@@ -15,12 +15,15 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+def key():
+    with open('%s\\%s' % (BASE_DIR, 'secret_key.txt')) as f:
+        return f.read()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'h5q-*ck_23etyu)pmd7n#p#7i)ci8p@&s!hw8#(0)4ieno9+%7'
+SECRET_KEY = key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
