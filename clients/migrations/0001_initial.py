@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=254)),
                 ('first_name', models.CharField(max_length=20)),
                 ('last_name', models.CharField(max_length=30)),
-                ('company', models.ForeignKey(to='client_management.Company')),
+                ('company', models.ForeignKey(to='clients.Company')),
             ],
         ),
     ]

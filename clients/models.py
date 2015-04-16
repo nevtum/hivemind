@@ -18,7 +18,7 @@ class Company(models.Model):
 
 class Contact(models.Model):
     company = models.ForeignKey('Company')
-    title = models.CharField(max_length=5, choices=title)
+    title = models.CharField(max_length=5, choices=titles)
     email = models.EmailField()
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=30)
