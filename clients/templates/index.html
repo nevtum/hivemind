@@ -1,0 +1,9 @@
+{% block content %}
+{% for company in companies %}
+<div class="client">
+  <a href="{{ company.code }}">
+    {{ company.name }}
+  </a>
+</div>
+{% endfor %}
+{% endblock %}
