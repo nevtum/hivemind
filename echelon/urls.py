@@ -8,4 +8,5 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^clients/$', 'clients.views.index'),
+    url(r'^clients/([a-zA-Z]+)/$', 'clients.views.contacts'),
 ]
