@@ -1,0 +1,23 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+  <style media="screen">
+    #head {
+    }
+  </style>
+  <title>{% block title %}Echelon{% endblock %}</title>
+</head>
+
+<body>
+  <div id="head">
+    <h1>Welcome!</h1>
+  </div>
+  <div id="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+</html>
