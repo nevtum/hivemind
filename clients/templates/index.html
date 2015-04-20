@@ -1,19 +1,25 @@
 {% block content %}
+<div class="container">
 
-{% if not companies %}
-<div class="Error">
-  <p>
-    There are currently no clients seen in the system!
-  </p>
-</div>
-{% endif %}
+  <div class="row controls">
+    <a href="{% url 'newclient' %}">Create new</a>
+  </div>
 
-{% for company in companies %}
-<div class="client">
-  <a href="{{ company.code }}">
-    {{ company.name }}
-  </a>
+  <div class="row items">
+    {% if not companies %}
+    <p>There are currently no clients seen in the system!</p>
+    {% endif %}
+
+    {% for company in companies %}
+    <div class="client">
+      <a href="{{ company.code }}">
+        {{ company.name }}
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+
 </div>
-{% endfor %}
+
 
 {% endblock %}
