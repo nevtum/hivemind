@@ -1,4 +1,13 @@
 {% block content %}
+
+{% if not companies %}
+<div class="Error">
+  <p>
+    There are currently no clients seen in the system!
+  </p>
+</div>
+{% endif %}
+
 {% for company in companies %}
 <div class="client">
   <a href="{{ company.code }}">
@@ -6,4 +15,5 @@
   </a>
 </div>
 {% endfor %}
+
 {% endblock %}

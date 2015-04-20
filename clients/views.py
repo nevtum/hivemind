@@ -10,3 +10,9 @@ def index(request):
 def contacts(request, code):
     c = Contact.objects.filter(company=code)
     return render(request, 'contacts.html', {'contacts': c})
+
+def create_company(request):
+    if request.method == 'GET':
+        return render(request, 'create_company.html')
+
+    # else 'POST'

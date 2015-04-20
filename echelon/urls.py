@@ -7,6 +7,7 @@ urlpatterns = [
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^clients/newclient/$', 'clients.views.create_company'),
     url(r'^clients/$', 'clients.views.index'),
     url(r'^clients/([a-zA-Z]+)/$', 'clients.views.contacts'),
 ]
