@@ -16,7 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def key():
-    with open('%s\\%s' % (BASE_DIR, 'secret_key.txt')) as f:
+    with open(os.path.join(BASE_DIR, 'secret_key.txt')) as f:
         return f.read()
 
 # Quick-start development settings - unsuitable for production
