@@ -6,7 +6,7 @@ class CompanySerializer(serializers.HyperlinkedModelSerializer):
         model = Company
         fields = ('name', 'code', 'status')
 
-class ContactSerializer(serializers.HyperlinkedModelSerializer):
+class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = ('company',
