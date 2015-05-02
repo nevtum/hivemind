@@ -16,7 +16,7 @@ def create_company(request):
 
     # else 'POST'
 
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from clients.serializers import CompanySerializer, ContactSerializer
 
 class CompanyViewSet(viewsets.ModelViewSet):
@@ -26,3 +26,10 @@ class CompanyViewSet(viewsets.ModelViewSet):
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+class CompanyContactList(generics.ListAPIView):
+    serializer_class = ContactSerializer
+
+    def get_queryset(self):
+        code = self.kwargs['code']
+        return Contact.objects.filter(company=code)

@@ -14,10 +14,11 @@ urlpatterns = [
 ]
 
 router = routers.DefaultRouter()
-router.register(r'Companies', views.CompanyViewSet)
-router.register(r'Contacts', views.ContactViewSet)
+router.register(r'companies', views.CompanyViewSet)
+router.register(r'contacts', views.ContactViewSet)
 
 urlpatterns += [
     url(r'^', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^(?P<code>[a-zA-Z]+)/contacts/$', views.CompanyContactList.as_view()),
 ]
