@@ -1,4 +1,4 @@
-from clients.models import Company, Contact
+from clients.models import Company, Contact, WorkRole
 from rest_framework import serializers
 
 class CompanySerializer(serializers.HyperlinkedModelSerializer):
@@ -12,6 +12,12 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = ('id',
         'company',
         'title',
+        'role',
         'email',
         'first_name',
         'last_name')
+
+class WorkRoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkRole
+        fields = ('name', 'department')

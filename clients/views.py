@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from clients.models import Company, Contact
+from clients.models import Company, Contact, WorkRole
 
 # Create your views here.
 def index(request):
@@ -17,18 +17,22 @@ def create_company(request):
     # else 'POST'
 
 from rest_framework import viewsets, generics
-from clients.serializers import CompanySerializer, ContactSerializer
+from clients import serializers
 
 class CompanyViewSet(viewsets.ModelViewSet):
     queryset = Company.objects.all()
-    serializer_class = CompanySerializer
+    serializer_class = serializers.CompanySerializer
 
 class ContactViewSet(viewsets.ModelViewSet):
     queryset = Contact.objects.all()
-    serializer_class = ContactSerializer
+    serializer_class = serializers.ContactSerializer
+
+class WorkRoleViewSet(viewsets.ModelViewSet):
+    queryset = WorkRole.objects.all()
+    serializer_class = serializers.WorkRoleSerializer
 
 class CompanyContactList(generics.ListAPIView):
-    serializer_class = ContactSerializer
+    serializer_class = serializers.ContactSerializer
 
     def get_queryset(self):
         code = self.kwargs['code']

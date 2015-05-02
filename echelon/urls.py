@@ -16,6 +16,7 @@ urlpatterns = [
 router = routers.DefaultRouter()
 router.register(r'companies', views.CompanyViewSet)
 router.register(r'contacts', views.ContactViewSet)
+router.register(r'roles', views.WorkRoleViewSet)
 
 urlpatterns += [
     url(r'^', include(router.urls)),
