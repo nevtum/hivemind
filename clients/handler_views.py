@@ -4,13 +4,14 @@ from rest_framework import status
 
 @api_view(http_method_names=['POST'])
 def accept(request):
-    if 'COMMAND' in request.META.keys():
-        command_type = request.META['COMMAND']
-        # to call command handler
-        return Response(request.data)
+    command_type = request.META.get('COMMAND')
 
-    data = {
-        'message': 'Please provide a COMMAND type in request header',
-        'request-data': request.data
-    }
-    return Response(data, status=status.HTTP_400_BAD_REQUEST)
+    if command_type is None:
+        data = {
+            'message': 'Please provide a COMMAND type in request header',
+            'request-data': request.data
+        }
+        return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+    # to call command handler
+    return Response(request.data)
