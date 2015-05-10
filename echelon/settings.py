@@ -16,7 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def key():
-    with open(os.path.join(BASE_DIR, 'secret_key.txt')) as f:
+    with open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')) as f:
         return f.read()
 
 # Quick-start development settings - unsuitable for production
@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'echelon.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'volume', 'db.sqlite3'),
     }
 }
 
