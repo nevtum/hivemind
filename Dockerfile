@@ -1,14 +1,17 @@
 FROM django:latest
 
-MAINTAINER "Neville Tummon"
+MAINTAINER Neville Tummon
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
 RUN mkdir -p echelon
-COPY . /echelon
-WORKDIR /echelon
-RUN mkdir -p volume
+COPY src/ /echelon
+
+RUN mkdir -p /echelon/volume
 VOLUME /echelon/volume
 
-RUN pip install -r requirements.txt
+WORKDIR /echelon
 RUN python manage.py syncdb --noinput
 RUN python manage.py migrate --noinput
 EXPOSE 8000
