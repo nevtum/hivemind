@@ -3,7 +3,7 @@ Build
 
 To build a docker image go to directory where this README file is located and type the following:
 
-    $ docker build -t <image name>
+    $ docker build -t <image name> .
 
 Deploy
 ======

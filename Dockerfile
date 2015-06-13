@@ -8,8 +8,9 @@ RUN pip install -r requirements.txt
 RUN mkdir -p echelon
 COPY src/ /echelon
 
-RUN mkdir -p /echelon/volume
-VOLUME /echelon/volume
+RUN mkdir -p volume
+COPY volume /volume
+VOLUME /volume
 
 WORKDIR /echelon
 RUN python manage.py syncdb --noinput
