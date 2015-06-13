@@ -13,6 +13,7 @@ COPY volume /volume
 VOLUME /volume
 
 WORKDIR /echelon
+RUN python manage.py collectstatic --noinput
 RUN python manage.py syncdb --noinput
 RUN python manage.py migrate --noinput
 EXPOSE 8000

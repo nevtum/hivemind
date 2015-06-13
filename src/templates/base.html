@@ -1,14 +1,10 @@
 <html>
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  <!-- <link rel="stylesheet" href="style.css" /> -->
-  <style media="screen">
-    #head {
-      color: #aaaaaa;
-    }
-  </style>
+  {% load staticfiles %}
+  <link rel="stylesheet" href="{% static "css/style.css" %}" />
+  <link rel="stylesheet" href="{% static "bootstrap/bootstrap.min.css" %}">
+  <link rel="stylesheet" href="{% static "bootstrap/bootstrap-theme.min.css" %}">
+  <script src="{% static "bootstrap/bootstrap.min.js" %}"></script>
   <title>{% block title %}Echelon{% endblock %}</title>
 </head>
 
