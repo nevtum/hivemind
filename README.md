@@ -30,8 +30,8 @@ Deploy
 
 To run a new container from the built image type the following:
 
-    $ docker run -it -d -p <host port>:8000 <image name>
+    $ docker run -it -d --name <container name> -p <host port>:8000 <image name>
 
 Once running there are volumes that are exposed from the container which can be accessed using other Docker containers. It is recommended to spin up a Busybox container to transfer files in and out of the Echelon container. Make sure Echelon container is currently running:
 
-    $ docker run -it --rm --volumes-from=<container name> busybox /bin/sh
+    $ docker run -it --rm --volumes-from <container name> busybox /bin/sh

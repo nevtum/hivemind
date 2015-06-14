@@ -3,7 +3,7 @@ FROM django:latest
 MAINTAINER Neville Tummon
 
 COPY requirements/ .
-RUN pip install -r requirements/common.txt
+RUN pip install -r dev.txt
 
 RUN mkdir -p web_app/echelon
 COPY src/ /web_app/echelon
