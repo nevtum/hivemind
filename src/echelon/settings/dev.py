@@ -1,6 +1,8 @@
 from .common import *
 from .drf import *
 
+INSTALLED_APPS += ['debug_toolbar']
+
 SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
 
 # SECURITY WARNING: don't run with debug turned on in production!
