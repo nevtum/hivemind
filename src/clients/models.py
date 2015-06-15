@@ -33,3 +33,17 @@ class WorkRole(models.Model):
 
     def __str__(self):
         return '%s: %s' % (self.department, self.name)
+
+class Regulator(models.Model):
+    abbrev = models.CharField(max_length=3, primary_key=True, unique=True)
+    jurisdiction = models.CharField(max_length=40)
+
+    def __str__(self):
+        return '%s (%s)' % (self.abbrev, self.jurisdiction)
+
+class RecommendationSubscription(models.Model):
+    user_id = models.ForeignKey('Contact')
+    regulator = models.ForeignKey('Regulator')
+
+    def __str__(self):
+        return '[%s] %s: %s' % (self.user_id.company, self.user_id, self.regulator)
