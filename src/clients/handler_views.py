@@ -4,7 +4,7 @@ from rest_framework import status
 
 @api_view(http_method_names=['POST'])
 def accept(request):
-    command_type = request.META.get('COMMAND')
+    command_type = request.META.get('HTTP_COMMAND')
 
     if command_type is None:
         data = {
