@@ -1,4 +1,28 @@
+/* base css */
+
+body {
+  padding-bottom: 30;
+  background-color: #A59D9D;
+}
 
 #head {
-  color: #aaaaaa;
+  font-family: Arial;
+  color: #FFF;
+  height: 5%;
+}
+
+#head h1 {
+  padding-left: 20;
+}
+
+#content {
+  padding: 10;
+  background-color: #DAE1E2;
+  height: 90%;
+}
+
+/* for contacts list */
+
+#search-control {
+  padding-bottom: 10;
 }

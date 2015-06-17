@@ -11,22 +11,32 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Company',
+            name='Contact',
             fields=[
-                ('name', models.CharField(max_length=40)),
-                ('code', models.CharField(max_length=20, unique=True, serialize=False, primary_key=True)),
-                ('status', models.CharField(default='OP', choices=[('OP', 'Operational'), ('NOOP', 'Non-Operational')], max_length=20)),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('employed_by', models.CharField(max_length=50)),
+                ('role', models.CharField(max_length=50)),
+                ('title', models.CharField(max_length=5, choices=[('Mr.', 'Mr.'), ('Mrs.', 'Mrs.'), ('Ms.', 'Ms.')])),
+                ('first_name', models.CharField(max_length=20)),
+                ('last_name', models.CharField(max_length=30)),
+                ('email', models.EmailField(max_length=254)),
             ],
         ),
         migrations.CreateModel(
-            name='Contact',
+            name='Jurisdiction',
             fields=[
-                ('id', models.AutoField(serialize=False, auto_created=True, verbose_name='ID', primary_key=True)),
-                ('title', models.CharField(choices=[('Mr.', 'Mr.'), ('Mrs.', 'Mrs.'), ('Ms.', 'Ms.')], max_length=5)),
-                ('email', models.EmailField(max_length=254)),
-                ('first_name', models.CharField(max_length=20)),
-                ('last_name', models.CharField(max_length=30)),
-                ('company', models.ForeignKey(to='clients.Company')),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('name', models.CharField(max_length=40)),
+                ('abbrev', models.CharField(max_length=10)),
+                ('regulator', models.CharField(max_length=40)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='RecommendationSubscription',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('jurisdiction', models.ForeignKey(to='clients.Jurisdiction')),
+                ('user_id', models.ForeignKey(to='clients.Contact')),
             ],
         ),
     ]

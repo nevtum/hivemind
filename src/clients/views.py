@@ -1,17 +1,10 @@
 from django.shortcuts import render
-from clients.models import Company, Contact
+from clients.models import Contact
 
-# Create your views here.
 def index(request):
-    c = Company.objects.all()
-    return render(request, 'index.html', {'companies': c})
-
-def contacts(request, code):
-    c = Contact.objects.filter(company=code)
+    c = Contact.objects.all()
     return render(request, 'contacts.html', {'contacts': c})
 
-def create_company(request):
-    if request.method == 'GET':
-        return render(request, 'create_company.html')
-
-    # else 'POST'
+def contacts(request, query):
+    c = Contact.objects.filter(employed_by__contains=query)
+    return render(request, 'contacts.html', {'contacts': c})
