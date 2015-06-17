@@ -26,7 +26,7 @@
             <td>{{ contact.employed_by }}</td>
             <td>{{ contact.title }} {{ contact.first_name }} {{ contact.last_name }}</td>
             <td>{{ contact.role }}</td>
-            <td>{{ contact.email }}</td>
+            <td><a href="mailto:{{ contact.email }}">{{ contact.email }}</td>
           </tr>
           {% endfor %}
         </tbody>
