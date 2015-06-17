@@ -1,22 +1,26 @@
 /* base css */
 
 body {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   padding-bottom: 30;
   background-color: #A59D9D;
 }
 
 #head {
-  font-family: Arial;
   color: #FFF;
-  height: 5%;
 }
 
 #head h1 {
+  font-family: Verdana;
+  font-weight: bold;
+  color: #C41230;
   padding-left: 20;
+  text-shadow: -1px 0 white, 0 1px white,
+      1px 0 white, 0 -1px white;
 }
 
 #content {
-  padding: 10;
+  padding-top: 10;
   background-color: #DAE1E2;
   height: 90%;
 }
@@ -24,5 +28,6 @@ body {
 /* for contacts list */
 
 #search-control {
+  padding-top: 20;
   padding-bottom: 10;
 }
