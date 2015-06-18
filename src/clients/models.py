@@ -6,7 +6,7 @@ titles = (
 ('Ms.', 'Ms.'))
 
 class Contact(models.Model):
-    employed_by = models.CharField(max_length=50)
+    employed_by = models.CharField(max_length=80)
     role = models.CharField(max_length=50)
     title = models.CharField(max_length=5, choices=titles)
     first_name = models.CharField(max_length=20)
