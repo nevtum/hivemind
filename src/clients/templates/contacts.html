@@ -1,14 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% csrf_token %}
 
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-4">
-      <div id="search-control" class="input-group">
-        <input type="text" class="form-control" placeholder="Enter search query">
-        <span class="input-group-addon">Search</span>
-      </div>
+      <form action="/clients/" method="get">
+        <div id="search-control" class="input-group">
+          <input type="text" name="search" class="form-control" placeholder="Search contact...">
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-danger">Search</button>
+          </span>
+        </div>
+      </form>
     </div>
   </div>
   <div class="row">
