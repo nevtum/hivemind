@@ -4,8 +4,7 @@ from rest_framework import routers
 from clients import api_views
 
 urlpatterns = [
-    url(r'^$', 'clients.views.index'),
-    url(r'^([a-zA-Z]+?)/$', 'clients.views.contacts'),
+    url(r'^$', 'clients.views.contacts'),
 ]
 
 router = routers.DefaultRouter()
