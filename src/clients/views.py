@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from clients.models import Contact
+from clients.services import ContactRepository
+
+rep = ContactRepository()
 
 def index(request):
-    c = Contact.objects.all()
+    c = rep.all_contacts()
     return render(request, 'contacts.html', {'contacts': c})
 
 def contacts(request, query):
-    c = Contact.objects.filter(employed_by__contains=query)
+    c = rep.search(query)
     return render(request, 'contacts.html', {'contacts': c})
