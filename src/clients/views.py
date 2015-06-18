@@ -1,16 +1,13 @@
 from django.shortcuts import render
-from clients.services import ContactRepository
-
-rep = ContactRepository()
+from clients.services import contact_repository
 
 def contacts(request):
-    search_param = _get_search_parameters(request)
-    c = rep.search(search_param)
+    search_param = _extract_search_parameters(request)
+    c = contact_repository.search(search_param)
     return render(request, 'contacts.html', {'contacts': c})
 
-def _get_search_parameters(request):
+def _extract_search_parameters(request):
     query = request.GET.get('search')
-    print(query)
-    if query is None:
-        return ''
-    return query
+    if query:
+        return query
+    return ''
