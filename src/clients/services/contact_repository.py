@@ -7,7 +7,7 @@ def search(keyword):
     | Q(role__contains=keyword) \
     | Q(first_name__contains=keyword) \
     | Q(last_name__contains=keyword)
-    return Contact.objects.filter(query)
+    return Contact.objects.filter(query).order_by('employed_by', 'last_name')
 
 def all_contacts():
     return Contact.objects.all()
