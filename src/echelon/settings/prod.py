@@ -1,5 +1,4 @@
 from .common import *
-from .drf import *
 
 SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
 

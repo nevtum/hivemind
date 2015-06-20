@@ -17,7 +17,7 @@ SRC_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file
 BASE_DIR = os.path.dirname(SRC_DIR)
 
 
-COMMON_APPS = [
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,11 +26,12 @@ COMMON_APPS = [
     'django.contrib.staticfiles'
 ]
 
-PROJECT_APPS = [
+INSTALLED_APPS += [
     'clients'
 ]
 
-INSTALLED_APPS = COMMON_APPS + PROJECT_APPS
+# Import third party libraries
+from .drf import *
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
