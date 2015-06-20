@@ -6,11 +6,12 @@ body {
   background-color: #595959;
 }
 
-#head {
-  color: #FFF;
+.jumbotron {
+  font-family: monospace;
+  color: #ADA5C6;
 }
 
-#head h1 {
+#header h1 {
   font-family: Verdana;
   font-weight: bold;
   color: #C41230;
@@ -19,10 +20,16 @@ body {
       1px 0 white, 0 -1px white;
 }
 
-#content {
+#footer {
+  /*background-color: #1D7B74;*/
+  color: #95C5C1;
+  text-align: center;
   padding-top: 10;
+}
+
+#content {
   background-color: #DAE1E2;
-  /*height: 90%;*/
+  padding-bottom: 20;
 }
 
 /* for contacts list */
