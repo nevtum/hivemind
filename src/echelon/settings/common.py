@@ -27,7 +27,8 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
-    'clients'
+    'clients',
+    'dirts'
 ]
 
 # Import third party libraries
