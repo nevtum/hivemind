@@ -4,6 +4,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework.authtoken import views
 
 urlpatterns = [
+    url(r'^$', 'echelon.views.index'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^clients/', include('clients.urls')),
     url(r'^dirts/', include('dirts.urls')),
