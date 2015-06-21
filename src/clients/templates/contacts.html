@@ -7,7 +7,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-4">
-        <form action="/clients/" method="get">
+        <form action="{% url 'clients-landing-url' %}" method="get">
           <div id="search-control" class="input-group">
             <input type="text" name="search" class="form-control" placeholder="Search contact...">
             <span class="input-group-btn">
