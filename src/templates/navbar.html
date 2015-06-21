@@ -7,7 +7,11 @@
             <li><a href="{% url 'dirts-landing-url' %}">DIRTs</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Login</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'logout-url' %}">{{ user.get_username }}, Log out</a></li>
+          {% else %}
+          <li><a href="{% url 'login-url' %}">Login</a></li>
+          {% endif %}
         </ul>
     </div>
 </nav>
