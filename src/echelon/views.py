@@ -14,16 +14,17 @@ def log_in(request):
     username = request.POST['username']
     password = request.POST['password']
     user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            login(request, user)
-            return redirect('home-url')
-        else:
-            error = 'User account has been disabled'
-            return render(request, 'login.html', {'form': form, 'error': error})
-    else:
+
+    if user is None:
         error = 'Incorrect username or password!'
         return render(request, 'login.html', {'form': form, 'error': error})
+
+    if not user.is_active:
+        error = 'User account has been disabled'
+        return render(request, 'login.html', {'form': form, 'error': error})
+
+    login(request, user)
+    return redirect('home-url')
 
 def log_out(request):
     logout(request)
