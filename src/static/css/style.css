@@ -46,6 +46,10 @@ form {
 
 /* for dirts */
 
+.myform input {
+  margin-bottom: 4;
+}
+
 #action-panel {
   margin-left: 1;
   margin-right: 1;
@@ -53,4 +57,10 @@ form {
   padding: 10;
   /*min-height: 150;*/
   background-color: #97BCC8;
+}
+
+#dirt-summary {
+  margin: 20;
+  padding: 30;
+  background-color: #B8C0DA
 }

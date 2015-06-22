@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% csrf_token %}
 
 <div id="content">
   <div class="container-fluid">
@@ -38,7 +37,9 @@
               <td>{{ dirt.date_created }}</td>
               <td>{{ dirt.project_code }}</td>
               <td>{{ dirt.release_id }}</td>
-              <td>{{ dirt.title }}</td>
+              <td>
+                <a href="{% url 'dirt-detail-url' dirt.id %}">{{ dirt.title }}</a>
+              </td>
               <td>{{ dirt.submitter }}</td>
             </tr>
             {% endfor %}

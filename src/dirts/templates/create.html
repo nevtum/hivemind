@@ -4,9 +4,11 @@
 
 <div id="content">
   <div class="container-fluid">
-    <form action="{% url 'create-dirt-url' %}" method="post">
+    <form class="myform" action="{% url 'create-dirt-url' %}" method="post">
       {% csrf_token %}
-      {{ form.as_p }}
+      <table>
+        {{ form.as_table }}
+      </table>
       <input type="submit" value="Submit" />
     </form>
   </div>

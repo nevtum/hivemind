@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="content">
+  <div class="container-fluid">
+    <div id="dirt-summary">
+      <div class="row">
+        <div class="col-sm-12 col-md-3 pull-right">
+          <div id="action-panel" class="row">
+            <ul>
+              <li><a href="#">Amend</a></li>
+              <li><a href="#">Mark Accepted</a></li>
+              <li><a href="#">Mark Rejected</a></li>
+              <li><a href="#">Close (raised in error)</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-9">
+            <h2>{{ summary.title }} ({{ summary.status }})</h2>
+            <h3>Release ID: {{ summary.release_id }}</h3>
+            <h4>Opened by {{ summary.submitter.get_full_name }}, {{ summary.date_created}}</h4>
+            <p>Reference: {{ summary.reference }}</p>
+            <p>{{ summary.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

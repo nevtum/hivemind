@@ -30,3 +30,7 @@ def create(request):
 
     dirt_manager.raise_dirt(**args)
     return redirect('dirts-landing-url')
+
+def detail(request, dirt_id):
+    summary = dirt_manager.get_detail(dirt_id)
+    return render(request, 'detail.html', {'summary': summary})

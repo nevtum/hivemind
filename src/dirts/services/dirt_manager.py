@@ -3,6 +3,9 @@ from dirts.models import Defect, Status
 def latest_dirts():
     return Defect.objects.all().order_by('-date_created');
 
+def get_detail(dirt_id):
+    return Defect.objects.get(pk=dirt_id)
+
 def raise_dirt(**kwargs):
     defect = Defect()
     defect.project_code = kwargs['project_code']
