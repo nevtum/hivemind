@@ -23,11 +23,12 @@ def create(request):
         'project_code': request.POST['project_code'],
         'date_created': datetime.utcnow(),
         'submitter': request.user,
+        'status': Status.objects.get(id=1),
         'release_id': request.POST['release_id'],
         'title': request.POST['title'],
         'description': request.POST['description'],
         'reference': request.POST['reference'],
     }
 
-    dirt_manager.raise_dirt(kwargs=args)
+    dirt_manager.raise_dirt(**args)
     return redirect('dirts-landing-url')
