@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% csrf_token %}
 
 <div id="content">
   <div class="container-fluid">
-    Fill in a form
+    <form action="#" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Submit" />
+    </form>
   </div>
 </div>
 

@@ -2,8 +2,9 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from dirts.models import Defect
+from dirts.models import Defect, Status
 from dirts.services import dirt_manager
+from dirts.forms import CreateDirtForm
 
 # Create your views here.
 
@@ -14,12 +15,18 @@ def index(request):
 @login_required(login_url='/login/')
 def create(request):
     if request.method == 'GET':
-        return render(request, 'create.html')
+        form = CreateDirtForm()
+        return render(request, 'create.html', {'form': form})
 
     # otherwise post
     args = {
-        'submitter': request.user,
+        'project_code': request.POST['project_code'],
         'date_created': datetime.utcnow(),
+        'submitter': request.user,
+        'release_id': request.POST['release_id'],
+        'title': request.POST['title'],
+        'description': request.POST['description'],
+        'reference': request.POST['reference'],
     }
 
     dirt_manager.raise_dirt(kwargs=args)
