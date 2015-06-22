@@ -9,7 +9,7 @@ class Status(models.Model):
 
 class Defect(models.Model):
     project_code = models.CharField(max_length=20)
-    date_created = models.DateField()
+    date_created = models.DateTimeField()
     submitter = models.ForeignKey(User)
     release_id = models.CharField(max_length=50)
     status = models.ForeignKey('Status')
