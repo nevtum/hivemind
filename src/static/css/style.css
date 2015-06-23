@@ -46,7 +46,7 @@ form {
 
 /* for dirts */
 
-.myform input {
+.myform input, select, textarea {
   margin-bottom: 4;
 }
 

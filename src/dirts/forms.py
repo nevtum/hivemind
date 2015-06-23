@@ -7,10 +7,12 @@ class CreateDirtForm(ModelForm):
         fields = [
         'project_code',
         'release_id',
-        'reference',
         'severity',
+        'title',
         'description',
+        'reference',
         ]
         widgets = {
-            'description': Textarea(attrs={'cols': 80, 'rows': 15}),
+            'description': Textarea(attrs={'cols': 80, 'rows': 10}),
+            'reference': Textarea(attrs={'cols': 80, 'rows': 5}),
         }
