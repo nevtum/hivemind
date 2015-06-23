@@ -1,9 +1,16 @@
-from django import forms
+from django.forms import ModelForm, Textarea
+from dirts.models import Defect
 
-class CreateDirtForm(forms.Form):
-    project_code = forms.CharField(max_length=20)
-    release_id = forms.CharField(max_length=50)
-    reference = forms.CharField(max_length=1000)
-    # status = ...
-    title = forms.CharField(max_length=80)
-    description = forms.CharField(max_length=2000, widget=forms.Textarea)
+class CreateDirtForm(ModelForm):
+    class Meta:
+        model = Defect
+        fields = [
+        'project_code',
+        'release_id',
+        'reference',
+        'severity',
+        'description',
+        ]
+        widgets = {
+            'description': Textarea(attrs={'cols': 80, 'rows': 15}),
+        }
