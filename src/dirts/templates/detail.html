@@ -20,6 +20,7 @@
             <h2>{{ summary.title }} ({{ summary.status }})</h2>
             <h3>Release ID: {{ summary.release_id }}</h3>
             <h4>Opened by {{ summary.submitter.get_full_name }}, {{ summary.date_created}}</h4>
+            <h4>Severity: {{ summary.severity.name }}</h4>
             <p>Reference: {{ summary.reference }}</p>
             <p>{{ summary.description }}</p>
         </div>

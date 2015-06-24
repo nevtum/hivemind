@@ -32,7 +32,7 @@ def amend(request, dirt_id):
     # otherwise post
     args = _create_args(request)
     dirt_manager.amend_dirt(dirt_id, **args)
-    return redirect('dirts-landing-url')
+    return redirect('dirt-detail-url', dirt_id)
 
 def detail(request, dirt_id):
     summary = dirt_manager.get_detail(dirt_id)
@@ -44,6 +44,7 @@ def _create_args(request):
         'date_created': datetime.utcnow(),
         'submitter': request.user,
         'release_id': request.POST['release_id'],
+        'severity_id': request.POST['severity'],
         'title': request.POST['title'],
         'description': request.POST['description'],
         'reference': request.POST['reference'],

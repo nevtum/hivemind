@@ -1,4 +1,4 @@
-from dirts.models import Defect, Status
+from dirts.models import Defect, Status, Severity
 
 def latest_dirts():
     return Defect.objects.all().order_by('-date_created');
@@ -13,6 +13,7 @@ def raise_dirt(**kwargs):
     defect.submitter = kwargs['submitter']
     defect.release_id = kwargs['release_id']
     defect.status = Status.objects.get(name='Open')
+    defect.severity = Severity.objects.get(id=kwargs['severity_id'])
     defect.title = kwargs['title']
     defect.description = kwargs['description']
     defect.reference = kwargs['reference']
@@ -26,6 +27,7 @@ def amend_dirt(dirt_id, **kwargs):
 
     defect.project_code = kwargs['project_code']
     defect.release_id = kwargs['release_id']
+    defect.severity = Severity.objects.get(id=kwargs['severity_id'])
     defect.title = kwargs['title']
     defect.description = kwargs['description']
     defect.reference = kwargs['reference']
