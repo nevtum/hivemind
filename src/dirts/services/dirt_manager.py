@@ -39,6 +39,9 @@ def amend_dirt(dirt_id, **kwargs):
     defect.reference = kwargs['reference']
     defect.save()
 
+def reopen(dirt_id):
+    pass
+
 def mark_accepted(dirt_id):
     pass
 
