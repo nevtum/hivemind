@@ -13,6 +13,6 @@ class CreateDirtForm(ModelForm):
         'reference',
         ]
         widgets = {
-            'description': Textarea(attrs={'cols': 80, 'rows': 10}),
-            'reference': Textarea(attrs={'cols': 80, 'rows': 5}),
+            'description': Textarea(attrs={'cols': 80}),
+            'reference': Textarea(attrs={'cols': 80}),
         }

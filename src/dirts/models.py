@@ -21,8 +21,8 @@ class Defect(models.Model):
     status = models.ForeignKey(Status, default=1)
     severity = models.ForeignKey(Severity, default=1)
     title = models.CharField(max_length=80)
-    description = models.CharField(max_length=2000)
-    reference = models.CharField(max_length=1000, default='N/A')
+    description = models.TextField()
+    reference = models.TextField(default='N/A')
 
     def __str__(self):
         return self.project_code
