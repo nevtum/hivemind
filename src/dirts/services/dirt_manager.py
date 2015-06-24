@@ -7,7 +7,7 @@ def latest_dirts(keyword):
     | Q(reference__contains=keyword) \
     | Q(release_id__contains=keyword)
 
-    return Defect.objects.filter(query).order_by('-date_created');
+    return Defect.objects.filter(query).order_by('-date_created')[:50];
 
 def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
