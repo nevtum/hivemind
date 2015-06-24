@@ -5,10 +5,9 @@ from django.contrib.auth.decorators import login_required
 from dirts.services import dirt_manager
 from dirts.forms import CreateDirtForm
 
-# Create your views here.
-
 def index(request):
-    defects = dirt_manager.latest_dirts()
+    search_param = _extract_search_parameters(request)
+    defects = dirt_manager.latest_dirts(search_param)
     return render(request, 'dirt_list.html', {'defects': defects})
 
 @login_required(login_url='/login/')
@@ -49,3 +48,9 @@ def _create_args(request):
         'description': request.POST['description'],
         'reference': request.POST['reference'],
     }
+
+def _extract_search_parameters(request):
+    query = request.GET.get('search')
+    if query:
+        return query
+    return ''

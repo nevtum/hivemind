@@ -1,7 +1,13 @@
+from django.db.models import Q
 from dirts.models import Defect, Status, Severity
 
-def latest_dirts():
-    return Defect.objects.all().order_by('-date_created');
+def latest_dirts(keyword):
+    query = Q(title__contains=keyword) \
+    | Q(description__contains=keyword) \
+    | Q(reference__contains=keyword) \
+    | Q(release_id__contains=keyword)
+
+    return Defect.objects.filter(query).order_by('-date_created');
 
 def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
