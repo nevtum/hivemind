@@ -12,7 +12,7 @@
               <li><a href="{% url 'dirt-amend-url' summary.id %}">Amend</a></li>
               <li><a href="#">Mark Accepted</a></li>
               <li><a href="#">Mark Rejected</a></li>
-              <li><a href="#">Close (raised in error)</a></li>
+              <li><a href="{% url 'dirt-close-url' summary.id %}">Close</a></li>
             </ul>
           </div>
         </div>

@@ -37,6 +37,12 @@ def detail(request, dirt_id):
     summary = dirt_manager.get_detail(dirt_id)
     return render(request, 'detail.html', {'summary': summary})
 
+def close(request, dirt_id):
+    # Very basic functionality for now
+    # To add confirmation screen if not marked accepted/rejected.
+    dirt_manager.close_dirt(dirt_id)
+    return redirect('dirt-detail-url', dirt_id)
+
 def _create_args(request):
     return {
         'project_code': request.POST['project_code'],

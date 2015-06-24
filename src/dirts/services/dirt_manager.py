@@ -49,4 +49,6 @@ def mark_rejected(dirt_id, reason):
     pass
 
 def close_dirt(dirt_id):
-    pass
+    defect = Defect.objects.get(id=dirt_id)
+    defect.status = Status.objects.get(name='Closed')
+    defect.save()
