@@ -1,5 +1,7 @@
+from datetime import datetime
 from django.db.models import Q
-from dirts.models import Defect, Status, Severity
+
+from dirts.models import Defect, Status, Severity, DefectHistoryItem
 
 def latest_dirts(keyword):
     query = Q(title__contains=keyword) \
@@ -11,6 +13,9 @@ def latest_dirts(keyword):
 
 def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
+
+def get_history(dirt_id):
+    return DefectHistoryItem.objects.filter(defect=dirt_id).order_by('-date_created')
 
 def raise_dirt(**kwargs):
     defect = Defect()
@@ -24,6 +29,14 @@ def raise_dirt(**kwargs):
     defect.description = kwargs['description']
     defect.reference = kwargs['reference']
     defect.save()
+
+    entry = DefectHistoryItem()
+    entry.date_created = kwargs['date_created']
+    entry.defect = defect
+    entry.short_desc = "DIRT created."
+    entry.submitter = kwargs['submitter']
+    entry.save()
+
 
 def amend_dirt(dirt_id, **kwargs):
     defect = Defect.objects.get(id=dirt_id)
@@ -39,7 +52,14 @@ def amend_dirt(dirt_id, **kwargs):
     defect.reference = kwargs['reference']
     defect.save()
 
-def reopen(dirt_id):
+    entry = DefectHistoryItem()
+    entry.date_created = kwargs['date_created']
+    entry.defect = defect
+    entry.short_desc = "DIRT amended."
+    entry.submitter = kwargs['submitter']
+    entry.save()
+
+def reopen(dirt_id, reason):
     pass
 
 def mark_accepted(dirt_id):
@@ -48,7 +68,14 @@ def mark_accepted(dirt_id):
 def mark_rejected(dirt_id, reason):
     pass
 
-def close_dirt(dirt_id):
+def close_dirt(dirt_id, user):
     defect = Defect.objects.get(id=dirt_id)
     defect.status = Status.objects.get(name='Closed')
     defect.save()
+
+    entry = DefectHistoryItem()
+    entry.date_created = datetime.utcnow()
+    entry.defect = defect
+    entry.short_desc = "DIRT closed."
+    entry.submitter = user
+    entry.save()

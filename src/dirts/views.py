@@ -10,6 +10,13 @@ def index(request):
     defects = dirt_manager.latest_dirts(search_param)
     return render(request, 'dirt_list.html', {'defects': defects})
 
+def detail(request, dirt_id):
+    data = {
+        'dirt': dirt_manager.get_detail(dirt_id),
+        'history': dirt_manager.get_history(dirt_id),
+    }
+    return render(request, 'detail.html', data)
+
 @login_required(login_url='/login/')
 def create(request):
     if request.method == 'GET':
@@ -33,14 +40,11 @@ def amend(request, dirt_id):
     dirt_manager.amend_dirt(dirt_id, **args)
     return redirect('dirt-detail-url', dirt_id)
 
-def detail(request, dirt_id):
-    summary = dirt_manager.get_detail(dirt_id)
-    return render(request, 'detail.html', {'summary': summary})
-
+@login_required(login_url='/login/')
 def close(request, dirt_id):
     # Very basic functionality for now
     # To add confirmation screen if not marked accepted/rejected.
-    dirt_manager.close_dirt(dirt_id)
+    dirt_manager.close_dirt(dirt_id, request.user)
     return redirect('dirt-detail-url', dirt_id)
 
 def _create_args(request):

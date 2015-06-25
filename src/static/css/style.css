@@ -50,6 +50,11 @@ form {
   margin-bottom: 4;
 }
 
+#history-list {
+  margin-top: 20;
+  font-size: 12;
+}
+
 #action-panel {
   margin-left: 1;
   margin-right: 1;

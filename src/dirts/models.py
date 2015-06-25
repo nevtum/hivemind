@@ -25,4 +25,16 @@ class Defect(models.Model):
     reference = models.TextField(default='N/A')
 
     def __str__(self):
-        return self.project_code
+        return str(self.date_created)
+
+    def is_active(self):
+        return self.status.name != "Closed"
+
+class DefectHistoryItem(models.Model):
+    date_created = models.DateTimeField()
+    defect = models.ForeignKey(Defect)
+    short_desc = models.CharField(max_length=80)
+    submitter = models.ForeignKey(User)
+
+    def __str__(self):
+        return "[%s] %s" % (self.defect.project_code, self.short_desc)

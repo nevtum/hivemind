@@ -9,22 +9,51 @@
         <div class="col-sm-12 col-md-3 pull-right">
           <div id="action-panel" class="row">
             <ul>
-              <li><a href="{% url 'dirt-amend-url' summary.id %}">Amend</a></li>
+              {% if dirt.is_active %}
+              <li><a href="{% url 'dirt-amend-url' dirt.id %}">Amend</a></li>
               <li><a href="#">Mark Accepted</a></li>
               <li><a href="#">Mark Rejected</a></li>
-              <li><a href="{% url 'dirt-close-url' summary.id %}">Close</a></li>
+              <li><a href="{% url 'dirt-close-url' dirt.id %}">Close</a></li>
+              {% else %}
+              <li><a href="#">Re-open</a></li>
+              <li><a href="#">Delete</a></li>
+              {% endif %}
             </ul>
           </div>
         </div>
         <div class="col-md-9">
-            <h2>{{ summary.title }} ({{ summary.status }})</h2>
-            <h3>Release ID: {{ summary.release_id }}</h3>
-            <h4>Opened by {{ summary.submitter.get_full_name }}, {{ summary.date_created}}</h4>
-            <h4>Severity: {{ summary.severity.name }}</h4>
-            <p>Reference: {{ summary.reference }}</p>
-            <p>{{ summary.description }}</p>
+            <h2>{{ dirt.title }} ({{ dirt.status }})</h2>
+            <h3>Release ID: {{ dirt.release_id }}</h3>
+            <h4>Opened by {{ dirt.submitter.get_full_name }}, {{ dirt.date_created}}</h4>
+            <h4>Severity: {{ dirt.severity.name }}</h4>
+            <p>Reference: {{ dirt.reference }}</p>
+            <p>{{ dirt.description | linebreaksbr }}</p>
         </div>
       </div>
+      {% if history %}
+      <div class="row">
+        <div class="col-md-12">
+          <hr>
+          <h5>Change history</h5>
+          <table id="history-list" class="table table-striped table-condensed">
+            <tbody>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Modified by</th>
+              </tr>
+              {% for change in history %}
+              <tr>
+                <td>{{ change.date_created | date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td>{{ change.short_desc }}</td>
+                <td>{{ change.submitter.get_full_name }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>
