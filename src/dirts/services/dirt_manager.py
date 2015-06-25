@@ -81,4 +81,5 @@ def close_dirt(dirt_id, user):
     entry.save()
 
 def delete_dirt(dirt_id):
-    raise NotImplemented()
+    Defect.objects.get(id=dirt_id).delete()
+    DefectHistoryItem.objects.filter(defect=dirt_id).delete()
