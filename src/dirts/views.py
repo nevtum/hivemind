@@ -47,6 +47,15 @@ def close(request, dirt_id):
     dirt_manager.close_dirt(dirt_id, request.user)
     return redirect('dirt-detail-url', dirt_id)
 
+@login_required(login_url='/login/')
+def delete(request, dirt_id):
+    if request.method == 'GET':
+        return render(request, 'delete_confirmation.html', {'id': dirt_id})
+
+    # otherwise post
+    dirt_manager.delete_dirt(dirt_id)
+    return redirect('dirts-landing-url')
+
 def _create_args(request):
     return {
         'project_code': request.POST['project_code'],

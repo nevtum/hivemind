@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="content">
+  <div class="container-fluid">
+      <div class="well well-sm">
+
+      Are you sure you wish to delete this item? This operation cannot be undone.
+      </div>
+    <form class="myform" action="{% url 'dirt-delete-url' id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+</div>
+
+{% endblock %}

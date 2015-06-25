@@ -79,3 +79,6 @@ def close_dirt(dirt_id, user):
     entry.short_desc = "DIRT closed."
     entry.submitter = user
     entry.save()
+
+def delete_dirt(dirt_id):
+    raise NotImplemented()
