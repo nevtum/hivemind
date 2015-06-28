@@ -59,7 +59,7 @@ def amend_dirt(dirt_id, **kwargs):
     entry.submitter = kwargs['submitter']
     entry.save()
 
-def reopen(dirt_id, reason):
+def reopen(dirt_id, release_id, reason):
     pass
 
 def mark_accepted(dirt_id):

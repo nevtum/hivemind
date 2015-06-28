@@ -15,7 +15,7 @@
               <li><a href="#">Mark Rejected</a></li>
               <li><a href="{% url 'dirt-close-url' dirt.id %}">Close</a></li>
               {% else %}
-              <li><a href="#">Re-open</a></li>
+              <li><a href="{% url 'dirt-reopen-url' dirt.id %}">Re-open</a></li>
               <li><a href="{% url 'dirt-delete-url' dirt.id %}">Delete</a></li>
               {% endif %}
             </ul>

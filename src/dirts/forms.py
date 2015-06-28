@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm, Textarea
 from dirts.models import Defect
 
@@ -16,3 +17,12 @@ class CreateDirtForm(ModelForm):
             'description': Textarea(attrs={'cols': 80}),
             'comments': Textarea(attrs={'cols': 80}),
         }
+
+class ReopenDirtForm(ModelForm, forms.Form):
+    reason = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = Defect
+        fields = [
+        'release_id',
+        ]

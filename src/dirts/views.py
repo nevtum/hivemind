@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from dirts.services import dirt_manager
-from dirts.forms import CreateDirtForm
+from dirts.forms import CreateDirtForm, ReopenDirtForm
 
 def index(request):
     search_param = _extract_search_parameters(request)
@@ -45,6 +45,19 @@ def close(request, dirt_id):
     # Very basic functionality for now
     # To add confirmation screen if not marked accepted/rejected.
     dirt_manager.close_dirt(dirt_id, request.user)
+    return redirect('dirt-detail-url', dirt_id)
+
+@login_required(login_url='/login/')
+def reopen(request, dirt_id):
+    if request.method == 'GET':
+        dirt = dirt_manager.get_detail(dirt_id)
+        form = ReopenDirtForm(instance=dirt)
+        return render(request, 'reopen.html', {'form': form, 'dirt': dirt})
+
+    # otherwise post
+    release_id = request.POST['release_id']
+    reason = request.POST['reason']
+    dirt_manager.reopen(dirt_id, release_id, reason)
     return redirect('dirt-detail-url', dirt_id)
 
 @login_required(login_url='/login/')
