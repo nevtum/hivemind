@@ -1,0 +1,15 @@
+server {
+
+    listen 80;
+    server_name example.org;
+    charset utf-8;
+
+    location /static {
+        alias /web_app/static;
+    }
+
+    location / {
+        proxy_pass http://localhost:8000;
+    }
+
+}
