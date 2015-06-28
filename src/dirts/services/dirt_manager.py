@@ -1,12 +1,12 @@
 from datetime import datetime
 from django.db.models import Q
 
-from dirts.models import Defect, Status, Severity, DefectHistoryItem
+from dirts.models import Defect, Status, Priority, DefectHistoryItem
 
 def latest_dirts(keyword):
-    query = Q(title__contains=keyword) \
+    query = Q(reference__contains=keyword) \
     | Q(description__contains=keyword) \
-    | Q(reference__contains=keyword) \
+    | Q(comments__contains=keyword) \
     | Q(release_id__contains=keyword)
 
     return Defect.objects.filter(query).order_by('-date_created')[:50];
@@ -24,10 +24,10 @@ def raise_dirt(**kwargs):
     defect.submitter = kwargs['submitter']
     defect.release_id = kwargs['release_id']
     defect.status = Status.objects.get(name='Open')
-    defect.severity = Severity.objects.get(id=kwargs['severity_id'])
-    defect.title = kwargs['title']
-    defect.description = kwargs['description']
+    defect.priority = Priority.objects.get(id=kwargs['priority'])
     defect.reference = kwargs['reference']
+    defect.description = kwargs['description']
+    defect.comments = kwargs['comments']
     defect.save()
 
     entry = DefectHistoryItem()
@@ -46,10 +46,10 @@ def amend_dirt(dirt_id, **kwargs):
 
     defect.project_code = kwargs['project_code']
     defect.release_id = kwargs['release_id']
-    defect.severity = Severity.objects.get(id=kwargs['severity_id'])
-    defect.title = kwargs['title']
-    defect.description = kwargs['description']
+    defect.priority = Priority.objects.get(id=kwargs['priority'])
     defect.reference = kwargs['reference']
+    defect.description = kwargs['description']
+    defect.comments = kwargs['comments']
     defect.save()
 
     entry = DefectHistoryItem()

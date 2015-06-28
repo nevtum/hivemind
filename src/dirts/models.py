@@ -7,7 +7,7 @@ class Status(models.Model):
     def __str__(self):
         return self.name
 
-class Severity(models.Model):
+class Priority(models.Model):
     name = models.CharField(max_length=20)
 
     def __str__(self):
@@ -19,10 +19,10 @@ class Defect(models.Model):
     submitter = models.ForeignKey(User)
     release_id = models.CharField(max_length=50)
     status = models.ForeignKey(Status, default=1)
-    severity = models.ForeignKey(Severity, default=1)
-    title = models.CharField(max_length=80)
+    priority = models.ForeignKey(Priority, default=1)
+    reference = models.CharField(max_length=80)
     description = models.TextField()
-    reference = models.TextField(default='N/A')
+    comments = models.TextField()
 
     def __str__(self):
         return str(self.date_created)

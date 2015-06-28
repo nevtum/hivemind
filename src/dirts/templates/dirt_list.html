@@ -30,8 +30,8 @@
               <th>Status</th>
               <th>Project code</th>
               <th>Release ID</th>
-              <th>Severity</th>
-              <th>Summary</th>
+              <th>Priority</th>
+              <th>Reference</th>
               <th>Submitter</th>
             </tr>
             {% for dirt in defects %}
@@ -40,9 +40,9 @@
               <td>{{ dirt.status.name }}</td>
               <td>{{ dirt.project_code }}</td>
               <td>{{ dirt.release_id }}</td>
-              <td>{{ dirt.severity.name }}</td>
+              <td>{{ dirt.priority.name }}</td>
               <td>
-                <a href="{% url 'dirt-detail-url' dirt.id %}">{{ dirt.title }}</a>
+                <a href="{% url 'dirt-detail-url' dirt.id %}">{{ dirt.reference }}</a>
               </td>
               <td>{{ dirt.submitter }}</td>
             </tr>

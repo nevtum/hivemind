@@ -62,10 +62,10 @@ def _create_args(request):
         'date_created': datetime.utcnow(),
         'submitter': request.user,
         'release_id': request.POST['release_id'],
-        'severity_id': request.POST['severity'],
-        'title': request.POST['title'],
-        'description': request.POST['description'],
+        'priority': request.POST['priority'],
         'reference': request.POST['reference'],
+        'description': request.POST['description'],
+        'comments': request.POST['comments'],
     }
 
 def _extract_search_parameters(request):
