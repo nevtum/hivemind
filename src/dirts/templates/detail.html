@@ -27,7 +27,7 @@
             <h4>Raised by {{ dirt.submitter.get_full_name }}, {{ dirt.date_created}}</h4>
             <h4>Priority: {{ dirt.priority.name }}</h4>
             <p>{{ dirt.description | linebreaksbr }}</p>
-            <p>Comments: {{ dirt.comments }}</p>
+            <p>Comments: {{ dirt.comments | linebreaksbr }}</p>
         </div>
       </div>
       {% if history %}

@@ -57,7 +57,7 @@ def reopen(request, dirt_id):
     # otherwise post
     release_id = request.POST['release_id']
     reason = request.POST['reason']
-    dirt_manager.reopen(dirt_id, release_id, reason)
+    dirt_manager.reopen(dirt_id, request.user, release_id, reason)
     return redirect('dirt-detail-url', dirt_id)
 
 @login_required(login_url='/login/')
