@@ -22,12 +22,16 @@
           </div>
         </div>
         <div class="col-md-9">
-            <h2>{{ dirt.reference }} ({{ dirt.status }})</h2>
-            <h3>Release ID: {{ dirt.release_id }}</h3>
-            <h4>Raised by {{ dirt.submitter.get_full_name }}, {{ dirt.date_created}}</h4>
-            <h4>Priority: {{ dirt.priority.name }}</h4>
-            <p>{{ dirt.description | linebreaksbr }}</p>
-            <p>Comments: {{ dirt.comments | linebreaksbr }}</p>
+            <div id="dirt-header">
+              <h2>{{ dirt.reference }} ({{ dirt.status }})</h2>
+              <h3>Release ID: {{ dirt.release_id }}</h3>
+              <h4>Raised by {{ dirt.submitter.get_full_name }}, {{ dirt.date_created}}</h4>
+              <h4>Priority: {{ dirt.priority.name }}</h4>
+            </div>
+            <div id="dirt-detail">
+              <p>{{ dirt.description | linebreaksbr }}</p>
+              <p>Comments: {{ dirt.comments | linebreaksbr }}</p>
+            </div>
         </div>
       </div>
       {% if history %}
