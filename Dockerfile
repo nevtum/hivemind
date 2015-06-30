@@ -18,6 +18,6 @@ ADD volume /web_app/volume
 VOLUME /web_app/volume
 VOLUME /web_app/static
 WORKDIR /web_app/echelon
-EXPOSE 80
+EXPOSE 8000
 
 CMD ["sh", "run.sh"]
