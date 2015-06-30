@@ -9,7 +9,7 @@ ALLOWED_HOSTS = ['*']
 
 # Attention!!
 # Update this settings variable when releasing a new version of Echelon
-RELEASE_VERSION = 'v0.1.1'
+RELEASE_VERSION = 'v0.1.2'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

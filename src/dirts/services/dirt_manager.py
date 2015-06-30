@@ -73,7 +73,7 @@ def reopen(dirt_id, user, release_id, reason):
     entry = DefectHistoryItem()
     entry.date_created = datetime.utcnow()
     entry.defect = defect
-    entry.short_desc = "Reopened, version %s (%s)" % (release_id, reason)
+    entry.short_desc = "Reopened. Version %s. [%s]" % (release_id, reason)
     entry.submitter = user
     entry.save()
 
@@ -91,7 +91,7 @@ def close_dirt(dirt_id, user):
     entry = DefectHistoryItem()
     entry.date_created = datetime.utcnow()
     entry.defect = defect
-    entry.short_desc = "DIRT closed."
+    entry.short_desc = "DIRT closed. Version %s." % defect.release_id
     entry.submitter = user
     entry.save()
 
