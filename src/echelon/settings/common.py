@@ -69,6 +69,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'echelon.wsgi.application'
 
+SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
+
+ALLOWED_HOSTS = ['*']
+
+# Attention!!
+# Update this settings variable when releasing a new version of Echelon
+RELEASE_VERSION = 'v0.1.2'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
