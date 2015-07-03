@@ -10,6 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
+# Attention!!
+# Update this settings variable when releasing a new version of Echelon
+RELEASE_VERSION = 'v0.1.3'
+
 # Build paths inside the project like this: os.path.join(SRC_DIR, ...)
 import os
 
@@ -72,10 +76,6 @@ WSGI_APPLICATION = 'echelon.wsgi.application'
 SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
 
 ALLOWED_HOSTS = ['*']
-
-# Attention!!
-# Update this settings variable when releasing a new version of Echelon
-RELEASE_VERSION = 'v0.1.2'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
