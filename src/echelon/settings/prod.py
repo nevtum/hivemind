@@ -12,7 +12,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'echelon_user',
         'PASSWORD': 'mypassword',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': 5432,
     }
 }

@@ -8,5 +8,5 @@ docker rm echelon-container
 
 docker run -it -d --name echelon-container \
   -p 8000:8000 \
-  --link pgdb:db \
+  --link pgdb:localhost \
   echelon-img
