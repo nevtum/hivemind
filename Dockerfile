@@ -10,7 +10,7 @@ ADD requirements/ .
 RUN pip install -r dev.txt
 
 RUN mkdir -p web_app/echelon
-ADD src/ run.sh /web_app/echelon/
+ADD src/ entry-point.sh /web_app/echelon/
 
 RUN mkdir -p web_app/volume
 ADD volume /web_app/volume
@@ -20,4 +20,4 @@ VOLUME /web_app/static
 WORKDIR /web_app/echelon
 EXPOSE 8000
 
-CMD ["sh", "run.sh"]
+CMD ["sh", "entry-point.sh"]
