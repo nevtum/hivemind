@@ -61,14 +61,7 @@ def amend_dirt(dirt_id, **kwargs):
 
 def reopen(dirt_id, user, release_id, reason):
     defect = Defect.objects.get(id=dirt_id)
-
-    if defect.status.name != "Closed":
-        raise Exception("DIRT must be in closed state to reopen.")
-
-    defect.status = Status.objects.get(name='Open')
-    defect.release_id = release_id
-    defect.comments += "\n%s" % reason
-    defect.save()
+    defect.reopen(release_id, reason)
 
     entry = DefectHistoryItem()
     entry.date_created = datetime.utcnow()
@@ -85,8 +78,7 @@ def mark_rejected(dirt_id, reason):
 
 def close_dirt(dirt_id, user):
     defect = Defect.objects.get(id=dirt_id)
-    defect.status = Status.objects.get(name='Closed')
-    defect.save()
+    defect.close()
 
     entry = DefectHistoryItem()
     entry.date_created = datetime.utcnow()

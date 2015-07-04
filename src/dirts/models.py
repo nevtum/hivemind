@@ -30,6 +30,19 @@ class Defect(models.Model):
     def is_active(self):
         return self.status.name != "Closed"
 
+    def reopen(self, release_id, reason):
+        if self.status.name != "Closed":
+            raise Exception("DIRT must be in closed state to reopen.")
+
+        self.status = Status.objects.get(name='Open')
+        self.release_id = release_id
+        self.comments += "\n%s" % reason
+        self.save()
+
+    def close(self):
+        self.status = Status.objects.get(name='Closed')
+        self.save()
+
 class DefectHistoryItem(models.Model):
     date_created = models.DateTimeField()
     defect = models.ForeignKey(Defect)
