@@ -37,7 +37,7 @@ Deploy
 
 To run a new container from the built image type the following:
 
-    $ docker run -it -d --name <app name> -p <host port>:8000 --link <db name>:localhost <image name>
+    $ docker run -it -d --name <app name> -p <host port>:8015 --link <db name>:localhost <image name>
 
 Alternatively, run the following in the scripts folder:
 

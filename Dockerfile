@@ -18,6 +18,6 @@ ADD volume /web_app/volume
 VOLUME /web_app/volume
 VOLUME /web_app/static
 WORKDIR /web_app/echelon
-EXPOSE 8000
+EXPOSE 8015
 
 CMD ["sh", "entry-point.sh"]
