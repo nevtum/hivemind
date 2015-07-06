@@ -16,7 +16,7 @@ Install the required PyPi packages listed within the dev.txt:
 
 To get started with a debug instance of the django server run the following:
 
-    $ python manage.py runserver
+    $ python dev_manage.py runserver
 
 Install new database instance (Production only)
 ==================
@@ -59,5 +59,5 @@ This only needs to be done once and not everytime a new Echelon release is sched
 
 Inside the container, run these commands, then exit out of the container:
 
-    $ python manage.py migrate (manage.py must point to prod)
-    $ python manage.py createsuperuser (manage.py must point to prod)
+    $ python prod_manage.py migrate
+    $ python prod_manage.py createsuperuser
