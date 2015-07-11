@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -84,7 +84,7 @@ def delete(request, dirt_id):
 def _create_args(request):
     return {
         'project_code': request.POST['project_code'],
-        'date_created': datetime.utcnow(),
+        'date_created': timezone.now(),
         'submitter': request.user,
         'release_id': request.POST['release_id'],
         'priority': request.POST['priority'],
