@@ -25,24 +25,28 @@ def create(request):
 
     # otherwise post
     form = CreateDirtForm(request.POST)
-    if form.is_valid():
-        args = _create_args(request)
-        dirt_manager.raise_dirt(**args)
-        return redirect('dirts-landing-url')
+    if not form.is_valid():
+        return render(request, 'create.html', {'form': form})
+
+    args = _create_args(request)
+    dirt_manager.raise_dirt(**args)
+    return redirect('dirts-landing-url')
 
 @login_required(login_url='/login/')
 def amend(request, dirt_id):
+    dirt = dirt_manager.get_detail(dirt_id)
     if request.method == 'GET':
-        summary = dirt_manager.get_detail(dirt_id)
-        form = CreateDirtForm(instance=summary)
-        return render(request, 'amend.html', {'form': form, 'dirt': summary})
+        form = CreateDirtForm(instance=dirt)
+        return render(request, 'amend.html', {'form': form, 'dirt': dirt})
 
     # otherwise post
     form = CreateDirtForm(request.POST)
-    if form.is_valid():
-        args = _create_args(request)
-        dirt_manager.amend_dirt(dirt_id, **args)
-        return redirect('dirt-detail-url', dirt_id)
+    if not form.is_valid():
+        return render(request, 'amend.html', {'form': form, 'dirt': dirt})
+
+    args = _create_args(request)
+    dirt_manager.amend_dirt(dirt_id, **args)
+    return redirect('dirt-detail-url', dirt_id)
 
 @login_required(login_url='/login/')
 def close(request, dirt_id):
@@ -53,18 +57,20 @@ def close(request, dirt_id):
 
 @login_required(login_url='/login/')
 def reopen(request, dirt_id):
+    dirt = dirt_manager.get_detail(dirt_id)
     if request.method == 'GET':
-        dirt = dirt_manager.get_detail(dirt_id)
         form = ReopenDirtForm(instance=dirt)
         return render(request, 'reopen.html', {'form': form, 'dirt': dirt})
 
     # otherwise post
     form = ReopenDirtForm(request.POST)
-    if form.is_valid():
-        release_id = request.POST['release_id']
-        reason = request.POST['reason']
-        dirt_manager.reopen(dirt_id, request.user, release_id, reason)
-        return redirect('dirt-detail-url', dirt_id)
+    if not form.is_valid():
+        return render(request, 'reopen.html', {'form': form, 'dirt': dirt})
+
+    release_id = request.POST['release_id']
+    reason = request.POST['reason']
+    dirt_manager.reopen(dirt_id, request.user, release_id, reason)
+    return redirect('dirt-detail-url', dirt_id)
 
 @login_required(login_url='/login/')
 def delete(request, dirt_id):
