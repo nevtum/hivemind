@@ -36,7 +36,7 @@
             </tr>
             {% for dirt in defects %}
             <tr>
-              <td>{{ dirt.date_created | date:"SHORT_DATETIME_FORMAT" }}</td>
+              <td>{{ dirt.date_created | date:"d/m/y H:i" }}</td>
               <td>{{ dirt.status.name }}</td>
               <td>{{ dirt.project_code }}</td>
               <td>{{ dirt.release_id }}</td>
