@@ -14,7 +14,7 @@ class Defect(object):
     def update_comments(self, comments):
         self.comments = comments
 
-    def update_status(self, release, status):
+    def update_state(self, release, status):
         self.state = self.state.change(release, status)
 
 class Symptom(object):
@@ -33,8 +33,5 @@ class DefectState(object):
         if self.release == release:
             if self.status != 'Open':
                 raise Exception('Cannot change status!')
-        else:
-            if self.status != 'Closed':
-                raise Exception('Cannot change release')
 
         return DefectState(release, status)
