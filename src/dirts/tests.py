@@ -3,14 +3,16 @@ from dirts.domain.models import Defect, DefectState
 
 class DefectBusinessRules(TestCase):
     def test_should_create_open_defect(self):
-        defect = Defect(1, 'ABC.1234', 'Program v1.0')
+        state = DefectState('Program v1.0')
+        defect = Defect(1, 'ABC.1234', state)
         self.assertEquals('Open', defect.state.status)
         self.assertEquals('Program v1.0', defect.state.release)
         self.assertEquals('ABC.1234', defect.project_code)
         self.assertEquals(1, defect.user_id)
 
     def test_should_close_status_from_opened(self):
-        defect = Defect(1, 'ABC.1234', 'Program v1.0')
+        state = DefectState('Program v1.0')
+        defect = Defect(1, 'ABC.1234', state)
         defect.update_state('Program v1.0', 'Closed')
         self.assertEquals('Closed', defect.state.status)
         self.assertEquals('Program v1.0', defect.state.release)
