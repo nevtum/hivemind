@@ -36,7 +36,7 @@ def raise_dirt(**kwargs):
     entry.short_desc = "DIRT created."
     entry.submitter = kwargs['submitter']
     entry.save()
-
+    return defect.id
 
 def amend_dirt(dirt_id, **kwargs):
     defect = Defect.objects.get(id=dirt_id)

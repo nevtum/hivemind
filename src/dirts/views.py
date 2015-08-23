@@ -29,8 +29,8 @@ def create(request):
         return render(request, 'create.html', {'form': form})
 
     args = _create_args(request)
-    dirt_manager.raise_dirt(**args)
-    return redirect('dirts-landing-url')
+    dirt_id = dirt_manager.raise_dirt(**args)
+    return redirect('dirt-detail-url', dirt_id)
 
 @login_required(login_url='/login/')
 def amend(request, dirt_id):
