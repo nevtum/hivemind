@@ -4,10 +4,10 @@ from django.db.models import Q
 from dirts.models import Defect, Status, Priority, DefectHistoryItem
 
 def latest_dirts(keyword):
-    query = Q(reference__contains=keyword) \
-    | Q(description__contains=keyword) \
-    | Q(comments__contains=keyword) \
-    | Q(release_id__contains=keyword)
+    query = Q(reference__icontains=keyword) \
+    | Q(description__icontains=keyword) \
+    | Q(comments__icontains=keyword) \
+    | Q(release_id__icontains=keyword)
 
     return Defect.objects.filter(query).order_by('-date_created')[:50];
 
