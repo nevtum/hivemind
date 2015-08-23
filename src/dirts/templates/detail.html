@@ -11,8 +11,6 @@
             <ul>
               {% if dirt.is_active %}
               <li><a href="{% url 'dirt-amend-url' dirt.id %}">Amend</a></li>
-              <li><a href="#">Mark Accepted</a></li>
-              <li><a href="#">Mark Rejected</a></li>
               <li><a href="{% url 'dirt-close-url' dirt.id %}">Close</a></li>
               {% else %}
               <li><a href="{% url 'dirt-reopen-url' dirt.id %}">Re-open</a></li>
