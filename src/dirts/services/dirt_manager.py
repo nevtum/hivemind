@@ -17,6 +17,13 @@ def get_detail(dirt_id):
 def get_history(dirt_id):
     return DefectHistoryItem.objects.filter(defect=dirt_id).order_by('-date_created')
 
+def get_copy(dirt_id):
+    defect = get_detail(dirt_id)
+    copy = Defect()
+    copy.project_code = defect.project_code
+    copy.release_id = defect.release_id
+    return copy
+
 def raise_dirt(**kwargs):
     defect = Defect()
     defect.project_code = kwargs['project_code']

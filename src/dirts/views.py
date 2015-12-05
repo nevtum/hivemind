@@ -37,6 +37,22 @@ def create(request):
     return redirect('dirt-detail-url', dirt_id)
 
 @login_required(login_url='/login/')
+def copy(request, dirt_id):
+    if request.method == 'GET':
+        dirt = dirt_manager.get_copy(dirt_id)
+        form = CreateDirtForm(instance=dirt)
+        return render(request, 'create.html', {'form': form})
+
+    # otherwise post
+    form = CreateDirtForm(request.POST)
+    if not form.is_valid():
+        return render(request, 'create.html', {'form': form})
+
+    args = _create_args(request)
+    dirt_id = dirt_manager.raise_dirt(**args)
+    return redirect('dirt-detail-url', dirt_id)
+
+@login_required(login_url='/login/')
 def amend(request, dirt_id):
     dirt = dirt_manager.get_detail(dirt_id)
     if request.method == 'GET':

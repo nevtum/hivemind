@@ -16,6 +16,7 @@
               <li><a href="{% url 'dirt-reopen-url' dirt.id %}">Re-open</a></li>
               <li><a href="{% url 'dirt-delete-url' dirt.id %}">Delete</a></li>
               {% endif %}
+              <li><a href="{% url 'create-similar-url' dirt.id %}">Raise similar</a></li>              
             </ul>
           </div>
         </div>
