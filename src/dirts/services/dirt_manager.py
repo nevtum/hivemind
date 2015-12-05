@@ -2,17 +2,14 @@ from django.utils import timezone
 from django.db.models import Q
 
 from dirts.models import Defect, Status, Priority, DefectHistoryItem
-from django.core.paginator import Paginator
 
-def latest_dirts(keyword, page_nr=1):
+def latest_dirts(keyword):
     query = Q(reference__icontains=keyword) \
     | Q(description__icontains=keyword) \
     | Q(comments__icontains=keyword) \
     | Q(release_id__icontains=keyword)
-    
-    defects = Defect.objects.filter(query).order_by('-date_created')[:50];
 
-    return Paginator(defects, 10).page(page_nr)
+    return Defect.objects.filter(query).order_by('-date_created')
 
 def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)

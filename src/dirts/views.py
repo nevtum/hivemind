@@ -1,14 +1,18 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from dirts.services import dirt_manager
 from dirts.forms import CreateDirtForm, ReopenDirtForm
 
 def index(request):
+    page_nr = 1
     search_param = _extract_search_parameters(request)
     defects = dirt_manager.latest_dirts(search_param)
-    return render(request, 'dirt_list.html', {'defects': defects})
+    viewmodel = Paginator(defects, 25).page(page_nr)
+    
+    return render(request, 'dirt_list.html', {'defects': viewmodel})
 
 def detail(request, dirt_id):
     data = {
