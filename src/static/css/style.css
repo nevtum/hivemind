@@ -11,7 +11,8 @@ body {
   color: #ADA5C6;
 }
 
-#header h1 {
+#brand {
+  font-size: 24;
   font-family: Verdana;
   font-weight: bold;
   color: #C41230;

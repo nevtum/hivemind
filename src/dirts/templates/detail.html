@@ -2,62 +2,60 @@
 
 {% block content %}
 
-<div id="content">
-  <div class="container-fluid">
-    <div id="dirt-summary">
-      <div class="row">
-        <div class="col-sm-12 col-md-3 pull-right">
-          <div id="action-panel" class="row">
-            <ul>
-              {% if dirt.is_active %}
-              <li><a href="{% url 'dirt-amend-url' dirt.id %}">Amend</a></li>
-              <li><a href="{% url 'dirt-close-url' dirt.id %}">Close</a></li>
-              {% else %}
-              <li><a href="{% url 'dirt-reopen-url' dirt.id %}">Re-open</a></li>
-              <li><a href="{% url 'dirt-delete-url' dirt.id %}">Delete</a></li>
-              {% endif %}
-              <li><a href="{% url 'create-similar-url' dirt.id %}">Raise similar</a></li>              
-            </ul>
+<div class="container-fluid">
+  <div id="dirt-summary">
+    <div class="row">
+      <div class="col-sm-12 col-md-3 pull-right">
+        <div id="action-panel" class="row">
+          <ul>
+            {% if dirt.is_active %}
+            <li><a href="{% url 'dirt-amend-url' dirt.id %}">Amend</a></li>
+            <li><a href="{% url 'dirt-close-url' dirt.id %}">Close</a></li>
+            {% else %}
+            <li><a href="{% url 'dirt-reopen-url' dirt.id %}">Re-open</a></li>
+            <li><a href="{% url 'dirt-delete-url' dirt.id %}">Delete</a></li>
+            {% endif %}
+            <li><a href="{% url 'create-similar-url' dirt.id %}">Raise similar</a></li>              
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-9">
+          <div id="dirt-header">
+            <h2>{{ dirt.reference }} ({{ dirt.status }})</h2>
+            <h3>Release ID: {{ dirt.release_id }}</h3>
+            <h4>Raised by {{ dirt.submitter.get_full_name }}, {{ dirt.date_created}}</h4>
+            <h4>Priority: {{ dirt.priority.name }}</h4>
           </div>
-        </div>
-        <div class="col-md-9">
-            <div id="dirt-header">
-              <h2>{{ dirt.reference }} ({{ dirt.status }})</h2>
-              <h3>Release ID: {{ dirt.release_id }}</h3>
-              <h4>Raised by {{ dirt.submitter.get_full_name }}, {{ dirt.date_created}}</h4>
-              <h4>Priority: {{ dirt.priority.name }}</h4>
-            </div>
-            <div id="dirt-detail">
-              <p>{{ dirt.description | linebreaksbr }}</p>
-              <p>Comments: {{ dirt.comments | linebreaksbr }}</p>
-            </div>
-        </div>
+          <div id="dirt-detail">
+            <p>{{ dirt.description | linebreaksbr }}</p>
+            <p>Comments: {{ dirt.comments | linebreaksbr }}</p>
+          </div>
       </div>
-      {% if history %}
-      <div class="row">
-        <div class="col-md-12">
-          <hr>
-          <h5>Change history</h5>
-          <table id="history-list" class="table table-striped table-condensed">
-            <tbody>
-              <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Modified by</th>
-              </tr>
-              {% for change in history %}
-              <tr>
-                <td>{{ change.date_created | date:"SHORT_DATETIME_FORMAT" }}</td>
-                <td>{{ change.short_desc }}</td>
-                <td>{{ change.submitter.get_full_name }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      {% endif %}
     </div>
+    {% if history %}
+    <div class="row">
+      <div class="col-md-12">
+        <hr>
+        <h5>Change history</h5>
+        <table id="history-list" class="table table-striped table-condensed">
+          <tbody>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Modified by</th>
+            </tr>
+            {% for change in history %}
+            <tr>
+              <td>{{ change.date_created | date:"SHORT_DATETIME_FORMAT" }}</td>
+              <td>{{ change.short_desc }}</td>
+              <td>{{ change.submitter.get_full_name }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
   </div>
 </div>
 
