@@ -7,7 +7,7 @@ from dirts.services import dirt_manager
 from dirts.forms import CreateDirtForm, ReopenDirtForm
 
 def index(request):
-    page_nr = 1
+    page_nr = _extract_page_nr(request)
     search_param = _extract_search_parameters(request)
     defects = dirt_manager.latest_dirts(search_param)
     viewmodel = Paginator(defects, 25).page(page_nr)
@@ -102,3 +102,9 @@ def _extract_search_parameters(request):
     if query:
         return query
     return ''
+
+def _extract_page_nr(request):
+    page_nr = request.GET.get('page')
+    if page_nr:
+        return page_nr
+    return 1
