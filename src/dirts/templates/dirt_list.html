@@ -50,6 +50,21 @@
           </tbody>
         </table>
       </div>
+      <div class="pagination">
+        <span class="step-links">
+            {% if defects.has_previous %}
+                <a href="?page={{ defects.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ defects.number }} of {{ defects.paginator.num_pages }}.
+            </span>
+    
+            {% if defects.has_next %}
+                <a href="?page={{ defects.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+      </div>
     </div>
   </div>
 </div>
