@@ -14,6 +14,14 @@ web:
   volumes_from:
     - data
   ports:
-    - "8015:8015"
+    - "8001"
   links:
     - postgres_db:pgdb
+reverse_proxy:
+  build: ./nginx
+  volumes_from:
+    - data
+  ports:
+    - "81:8015"
+  links:
+    - web:localhost
