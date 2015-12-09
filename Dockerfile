@@ -2,10 +2,6 @@ FROM django:latest
 
 MAINTAINER Neville Tummon
 
-RUN apt-get update && apt-get install nginx -y
-RUN rm /etc/nginx/sites-enabled/default
-ADD nginx/ /etc/nginx/sites-enabled
-
 ADD requirements/ .
 RUN pip install -r dev.txt
 
