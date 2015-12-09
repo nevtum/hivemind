@@ -1,0 +1,19 @@
+data:
+  image: busybox
+  volumes:
+    - ./volume/:/web_app/volume/
+    - /web_app/static/
+postgres_db:
+  image: postgres
+  environment:
+    POSTGRES_PASSWORD: mypassword
+    POSTGRES_USER: echelon_user
+web:
+  build: .
+  command: sh entry-point.sh
+  volumes_from:
+    - data
+  ports:
+    - "8015:8015"
+  links:
+    - postgres_db:pgdb
