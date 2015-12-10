@@ -1,0 +1,27 @@
+data:
+  build: ./volume
+  volumes:
+    - /web_app/volume/
+    - /web_app/static/
+postgres_db:
+  image: postgres
+  environment:
+    POSTGRES_PASSWORD: mypassword
+    POSTGRES_USER: echelon_user
+web:
+  build: .
+  command: sh entry-point.sh
+  volumes_from:
+    - data
+  ports:
+    - "8001"
+  links:
+    - postgres_db:pgdb
+reverse_proxy:
+  build: ./nginx
+  volumes_from:
+    - data
+  ports:
+    - "81:8015"
+  links:
+    - web:localhost

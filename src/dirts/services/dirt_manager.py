@@ -5,6 +5,7 @@ from dirts.models import Defect, Status, Priority, DefectHistoryItem
 
 def latest_dirts(keyword):
     query = Q(reference__icontains=keyword) \
+    | Q(project_code__icontains=keyword) \
     | Q(description__icontains=keyword) \
     | Q(comments__icontains=keyword) \
     | Q(release_id__icontains=keyword)
