@@ -1,7 +1,7 @@
 data:
-  image: busybox
+  build: ./volume
   volumes:
-    - ./volume/:/web_app/volume/
+    - /web_app/volume/
     - /web_app/static/
 postgres_db:
   image: postgres
