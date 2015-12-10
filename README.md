@@ -25,25 +25,15 @@ Echelon writes and reads from a PostgreSQL database within a separate Docker con
 
     $ sh install_pgsql.sh
 
-Build
+Build & Deploy
 ==================
 
-When deploying a production ready instance of BMM Echelon using Docker make sure Docker is properly installed on the system prior to building an image. To build a Docker image  of the project go to the directory where this README file is located and type the following:
+When deploying a production ready instance of BMM Echelon using Docker make sure Docker and Docker Compose is properly installed on the system prior to building an image. To build a Docker image  of the project go to the directory where this README file is located and type the following:
 
-    $ docker build -t <image name> .
+    $ docker-compose build
+    $ docker-compose up -d
 
-Deploy
-==================
-
-To run a new container from the built image type the following:
-
-    $ docker run -it -d --name <app name> -p <host port>:8015 --link <db name>:localhost <image name>
-
-Alternatively, run the following in the scripts folder:
-
-    $ sh release_app.sh
-
-This script will conveniently build and (re)deploy a new instance of Echelon. Use this script when updating to a new version of the app.
+The same sequence of commands can be used when updating a new version of the BMM Echelon django application. But BE CAREFUL not to change any Docker settings for the PostGreSQL database container unless you're looking to delete ALL DATA in the existing database instance container.
 
 Populating database for 1st time (Production only)
 ==================
@@ -55,7 +45,7 @@ The fresh db install will initially have no data so there are a few more steps n
 
 This only needs to be done once and not everytime a new Echelon release is scheduled. Make sure an Echelon container is running and linked to the database container:
 
-    $ docker exec -it <app name> /bin/bash
+    $ docker exec -it <web app name> bash
 
 Inside the container, run these commands, then exit out of the container:
 
