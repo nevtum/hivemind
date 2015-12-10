@@ -1,5 +1,7 @@
+import json
 from django.utils import timezone
 from django.db.models import Q
+from common.models import DomainEvent
 
 from dirts.models import Defect, Status, Priority, DefectHistoryItem
 
@@ -37,6 +39,23 @@ def raise_dirt(**kwargs):
     defect.description = kwargs['description']
     defect.comments = kwargs['comments']
     defect.save()
+    
+    data = {
+        'project_code': defect.project_code,
+        'release_id': defect.release_id,
+        'priority': defect.priority.name,
+        'reference': defect.reference,
+        'description': defect.description,
+        'comments': defect.comments
+    }
+    
+    event = DomainEvent()
+    event.event_type = 'DIRT.OPENED'
+    event.aggregate_id = defect.id
+    event.date_occurred = defect.date_created
+    event.username = defect.submitter.username
+    event.blob = json.dumps(data)
+    event.save()
 
     entry = DefectHistoryItem()
     entry.date_created = kwargs['date_created']
