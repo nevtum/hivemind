@@ -18,7 +18,9 @@ def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
 
 def get_history(dirt_id):
-    return DefectHistoryItem.objects.filter(defect=dirt_id).order_by('-date_created')
+    events = DomainEvent.objects.filter(aggregate_id=dirt_id).order_by('-date_occurred')
+    return events
+    # return DefectHistoryItem.objects.filter(defect=dirt_id).order_by('-date_created')
 
 def get_copy(dirt_id):
     defect = get_detail(dirt_id)
@@ -49,13 +51,7 @@ def raise_dirt(**kwargs):
         'comments': defect.comments
     }
     
-    event = DomainEvent()
-    event.event_type = 'DIRT.OPENED'
-    event.aggregate_id = defect.id
-    event.date_occurred = defect.date_created
-    event.username = defect.submitter.username
-    event.blob = json.dumps(data)
-    event.save()
+    _save_event('DIRT.OPENED', defect.id, defect.date_created, defect.submitter.username, data)
 
     entry = DefectHistoryItem()
     entry.date_created = kwargs['date_created']
@@ -87,14 +83,8 @@ def amend_dirt(dirt_id, **kwargs):
         'description': defect.description,
         'comments': defect.comments
     }
-    
-    event = DomainEvent()
-    event.event_type = 'DIRT.AMENDED'
-    event.aggregate_id = defect.id
-    event.date_occurred = timezone.now()
-    event.username = kwargs['submitter']
-    event.blob = json.dumps(data)
-    event.save()
+
+    _save_event('DIRT.AMENDED', dirt_id, timezone.now(), kwargs['submitter'], data)
 
     entry = DefectHistoryItem()
     entry.date_created = kwargs['date_created']
@@ -113,13 +103,7 @@ def reopen(dirt_id, user, release_id, reason):
         'reason': reason
     }
     
-    event = DomainEvent()
-    event.event_type = 'DIRT.REOPENED'
-    event.aggregate_id = dirt_id
-    event.date_occurred = timezone.now()
-    event.username = user
-    event.blob = json.dumps(data)
-    event.save()
+    _save_event('DIRT.REOPENED', dirt_id, timezone.now(), user, data)
     
     entry = DefectHistoryItem()
     entry.date_created = timezone.now()
@@ -138,13 +122,7 @@ def close_dirt(dirt_id, user, reason = ''):
         'reason': reason
     }
     
-    event = DomainEvent()
-    event.event_type = 'DIRT.CLOSED'
-    event.aggregate_id = dirt_id
-    event.date_occurred = timezone.now()
-    event.username = user
-    event.blob = json.dumps(data)
-    event.save()
+    _save_event('DIRT.CLOSED', dirt_id, timezone.now(), user, data)
 
     entry = DefectHistoryItem()
     entry.date_created = timezone.now()
@@ -157,10 +135,13 @@ def delete_dirt(dirt_id):
     Defect.objects.get(id=dirt_id).delete()
     DefectHistoryItem.objects.filter(defect=dirt_id).delete()
     
+    _save_event('DIRT.DELETED', dirt_id, timezone.now(), 'someone', '{}')
+
+def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
     event = DomainEvent()
-    event.event_type = 'DIRT.DELETED'
+    event.event_type = event_type
     event.aggregate_id = dirt_id
-    event.date_occurred = timezone.now()
-    event.username = 'someone'
-    event.blob = '{}'
+    event.date_occurred = date_occurred
+    event.username = username
+    event.blob = json.dumps(dictionary, indent=2)
     event.save()

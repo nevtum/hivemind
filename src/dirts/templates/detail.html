@@ -46,9 +46,9 @@
             </tr>
             {% for change in history %}
             <tr>
-              <td>{{ change.date_created | date:"SHORT_DATETIME_FORMAT" }}</td>
-              <td>{{ change.short_desc }}</td>
-              <td>{{ change.submitter.get_full_name }}</td>
+              <td>{{ change.date_occurred | date:"SHORT_DATETIME_FORMAT" }}</td>
+              <td>{{ change.event_type }}</td>
+              <td>{{ change.username }}</td>
             </tr>
             {% endfor %}
           </tbody>
