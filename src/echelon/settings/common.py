@@ -32,7 +32,7 @@ INSTALLED_APPS = [
 ]
 
 INSTALLED_APPS += [
-    'echelon',
+    'common',
     'clients',
     'dirts'
 ]
