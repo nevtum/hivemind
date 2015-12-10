@@ -18,13 +18,6 @@ To get started with a debug instance of the django server run the following:
 
     $ python dev_manage.py runserver
 
-Install new database instance (Production only)
-==================
-
-Echelon writes and reads from a PostgreSQL database within a separate Docker container instance. To create this new container go into the scripts folder and execute the following:
-
-    $ sh install_pgsql.sh
-
 Build & Deploy
 ==================
 
