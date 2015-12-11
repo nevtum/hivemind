@@ -1,5 +1,5 @@
 from datetime import datetime
-from dirts.constants import DIRT.OPENED, DIRT.AMENDED, DIRT.REOPENED, DIRT.CLOSED
+from dirts.constants import DIRT_OPENED, DIRT_AMENDED, DIRT_REOPENED, DIRT_CLOSED
 
 class DefectViewModel(object):
     def __init__(self, defect_events):
@@ -7,13 +7,13 @@ class DefectViewModel(object):
     
     def apply(self, event):
         e = event.deserialized()
-        if event.event_type == DIRT.OPENED:
+        if event.event_type == DIRT_OPENED:
             return self._on_opened(e)
-        if event.event_type == DIRT.AMENDED:
+        if event.event_type == DIRT_AMENDED:
             return self._on_amended(e)
-        if event.event_type == DIRT.REOPENED:
+        if event.event_type == DIRT_REOPENED:
             return self._on_reopened(e)
-        if event.event_type == DIRT.CLOSED:
+        if event.event_type == DIRT_CLOSED:
             return self._on_closed(e)
     
     def _replay_from(self, defect_events):
@@ -26,21 +26,23 @@ class DefectViewModel(object):
     
     def _on_closed(self, e):
         self.status = 'Closed'
-        self.release_id = e.release_id
-        self.comments += _add_to_comments(e.reason)
+        self.release_id = e['release_id']
+        self.comments += _add_to_comments(e['reason'])
     
     def _on_reopened(self, e):
+        dir(e)
+        print('*****************************')
         self.status = 'Open'
-        self.release_id = e.release_id
-        self.comments += _add_to_comments(e.reason)
+        self.release_id = e['release_id']
+        self.comments += _add_to_comments(e['reason'])
     
     def _on_amended(self, e):
-        self.project_code = e.project_code
-        self.release_id = e.release_id
-        self.priority = e.priority
-        self.reference = e.reference
-        self.description = e.description
-        self.comments = e.comments
+        self.project_code = e['project_code']
+        self.release_id = e['release_id']
+        self.priority = e['priority']
+        self.reference = e['reference']
+        self.description = e['description']
+        self.comments = e['comments']
 
 def _add_to_comments(reason):
     if reason == '':
