@@ -1,9 +1,11 @@
 import json
 from django.utils import timezone
 from django.db.models import Q
-from common.models import DomainEvent
 
+from common.models import DomainEvent
 from dirts.models import Defect, Status, Priority, DefectHistoryItem
+from dirts.constants import (DIRT_OPENED, DIRT_REOPENED, 
+DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED)
 
 def latest_dirts(keyword):
     query = Q(reference__icontains=keyword) \
@@ -52,7 +54,7 @@ def raise_dirt(**kwargs):
         'comments': defect.comments
     }
     
-    _save_event('DIRT.OPENED', defect.id, defect.date_created, defect.submitter.username, data)
+    _save_event(DIRT_OPENED, defect.id, defect.date_created, defect.submitter.username, data)
 
     entry = DefectHistoryItem()
     entry.date_created = kwargs['date_created']
@@ -85,7 +87,7 @@ def amend_dirt(dirt_id, **kwargs):
         'comments': defect.comments
     }
 
-    _save_event('DIRT.AMENDED', dirt_id, timezone.now(), kwargs['submitter'], data)
+    _save_event(DIRT_AMENDED, dirt_id, timezone.now(), kwargs['submitter'], data)
 
     entry = DefectHistoryItem()
     entry.date_created = kwargs['date_created']
@@ -99,12 +101,11 @@ def reopen(dirt_id, user, release_id, reason):
     defect.reopen(release_id, reason)
 
     data = {
-        'project_code': defect.project_code,
         'release_id': release_id,
         'reason': reason
     }
     
-    _save_event('DIRT.REOPENED', dirt_id, timezone.now(), user, data)
+    _save_event(DIRT_REOPENED, dirt_id, timezone.now(), user, data)
     
     entry = DefectHistoryItem()
     entry.date_created = timezone.now()
@@ -118,12 +119,11 @@ def close_dirt(dirt_id, release_id, reason, user):
     defect.close(release_id)
 
     data = {
-        'project_code': defect.project_code,
         'release_id': defect.release_id,
         'reason': reason
     }
     
-    _save_event('DIRT.CLOSED', dirt_id, timezone.now(), user, data)
+    _save_event(DIRT_CLOSED, dirt_id, timezone.now(), user, data)
     
     entry = DefectHistoryItem()
     entry.date_created = timezone.now()
@@ -136,7 +136,7 @@ def delete_dirt(dirt_id, user):
     Defect.objects.get(id=dirt_id).delete()
     DefectHistoryItem.objects.filter(defect=dirt_id).delete()
     
-    _save_event('DIRT.DELETED', dirt_id, timezone.now(), user, '{}')
+    _save_event(DIRT_DELETED, dirt_id, timezone.now(), user, '{}')
 
 def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
     event = DomainEvent()

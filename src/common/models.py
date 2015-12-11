@@ -1,3 +1,4 @@
+import json
 from django.db import models
 
 class DomainEvent(models.Model):
@@ -7,6 +8,9 @@ class DomainEvent(models.Model):
 	blob = models.TextField()
 	date_occurred = models.DateTimeField()
 	username = models.CharField(max_length=50)
+	
+	def deserialized(self):
+		return json.loads(self.blob)
 	
 	def __str__(self):
 		return "[%s] - #%s (%s)" % (self.aggregate_type, self.aggregate_id, self.event_type)
