@@ -16,7 +16,7 @@ def index(request):
 
 def detail(request, dirt_id):
     data = {
-        'dirt': dirt_manager.get_detail(dirt_id),
+        'dirt': dirt_manager.get_new_model(dirt_id),
         'history': dirt_manager.get_history(dirt_id),
     }
     return render(request, 'detail.html', data)

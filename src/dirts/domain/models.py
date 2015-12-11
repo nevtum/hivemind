@@ -8,6 +8,9 @@ class DefectViewModel(object):
     def apply(self, event):
         e = event.deserialized()
         if event.event_type == DIRT_OPENED:
+            self.id = event.aggregate_id
+            self.submitter = event.username
+            self.date_created = event.date_occurred
             return self._on_opened(e)
         if event.event_type == DIRT_AMENDED:
             return self._on_amended(e)
@@ -15,6 +18,9 @@ class DefectViewModel(object):
             return self._on_reopened(e)
         if event.event_type == DIRT_CLOSED:
             return self._on_closed(e)
+    
+    def is_active(self):
+        return self.status != "Closed"
     
     def _replay_from(self, defect_events):
         for event in defect_events:

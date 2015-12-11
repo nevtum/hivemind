@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.db.models import Q
 
 from common.models import DomainEvent
+from dirts.domain.models import DefectViewModel
 from dirts.models import Defect, Status, Priority, DefectHistoryItem
 from dirts.constants import (DIRT_OPENED, DIRT_REOPENED, 
 DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED)
@@ -15,6 +16,12 @@ def latest_dirts(keyword):
     | Q(release_id__icontains=keyword)
 
     return Defect.objects.filter(query).order_by('-date_created')
+
+def get_new_model(dirt_id):
+    events = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id)
+    if len(events) > 0:
+        return DefectViewModel(events)
+    return Defect.objects.get(pk=dirt_id)
 
 def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
@@ -162,5 +169,5 @@ def _to_event(defect_history_item):
     event = DomainEvent()
     event.username = defect_history_item.submitter.username
     event.date_occurred = defect_history_item.date_created
-    event.event_type = defect_history_item.short_desc
+    event.blob = defect_history_item.short_desc
     return event

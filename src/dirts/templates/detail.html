@@ -23,8 +23,8 @@
           <div id="dirt-header">
             <h2>{{ dirt.reference }} ({{ dirt.status }})</h2>
             <h3>Release ID: {{ dirt.release_id }}</h3>
-            <h4>Raised by {{ dirt.submitter.get_full_name }}, {{ dirt.date_created}}</h4>
-            <h4>Priority: {{ dirt.priority.name }}</h4>
+            <h4>Raised by {{ dirt.submitter }}, {{ dirt.date_created }}</h4>
+            <h4>Priority: {{ dirt.priority }}</h4>
           </div>
           <div id="dirt-detail">
             <p>{{ dirt.description | linebreaksbr }}</p>
@@ -47,7 +47,7 @@
             {% for change in history %}
             <tr>
               <td>{{ change.date_occurred | date:"SHORT_DATETIME_FORMAT" }}</td>
-              <td>{{ change.event_type }}</td>
+              <td>{{ change.blob | linebreaksbr }}</td>
               <td>{{ change.username }}</td>
             </tr>
             {% endfor %}
