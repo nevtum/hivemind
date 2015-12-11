@@ -22,7 +22,7 @@ class Defect(models.Model):
     priority = models.ForeignKey(Priority, default=1)
     reference = models.CharField(max_length=80)
     description = models.TextField()
-    comments = models.TextField()
+    comments = models.TextField(blank=True)
 
     def __str__(self):
         return str(self.date_created)
