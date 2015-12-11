@@ -39,8 +39,9 @@ class Defect(models.Model):
         self.comments += "\n%s" % reason
         self.save()
 
-    def close(self):
+    def close(self, release_id):
         self.status = Status.objects.get(name='Closed')
+        self.release_id = release_id
         self.save()
 
 class DefectHistoryItem(models.Model):

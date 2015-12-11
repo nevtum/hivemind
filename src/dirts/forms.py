@@ -6,12 +6,12 @@ class CreateDirtForm(ModelForm):
     class Meta:
         model = Defect
         fields = [
-        'project_code',
-        'release_id',
-        'priority',
-        'reference',
-        'description',
-        'comments',
+            'project_code',
+            'release_id',
+            'priority',
+            'reference',
+            'description',
+            'comments',
         ]
         widgets = {
             'description': Textarea(attrs={'cols': 80}),
@@ -24,5 +24,14 @@ class ReopenDirtForm(ModelForm, forms.Form):
     class Meta:
         model = Defect
         fields = [
-        'release_id',
+            'release_id',
         ]
+
+class CloseDirtForm(ModelForm, forms.Form):
+    class Meta:
+        model = Defect
+        fields = [
+            'release_id',
+        ]
+        
+    reason = forms.CharField(widget=forms.Textarea, required=False)

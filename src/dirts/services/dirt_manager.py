@@ -112,10 +112,10 @@ def reopen(dirt_id, user, release_id, reason):
     entry.submitter = user
     entry.save()
 
-def close_dirt(dirt_id, user, reason = ''):
+def close_dirt(dirt_id, release_id, reason, user):
     defect = Defect.objects.get(id=dirt_id)
-    defect.close()
-    
+    defect.close(release_id)
+
     data = {
         'project_code': defect.project_code,
         'release_id': defect.release_id,
@@ -123,11 +123,11 @@ def close_dirt(dirt_id, user, reason = ''):
     }
     
     _save_event('DIRT.CLOSED', dirt_id, timezone.now(), user, data)
-
+    
     entry = DefectHistoryItem()
     entry.date_created = timezone.now()
     entry.defect = defect
-    entry.short_desc = "DIRT closed. Version %s." % defect.release_id
+    entry.short_desc = _close_dirt_desc(release_id, reason)
     entry.submitter = user
     entry.save()
 
@@ -145,3 +145,8 @@ def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
     event.username = username
     event.blob = json.dumps(dictionary, indent=2)
     event.save()
+
+def _close_dirt_desc(release_id, reason):
+    if reason == '':
+        return "DIRT closed. Version %s." % release_id
+    return "DIRT closed. Version %s. [%s]" % (release_id, reason)
