@@ -19,8 +19,9 @@ def get_detail(dirt_id):
 
 def get_history(dirt_id):
     events = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id).order_by('-date_occurred')
-    return events
-    # return DefectHistoryItem.objects.filter(defect=dirt_id).order_by('-date_created')
+    if len(events) > 0:
+        return events
+    return _converted_history(dirt_id)
 
 def get_copy(dirt_id):
     defect = get_detail(dirt_id)
@@ -151,3 +152,15 @@ def _close_dirt_desc(release_id, reason):
     if reason == '':
         return "DIRT closed. Version %s." % release_id
     return "DIRT closed. Version %s. [%s]" % (release_id, reason)
+
+def _converted_history(dirt_id):
+     items = DefectHistoryItem.objects.filter(defect=dirt_id).order_by('-date_created')
+     arr = [_to_event(item) for item in items]
+     return arr
+
+def _to_event(defect_history_item):
+    event = DomainEvent()
+    event.username = defect_history_item.submitter.username
+    event.date_occurred = defect_history_item.date_created
+    event.event_type = defect_history_item.short_desc
+    return event
