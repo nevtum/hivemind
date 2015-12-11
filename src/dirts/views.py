@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from dirts.services import dirt_manager
-from dirts.forms import CreateDirtForm, ReopenDirtForm
+from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm
 
 def index(request):
     page_nr = _extract_page_nr(request)
@@ -70,9 +70,20 @@ def amend(request, dirt_id):
 
 @login_required(login_url='/login/')
 def close(request, dirt_id):
-    # Very basic functionality for now
-    # To add confirmation screen if not marked accepted/rejected.
-    dirt_manager.close_dirt(dirt_id, request.user)
+    dirt = dirt_manager.get_detail(dirt_id)
+    if request.method == 'GET':
+        form = CloseDirtForm(instance=dirt)
+        return render(request, 'close.html', {'form': form, 'dirt': dirt})
+    
+    # otherwise post
+    form = CloseDirtForm(request.POST)
+    if not form.is_valid():
+        return render(request, 'close.html', {'form': form, 'dirt': dirt})
+    
+    reason = request.POST['reason']
+    release_id = request.POST['release_id']
+    
+    dirt_manager.close_dirt(dirt_id, release_id, reason, request.user)
     return redirect('dirt-detail-url', dirt_id)
 
 @login_required(login_url='/login/')

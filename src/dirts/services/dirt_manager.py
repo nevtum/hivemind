@@ -78,23 +78,22 @@ def reopen(dirt_id, user, release_id, reason):
     entry.submitter = user
     entry.save()
 
-def mark_accepted(dirt_id):
-    pass
-
-def mark_rejected(dirt_id, reason):
-    pass
-
-def close_dirt(dirt_id, user):
+def close_dirt(dirt_id, release_id, reason, user):
     defect = Defect.objects.get(id=dirt_id)
-    defect.close()
+    defect.close(release_id)
 
     entry = DefectHistoryItem()
     entry.date_created = timezone.now()
     entry.defect = defect
-    entry.short_desc = "DIRT closed. Version %s." % defect.release_id
+    entry.short_desc = _close_dirt_desc(release_id, reason)
     entry.submitter = user
     entry.save()
 
 def delete_dirt(dirt_id):
     Defect.objects.get(id=dirt_id).delete()
     DefectHistoryItem.objects.filter(defect=dirt_id).delete()
+
+def _close_dirt_desc(release_id, reason):
+    if reason == '':
+        return "DIRT closed. Version %s." % release_id
+    return "DIRT closed. Version %s. [%s]" % (release_id, reason)
