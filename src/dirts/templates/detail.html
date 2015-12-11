@@ -47,7 +47,7 @@
             {% for change in history %}
             <tr>
               <td>{{ change.date_occurred | date:"SHORT_DATETIME_FORMAT" }}</td>
-              <td>{{ change.blob | linebreaksbr }}</td>
+              <td>{{ change.event_type | linebreaksbr }}</td>
               <td>{{ change.username }}</td>
             </tr>
             {% endfor %}

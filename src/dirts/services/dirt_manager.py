@@ -169,5 +169,5 @@ def _to_event(defect_history_item):
     event = DomainEvent()
     event.username = defect_history_item.submitter.username
     event.date_occurred = defect_history_item.date_created
-    event.blob = defect_history_item.short_desc
+    event.event_type = defect_history_item.short_desc
     return event
