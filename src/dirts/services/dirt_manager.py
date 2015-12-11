@@ -18,7 +18,7 @@ def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
 
 def get_history(dirt_id):
-    events = DomainEvent.objects.filter(aggregate_id=dirt_id).order_by('-date_occurred')
+    events = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id).order_by('-date_occurred')
     return events
     # return DefectHistoryItem.objects.filter(defect=dirt_id).order_by('-date_created')
 
@@ -141,6 +141,7 @@ def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
     event = DomainEvent()
     event.event_type = event_type
     event.aggregate_id = dirt_id
+    event.aggregate_type = 'DEFECT'
     event.date_occurred = date_occurred
     event.username = username
     event.blob = json.dumps(dictionary, indent=2)
