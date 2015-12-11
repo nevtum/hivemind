@@ -109,7 +109,7 @@ def delete(request, dirt_id):
         return render(request, 'delete_confirmation.html', {'id': dirt_id})
 
     # otherwise post
-    dirt_manager.delete_dirt(dirt_id)
+    dirt_manager.delete_dirt(dirt_id, request.user)
     return redirect('dirts-landing-url')
 
 def _create_args(request):

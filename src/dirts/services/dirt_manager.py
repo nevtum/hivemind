@@ -131,11 +131,11 @@ def close_dirt(dirt_id, release_id, reason, user):
     entry.submitter = user
     entry.save()
 
-def delete_dirt(dirt_id):
+def delete_dirt(dirt_id, user):
     Defect.objects.get(id=dirt_id).delete()
     DefectHistoryItem.objects.filter(defect=dirt_id).delete()
     
-    _save_event('DIRT.DELETED', dirt_id, timezone.now(), 'someone', '{}')
+    _save_event('DIRT.DELETED', dirt_id, timezone.now(), user, '{}')
 
 def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
     event = DomainEvent()
