@@ -9,4 +9,4 @@ class DomainEvent(models.Model):
 	username = models.CharField(max_length=50)
 	
 	def __str__(self):
-		return "[%s] - #%s" % (self.event_type, self.aggregate_id)
+		return "[%s] - #%s (%s)" % (self.aggregate_type, self.aggregate_id, self.event_type)
