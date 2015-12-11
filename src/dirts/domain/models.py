@@ -30,8 +30,6 @@ class DefectViewModel(object):
         self.comments += _add_to_comments(e['reason'])
     
     def _on_reopened(self, e):
-        dir(e)
-        print('*****************************')
         self.status = 'Open'
         self.release_id = e['release_id']
         self.comments += _add_to_comments(e['reason'])
