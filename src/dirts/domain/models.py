@@ -18,8 +18,6 @@ class DefectViewModel(object):
     
     def apply(self, event):
         e = event.deserialized()
-        print(event.event_type)
-        print(e)
         date = event.date_occurred
         username = event.username
         if event.event_type == DIRT_OPENED:

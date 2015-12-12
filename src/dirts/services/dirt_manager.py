@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db.models import Q
 
 from common.models import DomainEvent
+from common import store as EventStore
 from dirts.domain.models import DefectViewModel
 from dirts.models import Defect, Status, Priority
 from dirts.constants import (DIRT_OPENED, DIRT_REOPENED, 
@@ -18,7 +19,7 @@ def latest_dirts(keyword):
     return Defect.objects.filter(query).order_by('-date_created')
 
 def get_new_model(dirt_id):
-    events = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id)
+    events = EventStore.get_events_for('DEFECT', dirt_id)
     return DefectViewModel(events)
 
 def get_detail(dirt_id):
