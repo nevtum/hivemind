@@ -47,7 +47,7 @@
             {% for change in dirt.change_history %}
             <tr>
               <td>{{ change.date_created | date:"SHORT_DATETIME_FORMAT" }}</td>
-              <td>{{ change.description | linebreaksbr }}</td>
+              <td class="desc">{{ change.description | linebreaksbr }}</td>
               <td>{{ change.submitter }}</td>
             </tr>
             {% endfor %}
