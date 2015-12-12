@@ -1,5 +1,5 @@
 import json
-from django.utils import timezone
+from datetime import datetime
 from django.db.models import Q
 
 from common.models import DomainEvent
@@ -80,7 +80,7 @@ def amend_dirt(dirt_id, **kwargs):
         'comments': defect.comments
     }
 
-    _save_event(DIRT_AMENDED, dirt_id, timezone.now(), kwargs['submitter'], data)
+    _save_event(DIRT_AMENDED, dirt_id, datetime.now(), kwargs['submitter'], data)
 
 def reopen(dirt_id, user, release_id, reason):
     defect = Defect.objects.get(id=dirt_id)
@@ -91,7 +91,7 @@ def reopen(dirt_id, user, release_id, reason):
         'reason': reason
     }
     
-    _save_event(DIRT_REOPENED, dirt_id, timezone.now(), user, data)
+    _save_event(DIRT_REOPENED, dirt_id, datetime.now(), user, data)
 
 def close_dirt(dirt_id, release_id, reason, user):
     defect = Defect.objects.get(id=dirt_id)
@@ -102,11 +102,11 @@ def close_dirt(dirt_id, release_id, reason, user):
         'reason': reason
     }
     
-    _save_event(DIRT_CLOSED, dirt_id, timezone.now(), user, data)
+    _save_event(DIRT_CLOSED, dirt_id, datetime.now(), user, data)
 
 def delete_dirt(dirt_id, user):
     Defect.objects.get(id=dirt_id).delete()
-    _save_event(DIRT_DELETED, dirt_id, timezone.now(), user, '{}')
+    _save_event(DIRT_DELETED, dirt_id, datetime.now(), user, '{}')
 
 def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
     event = DomainEvent()
