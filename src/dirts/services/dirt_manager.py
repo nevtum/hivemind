@@ -4,7 +4,7 @@ from django.db.models import Q
 
 from common.models import DomainEvent
 from dirts.domain.models import DefectViewModel
-from dirts.models import Defect, Status, Priority, DefectHistoryItem
+from dirts.models import Defect, Status, Priority
 from dirts.constants import (DIRT_OPENED, DIRT_REOPENED, 
 DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED)
 
@@ -18,19 +18,14 @@ def latest_dirts(keyword):
     return Defect.objects.filter(query).order_by('-date_created')
 
 def get_new_model(dirt_id):
-    events = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id)
-    if len(events) > 0:
-        return DefectViewModel(events)
-    return Defect.objects.get(pk=dirt_id)
+    events = get_history(dirt_id)
+    return DefectViewModel(events)
 
 def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
 
 def get_history(dirt_id):
-    events = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id).order_by('-date_occurred')
-    if len(events) > 0:
-        return events
-    return _converted_history(dirt_id)
+    return DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id).order_by('-date_occurred')
 
 def get_copy(dirt_id):
     defect = get_detail(dirt_id)
@@ -63,12 +58,6 @@ def raise_dirt(**kwargs):
     
     _save_event(DIRT_OPENED, defect.id, defect.date_created, defect.submitter.username, data)
 
-    entry = DefectHistoryItem()
-    entry.date_created = kwargs['date_created']
-    entry.defect = defect
-    entry.short_desc = "DIRT created."
-    entry.submitter = kwargs['submitter']
-    entry.save()
     return defect.id
 
 def amend_dirt(dirt_id, **kwargs):
@@ -96,13 +85,6 @@ def amend_dirt(dirt_id, **kwargs):
 
     _save_event(DIRT_AMENDED, dirt_id, timezone.now(), kwargs['submitter'], data)
 
-    entry = DefectHistoryItem()
-    entry.date_created = kwargs['date_created']
-    entry.defect = defect
-    entry.short_desc = "DIRT amended."
-    entry.submitter = kwargs['submitter']
-    entry.save()
-
 def reopen(dirt_id, user, release_id, reason):
     defect = Defect.objects.get(id=dirt_id)
     defect.reopen(release_id, reason)
@@ -113,13 +95,6 @@ def reopen(dirt_id, user, release_id, reason):
     }
     
     _save_event(DIRT_REOPENED, dirt_id, timezone.now(), user, data)
-    
-    entry = DefectHistoryItem()
-    entry.date_created = timezone.now()
-    entry.defect = defect
-    entry.short_desc = "Reopened. Version %s. [%s]" % (release_id, reason)
-    entry.submitter = user
-    entry.save()
 
 def close_dirt(dirt_id, release_id, reason, user):
     defect = Defect.objects.get(id=dirt_id)
@@ -131,18 +106,9 @@ def close_dirt(dirt_id, release_id, reason, user):
     }
     
     _save_event(DIRT_CLOSED, dirt_id, timezone.now(), user, data)
-    
-    entry = DefectHistoryItem()
-    entry.date_created = timezone.now()
-    entry.defect = defect
-    entry.short_desc = _close_dirt_desc(release_id, reason)
-    entry.submitter = user
-    entry.save()
 
 def delete_dirt(dirt_id, user):
     Defect.objects.get(id=dirt_id).delete()
-    DefectHistoryItem.objects.filter(defect=dirt_id).delete()
-    
     _save_event(DIRT_DELETED, dirt_id, timezone.now(), user, '{}')
 
 def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
@@ -159,15 +125,3 @@ def _close_dirt_desc(release_id, reason):
     if reason == '':
         return "DIRT closed. Version %s." % release_id
     return "DIRT closed. Version %s. [%s]" % (release_id, reason)
-
-def _converted_history(dirt_id):
-     items = DefectHistoryItem.objects.filter(defect=dirt_id).order_by('-date_created')
-     arr = [_to_event(item) for item in items]
-     return arr
-
-def _to_event(defect_history_item):
-    event = DomainEvent()
-    event.username = defect_history_item.submitter.username
-    event.date_occurred = defect_history_item.date_created
-    event.event_type = defect_history_item.short_desc
-    return event
