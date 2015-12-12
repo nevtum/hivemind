@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime, timedelta
 from django.db import models, migrations
 from django.conf import settings
 from common.models import DomainEvent
@@ -29,19 +30,20 @@ def migrate_to_events(apps, schema_editor):
         openevent.blob = json.dumps(data, indent=2)
         openevent.save()
         
-        closedata = {
-            'release_id': d.release_id,
-            'reason': ""
-        }
-        
-        closeevent = DomainEvent()
-        closeevent.event_type = DIRT_CLOSED
-        closeevent.aggregate_id = int(d.id)
-        closeevent.aggregate_type = 'DEFECT'
-        closeevent.date_occurred = d.date_created
-        closeevent.username = d.submitter.username
-        closeevent.blob = json.dumps(closedata, indent=2)
-        closeevent.save()
+        if d.status.name == 'Closed':
+            closedata = {
+                'release_id': d.release_id,
+                'reason': ""
+            }
+            
+            closeevent = DomainEvent()
+            closeevent.event_type = DIRT_CLOSED
+            closeevent.aggregate_id = int(d.id)
+            closeevent.aggregate_type = 'DEFECT'
+            closeevent.date_occurred = d.date_created + timedelta(hours=1)
+            closeevent.username = d.submitter.username
+            closeevent.blob = json.dumps(closedata, indent=2)
+            closeevent.save()
     
 class Migration(migrations.Migration):
 

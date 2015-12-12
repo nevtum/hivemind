@@ -10,11 +10,16 @@ class ChangeHistory(object):
         
 class DefectViewModel(object):
     def __init__(self, defect_events):
+        if len(defect_events) == 0:
+            raise Exception("No events were found for this DIRT")
+        
         self.change_history = []
         self._replay_from(defect_events)
     
     def apply(self, event):
         e = event.deserialized()
+        print(event.event_type)
+        print(e)
         date = event.date_occurred
         username = event.username
         if event.event_type == DIRT_OPENED:
@@ -44,6 +49,7 @@ class DefectViewModel(object):
         ch.date_created = date
         ch.submitter = username
         ch.description = "DIRT closed."
+        # ch.description = e
         self.change_history.insert(0, ch)
     
     def _add_change_dirt_reopened(self, date, username, e):
@@ -51,6 +57,7 @@ class DefectViewModel(object):
         ch.date_created = date
         ch.submitter = username
         ch.description = "DIRT has been reopened."
+        # ch.description = e
         self.change_history.insert(0, ch)
 
     def _add_change_dirt_amended(self, date, username, e):
@@ -58,6 +65,7 @@ class DefectViewModel(object):
         ch.date_created = date
         ch.submitter = username
         ch.description = "DIRT has been modified."
+        # ch.description = e
         self.change_history.insert(0, ch)
     
     def _create_change_dirt_opened(self, date, username):
