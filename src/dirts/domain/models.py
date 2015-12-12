@@ -49,7 +49,8 @@ class DefectViewModel(object):
         ch.date_created = date
         ch.submitter = username
         ch.description = "DIRT closed."
-        # ch.description = e
+        if e['reason'] != "":
+            ch.description += "\nReason: \"%s\"" % e['reason']
         self.change_history.insert(0, ch)
     
     def _add_change_dirt_reopened(self, date, username, e):
@@ -57,7 +58,8 @@ class DefectViewModel(object):
         ch.date_created = date
         ch.submitter = username
         ch.description = "DIRT has been reopened."
-        # ch.description = e
+        if e['reason'] != "":
+            ch.description += "\nReason: \"%s\"" % e['reason']
         self.change_history.insert(0, ch)
 
     def _add_change_dirt_amended(self, date, username, e):
@@ -86,12 +88,10 @@ class DefectViewModel(object):
     def _on_closed(self, e):
         self.status = 'Closed'
         self.release_id = e['release_id']
-        self.comments += _add_to_comments(e['reason'])
     
     def _on_reopened(self, e):
         self.status = 'Open'
         self.release_id = e['release_id']
-        self.comments += _add_to_comments(e['reason'])
     
     def _on_amended(self, e):
         self._set_properties(e)
@@ -103,12 +103,6 @@ class DefectViewModel(object):
         self.reference = e['reference']
         self.description = e['description']
         self.comments = e['comments']
-
-def _add_to_comments(reason):
-    if reason == '':
-        return reason
-    line_break = "\n===================\n"
-    return "%s%s" % (line_break, reason)
 
 class Defect(object):
     """docstring for Defect"""
