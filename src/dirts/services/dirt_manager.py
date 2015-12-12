@@ -1,4 +1,4 @@
-from django.utils import timezone
+from datetime import datetime
 from django.db.models import Q
 
 from dirts.models import Defect, Status, Priority, DefectHistoryItem
@@ -72,7 +72,7 @@ def reopen(dirt_id, user, release_id, reason):
     defect.reopen(release_id, reason)
 
     entry = DefectHistoryItem()
-    entry.date_created = timezone.now()
+    entry.date_created = datetime.now()
     entry.defect = defect
     entry.short_desc = "Reopened. Version %s. [%s]" % (release_id, reason)
     entry.submitter = user
@@ -83,7 +83,7 @@ def close_dirt(dirt_id, release_id, reason, user):
     defect.close(release_id)
 
     entry = DefectHistoryItem()
-    entry.date_created = timezone.now()
+    entry.date_created = datetime.now()
     entry.defect = defect
     entry.short_desc = _close_dirt_desc(release_id, reason)
     entry.submitter = user
