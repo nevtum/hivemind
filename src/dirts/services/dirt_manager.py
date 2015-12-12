@@ -18,14 +18,11 @@ def latest_dirts(keyword):
     return Defect.objects.filter(query).order_by('-date_created')
 
 def get_new_model(dirt_id):
-    events = get_history(dirt_id)
+    events = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id)
     return DefectViewModel(events)
 
 def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
-
-def get_history(dirt_id):
-    return DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=dirt_id)
 
 def get_copy(dirt_id):
     defect = get_detail(dirt_id)
