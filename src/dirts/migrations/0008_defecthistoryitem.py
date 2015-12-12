@@ -22,7 +22,7 @@ def migrate_to_events(apps, schema_editor):
         
         openevent = DomainEvent()
         openevent.event_type = DIRT_OPENED
-        openevent.aggregate_id = d.id
+        openevent.aggregate_id = int(d.id)
         openevent.aggregate_type = 'DEFECT'
         openevent.date_occurred = d.date_created
         openevent.username = d.submitter.username
@@ -36,6 +36,7 @@ def migrate_to_events(apps, schema_editor):
         
         closeevent = DomainEvent()
         closeevent.event_type = DIRT_CLOSED
+        closeevent.aggregate_id = int(d.id)
         closeevent.aggregate_type = 'DEFECT'
         closeevent.date_occurred = d.date_created
         closeevent.username = d.submitter.username
