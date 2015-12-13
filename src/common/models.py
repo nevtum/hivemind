@@ -18,7 +18,7 @@ class DomainEvent(models.Model):
 		agg_id = self.aggregate_id
 		ev_type = self.event_type
 		seq = self.sequence_nr
-		return "[%s] - #%s (%s) %i" % (agg_type, agg_id, ev_type, seq)
+		return "[%s #%i] - %s, Seq: %i" % (agg_type, agg_id, ev_type, seq)
 	
 	class Meta:
 		unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),)

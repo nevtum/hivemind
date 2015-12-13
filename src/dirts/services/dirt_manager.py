@@ -59,21 +59,11 @@ def raise_dirt(**kwargs):
     return defect.id
 
 def amend_dirt(dirt_id, **kwargs):
+    defect = get_new_model(dirt_id)
+    event = defect.amend(kwargs['submitter'], **kwargs)
+    EventStore.append_next(event)
+
     defect = Defect.objects.get(id=dirt_id)
-
-    if defect.status.name != "Open":
-        raise Exception("DIRT must be in open state to amend.")
-    
-    data = {
-        'project_code': defect.project_code,
-        'release_id': defect.release_id,
-        'priority': defect.priority.name,
-        'reference': defect.reference,
-        'description': defect.description,
-        'comments': defect.comments
-    }
-
-    _save_event(DIRT_AMENDED, dirt_id, datetime.now(), kwargs['submitter'], data)
     
     defect.project_code = kwargs['project_code']
     defect.release_id = kwargs['release_id']
