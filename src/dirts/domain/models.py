@@ -104,6 +104,7 @@ class DefectViewModel(object):
         ch.date_created = date
         ch.submitter = username
         ch.description = "DIRT closed."
+        ch.description += "\nVersion: %s" % e['release_id']
         if e['reason'] != "":
             ch.description += "\nReason: \"%s\"" % e['reason']
         self.change_history.insert(0, ch)
@@ -113,6 +114,7 @@ class DefectViewModel(object):
         ch.date_created = date
         ch.submitter = username
         ch.description = "DIRT has been reopened."
+        ch.description += "\nVersion: %s" % e['release_id']
         if e['reason'] != "":
             ch.description += "\nReason: \"%s\"" % e['reason']
         self.change_history.insert(0, ch)
