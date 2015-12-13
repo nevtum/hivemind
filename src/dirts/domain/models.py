@@ -13,6 +13,7 @@ class DefectViewModel(object):
         if len(defect_events) == 0:
             raise Exception("No events were found for this DIRT")
         
+        self.last_sequence_nr = -1
         self.change_history = []
         self._replay_from(defect_events)
     
@@ -77,6 +78,8 @@ class DefectViewModel(object):
     
     def _replay_from(self, defect_events):
         for event in defect_events:
+            self.last_sequence_nr += 1
+            assert(event.sequence_nr == self.last_sequence_nr)
             self.apply(event)
 
     def _on_opened(self, e):
