@@ -36,6 +36,8 @@ class DefectViewModel(object):
         if event.event_type == DIRT_CLOSED:
             self._add_change_dirt_closed(date, username, e)        
             return self._on_closed(e)
+        if event.event_type == DIRT_DELETED:
+            return self._on_deleted(e)
     
     def amend(self, user, **kwargs):
         if self.status != "Open":
@@ -151,6 +153,9 @@ class DefectViewModel(object):
     def _on_reopened(self, e):
         self.status = 'Open'
         self.release_id = e['release_id']
+    
+    def _on_deleted(self, e):
+        self.status = 'Deleted'
     
     def _on_amended(self, e):
         self._set_properties(e)
