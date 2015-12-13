@@ -79,7 +79,7 @@ def reopen(dirt_id, user, release_id, reason):
     EventStore.append_next(event)
     
     defect = Defect.objects.get(id=dirt_id)
-    defect.reopen(release_id, reason)
+    defect.reopen(release_id)
     
 def close_dirt(dirt_id, release_id, reason, user):
     defect = get_new_model(dirt_id)
@@ -90,7 +90,10 @@ def close_dirt(dirt_id, release_id, reason, user):
     defect.close(release_id)
 
 def delete_dirt(dirt_id, user):
-    _save_event(DIRT_DELETED, dirt_id, datetime.now(), user, '{}')
+    defect = get_new_model(dirt_id)
+    event = defect.soft_delete(user)
+    EventStore.append_next(event)
+    
     Defect.objects.get(id=dirt_id).delete()
 
 def _save_event(event_type, dirt_id, date_occurred, username, dictionary):

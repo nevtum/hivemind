@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 from common.models import DomainEvent
 from dirts.constants import (DIRT_OPENED, DIRT_AMENDED,
-DIRT_REOPENED, DIRT_CLOSED)
+DIRT_REOPENED, DIRT_CLOSED, DIRT_DELETED)
 
 class ChangeHistory(object):
     def __init__(self):
@@ -73,6 +73,12 @@ class DefectViewModel(object):
         }
         
         return self._create_event(DIRT_REOPENED, data, user)
+    
+    def soft_delete(self, user):
+        if self.status != "Closed":
+            raise Exception("DIRT must be in closed state to delete.")
+        
+        return self._create_event(DIRT_DELETED, {}, user)
     
     def _create_event(self, event_type, dictionary, username):
         event = DomainEvent()
