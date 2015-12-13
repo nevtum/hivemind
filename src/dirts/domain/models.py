@@ -1,4 +1,6 @@
+import json
 from datetime import datetime
+from common.models import DomainEvent
 from dirts.constants import (DIRT_OPENED, DIRT_AMENDED,
 DIRT_REOPENED, DIRT_CLOSED)
 
@@ -34,6 +36,39 @@ class DefectViewModel(object):
         if event.event_type == DIRT_CLOSED:
             self._add_change_dirt_closed(date, username, e)        
             return self._on_closed(e)
+    
+    def close(self, user, release_id, reason):
+        if self.status == "Closed":
+            raise Exception("DIRT is already closed.")
+        
+        data = {
+            'release_id': release_id,
+            'reason': reason
+        }
+        
+        return self._create_event(DIRT_CLOSED, data, user)
+    
+    def reopen(self, user, release_id, reason):
+        if self.status != "Closed":
+            raise Exception("DIRT must be in closed state to reopen.")
+
+        data = {
+            'release_id': release_id,
+            'reason': reason
+        }
+        
+        return self._create_event(DIRT_REOPENED, data, user)
+    
+    def _create_event(self, event_type, dictionary, username):
+        event = DomainEvent()
+        event.sequence_nr = self.last_sequence_nr+1
+        event.aggregate_id = self.id
+        event.aggregate_type = 'DEFECT'
+        event.date_occurred = datetime.now()
+        event.username = username
+        event.event_type = event_type
+        event.blob = json.dumps(dictionary, indent=2)
+        return event
     
     def is_active(self):
         return self.status != "Closed"

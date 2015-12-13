@@ -63,14 +63,6 @@ def amend_dirt(dirt_id, **kwargs):
 
     if defect.status.name != "Open":
         raise Exception("DIRT must be in open state to amend.")
-
-    defect.project_code = kwargs['project_code']
-    defect.release_id = kwargs['release_id']
-    defect.priority = Priority.objects.get(id=kwargs['priority'])
-    defect.reference = kwargs['reference']
-    defect.description = kwargs['description']
-    defect.comments = kwargs['comments']
-    defect.save()
     
     data = {
         'project_code': defect.project_code,
@@ -82,44 +74,42 @@ def amend_dirt(dirt_id, **kwargs):
     }
 
     _save_event(DIRT_AMENDED, dirt_id, datetime.now(), kwargs['submitter'], data)
+    
+    defect.project_code = kwargs['project_code']
+    defect.release_id = kwargs['release_id']
+    defect.priority = Priority.objects.get(id=kwargs['priority'])
+    defect.reference = kwargs['reference']
+    defect.description = kwargs['description']
+    defect.comments = kwargs['comments']
+    defect.save()
 
 def reopen(dirt_id, user, release_id, reason):
+    defect = get_new_model(dirt_id)
+    event = defect.reopen(user, release_id, reason)
+    EventStore.append_next(event)
+    
     defect = Defect.objects.get(id=dirt_id)
     defect.reopen(release_id, reason)
-
-    data = {
-        'release_id': release_id,
-        'reason': reason
-    }
     
-    _save_event(DIRT_REOPENED, dirt_id, datetime.now(), user, data)
-
 def close_dirt(dirt_id, release_id, reason, user):
+    defect = get_new_model(dirt_id)
+    event = defect.close(user, release_id, reason)
+    EventStore.append_next(event)
+    
     defect = Defect.objects.get(id=dirt_id)
     defect.close(release_id)
 
-    data = {
-        'release_id': defect.release_id,
-        'reason': reason
-    }
-    
-    _save_event(DIRT_CLOSED, dirt_id, datetime.now(), user, data)
-
 def delete_dirt(dirt_id, user):
-    Defect.objects.get(id=dirt_id).delete()
     _save_event(DIRT_DELETED, dirt_id, datetime.now(), user, '{}')
+    Defect.objects.get(id=dirt_id).delete()
 
 def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
     event = DomainEvent()
     event.event_type = event_type
+    event.sequence_nr = 0
     event.aggregate_id = dirt_id
     event.aggregate_type = 'DEFECT'
     event.date_occurred = date_occurred
     event.username = username
     event.blob = json.dumps(dictionary, indent=2)
     event.save()
-
-def _close_dirt_desc(release_id, reason):
-    if reason == '':
-        return "DIRT closed. Version %s." % release_id
-    return "DIRT closed. Version %s. [%s]" % (release_id, reason)

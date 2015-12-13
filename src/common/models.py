@@ -14,7 +14,11 @@ class DomainEvent(models.Model):
 		return json.loads(self.blob)
 	
 	def __str__(self):
-		return "[%s] - #%s (%s)" % (self.aggregate_type, self.aggregate_id, self.event_type)
+		agg_type = self.aggregate_type
+		agg_id = self.aggregate_id
+		ev_type = self.event_type
+		seq = self.sequence_nr
+		return "[%s] - #%s (%s) %i" % (agg_type, agg_id, ev_type, seq)
 	
 	class Meta:
 		unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),)
