@@ -2,7 +2,9 @@ from django.db.models import Max
 from common.models import DomainEvent
 
 def get_events_for(agg_type, agg_id):
-	return DomainEvent.objects.filter(aggregate_type=agg_type, aggregate_id=agg_id)
+	return DomainEvent.objects \
+		.filter(aggregate_type=agg_type, aggregate_id=agg_id) \
+		.order_by('sequence_nr')
 	
 def append_next(event):
 	"""Throws an exception if expected_seq_nr does
