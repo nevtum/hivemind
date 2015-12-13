@@ -23,6 +23,7 @@ def migrate_to_events(apps, schema_editor):
         
         openevent = DomainEvent()
         openevent.event_type = DIRT_OPENED
+        openevent.sequence_nr = 0
         openevent.aggregate_id = int(d.id)
         openevent.aggregate_type = 'DEFECT'
         openevent.date_occurred = d.date_created
@@ -38,6 +39,7 @@ def migrate_to_events(apps, schema_editor):
             
             closeevent = DomainEvent()
             closeevent.event_type = DIRT_CLOSED
+            closeevent.sequence_nr = 1
             closeevent.aggregate_id = int(d.id)
             closeevent.aggregate_type = 'DEFECT'
             closeevent.date_occurred = d.date_created + timedelta(hours=1)
