@@ -45,17 +45,8 @@ def raise_dirt(**kwargs):
     defect.comments = kwargs['comments']
     defect.save()
     
-    data = {
-        'project_code': defect.project_code,
-        'release_id': defect.release_id,
-        'priority': defect.priority.name,
-        'reference': defect.reference,
-        'description': defect.description,
-        'comments': defect.comments
-    }
-    
-    _save_event(DIRT_OPENED, defect.id, defect.date_created, defect.submitter.username, data)
-
+    event = _create_new_defect(defect.id, **kwargs)
+    EventStore.append_next(event)
     return defect.id
 
 def amend_dirt(dirt_id, **kwargs):
@@ -64,7 +55,6 @@ def amend_dirt(dirt_id, **kwargs):
     EventStore.append_next(event)
 
     defect = Defect.objects.get(id=dirt_id)
-    
     defect.project_code = kwargs['project_code']
     defect.release_id = kwargs['release_id']
     defect.priority = Priority.objects.get(id=kwargs['priority'])
@@ -95,14 +85,23 @@ def delete_dirt(dirt_id, user):
     EventStore.append_next(event)
     
     Defect.objects.get(id=dirt_id).delete()
-
-def _save_event(event_type, dirt_id, date_occurred, username, dictionary):
+    
+def _create_new_defect(dirt_id, **kwargs):
+    data = {
+        'project_code': kwargs['project_code'],
+        'release_id': kwargs['release_id'],
+        'priority': kwargs['priority'],
+        'reference': kwargs['reference'],
+        'description': kwargs['description'],
+        'comments': kwargs['comments']
+    }
+    
     event = DomainEvent()
-    event.event_type = event_type
     event.sequence_nr = 0
     event.aggregate_id = dirt_id
     event.aggregate_type = 'DEFECT'
-    event.date_occurred = date_occurred
-    event.username = username
-    event.blob = json.dumps(dictionary, indent=2)
-    event.save()
+    event.event_type = DIRT_OPENED
+    event.date_occurred = kwargs['date_created']
+    event.username = kwargs['submitter']
+    event.blob = json.dumps(data, indent=2)
+    return event
