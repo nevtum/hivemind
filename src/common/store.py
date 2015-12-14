@@ -1,7 +1,12 @@
 from django.db.models import Max
 from common.models import DomainEvent
 
-def get_events_for(agg_type, agg_id):
+def get_events_for(agg_type, agg_id, before_date = None):
+	if before_date:
+		return DomainEvent.objects \
+			.filter(aggregate_type=agg_type, aggregate_id=agg_id) \
+			.filter(date_occurred__lt=before_date) \
+			.order_by('sequence_nr')
 	return DomainEvent.objects \
 		.filter(aggregate_type=agg_type, aggregate_id=agg_id) \
 		.order_by('sequence_nr')

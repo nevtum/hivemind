@@ -1,5 +1,4 @@
 import json
-from datetime import datetime
 from django.db.models import Q
 
 from common.models import DomainEvent
@@ -22,6 +21,10 @@ def get_new_model(dirt_id):
     events = EventStore.get_events_for('DEFECT', dirt_id)
     return DefectViewModel(events)
 
+def get_historic_dirt(dirt_id, before_date):
+    events = EventStore.get_events_for('DEFECT', dirt_id, before_date)
+    return DefectViewModel(events)
+    
 def get_detail(dirt_id):
     return Defect.objects.get(pk=dirt_id)
 
