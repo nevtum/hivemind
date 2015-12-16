@@ -90,10 +90,11 @@ def delete_dirt(dirt_id, user):
     Defect.objects.get(id=dirt_id).delete()
     
 def _create_new_defect(dirt_id, **kwargs):
+    priority = Priority.objects.get(pk=kwargs['priority'])
     data = {
         'project_code': kwargs['project_code'],
         'release_id': kwargs['release_id'],
-        'priority': kwargs['priority'],
+        'priority': priority.name,
         'reference': kwargs['reference'],
         'description': kwargs['description'],
         'comments': kwargs['comments']
