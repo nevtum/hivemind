@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -24,8 +24,8 @@ def time_travel(request, dirt_id, day, month, year):
     day = int(day)
     month = int(month)
     year = int(year)
-    before_date = datetime.date(year, month, day)
-    before_date += datetime.timedelta(days=1)
+    before_date = timezone.datetime(year, month, day)
+    before_date += timezone.timedelta(days=1)
     data = {
         'dirt': dirt_manager.get_historic_dirt(dirt_id, before_date)
     }
@@ -125,7 +125,7 @@ def delete(request, dirt_id):
 def _create_args(request):
     return {
         'project_code': request.POST['project_code'],
-        'date_created': datetime.datetime.now(),
+        'date_created': timezone.now(),
         'submitter': request.user,
         'release_id': request.POST['release_id'],
         'priority': request.POST['priority'],

@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from django.utils import timezone
 from common.models import DomainEvent
 from dirts.constants import (DIRT_OPENED, DIRT_AMENDED,
 DIRT_REOPENED, DIRT_CLOSED, DIRT_DELETED)
@@ -87,7 +87,7 @@ class DefectViewModel(object):
         event.sequence_nr = self.last_sequence_nr+1
         event.aggregate_id = self.id
         event.aggregate_type = 'DEFECT'
-        event.date_occurred = datetime.now()
+        event.date_occurred = timezone.now()
         event.username = username
         event.event_type = event_type
         event.blob = json.dumps(dictionary, indent=2)
@@ -174,7 +174,7 @@ class Defect(object):
         self.user_id = user_id
         self.project_code = project_code
         self.state = initial_state
-        self.date_created = datetime.now()
+        self.date_created = timezone.now()
 
     def describe_symptom(self, reference, description, priority):
         self.symptom = Symptom(reference, description, priority)
