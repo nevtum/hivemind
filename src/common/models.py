@@ -13,12 +13,5 @@ class DomainEvent(models.Model):
 	def deserialized(self):
 		return json.loads(self.blob)
 	
-	def __str__(self):
-		agg_type = self.aggregate_type
-		agg_id = self.aggregate_id
-		ev_type = self.event_type
-		seq = self.sequence_nr
-		return "[%s #%i] - %s, Seq: %i" % (agg_type, agg_id, ev_type, seq)
-	
 	class Meta:
 		unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),)
