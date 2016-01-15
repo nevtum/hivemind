@@ -24,9 +24,6 @@ class Defect(models.Model):
     description = models.TextField()
     comments = models.TextField(blank=True)
 
-    def __str__(self):
-        return str(self.date_created)
-
     def is_active(self):
         return self.status.name != "Closed"
 
