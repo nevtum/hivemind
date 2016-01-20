@@ -1,18 +1,26 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.views.generic import ListView
 
 from dirts.services import dirt_manager
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm
 
-def index(request):
-    page_nr = _extract_page_nr(request)
-    search_param = _extract_search_parameters(request)
-    defects = dirt_manager.latest_dirts(search_param)
-    viewmodel = Paginator(defects, 25).page(page_nr)
+class DefectListView(ListView):
+    template_name = 'dirt_list.html'
+    context_object_name = 'defects'
+    paginate_by = 25
     
-    return render(request, 'dirt_list.html', {'defects': viewmodel})
+    def get_queryset(self):
+        search_param = self._extract_search_parameters()
+        return dirt_manager.latest_dirts(search_param)
+    
+    def _extract_search_parameters(self):
+        query = self.request.GET.get('search')
+        if query:
+            return query
+        return ''
+
 
 def detail(request, dirt_id):
     data = {
@@ -133,15 +141,3 @@ def _create_args(request):
         'description': request.POST['description'],
         'comments': request.POST['comments'],
     }
-
-def _extract_search_parameters(request):
-    query = request.GET.get('search')
-    if query:
-        return query
-    return ''
-
-def _extract_page_nr(request):
-    page_nr = request.GET.get('page')
-    if page_nr:
-        return page_nr
-    return 1

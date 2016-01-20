@@ -8,7 +8,7 @@ router.register(r'dirts', DefectViewSet)
 
 urlpatterns = [
     url(r'^v1/', include(router.urls)),
-    url(r'^$', views.index, name='dirts-landing-url'),
+    url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),
     url(r'^create/', views.create, name='create-dirt-url'),
     url(r'^(?P<dirt_id>\d+?)/create-similar/$', views.copy, name='create-similar-url'),
     url(r'^(?P<dirt_id>\d+?)/$', views.detail, name='dirt-detail-url'),
