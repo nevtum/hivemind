@@ -53,9 +53,12 @@ def raise_dirt(**kwargs):
     return defect.id
 
 def amend_dirt(dirt_id, **kwargs):
-    # BUG: event saving priority id instead of description
+    # to prevent domain event from saving priority id instead of description
+    event_args = dict(kwargs)
+    event_args['priority'] = Priority.objects.get(id=kwargs['priority']).name
+    
     defect = get_new_model(dirt_id)
-    event = defect.amend(kwargs['submitter'], **kwargs)
+    event = defect.amend(event_args['submitter'], **event_args)
     EventStore.append_next(event)
 
     defect = Defect.objects.get(id=dirt_id)
