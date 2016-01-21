@@ -53,6 +53,7 @@ def raise_dirt(**kwargs):
     return defect.id
 
 def amend_dirt(dirt_id, **kwargs):
+    # issue with event saving priority id instead of description
     defect = get_new_model(dirt_id)
     event = defect.amend(kwargs['submitter'], **kwargs)
     EventStore.append_next(event)
