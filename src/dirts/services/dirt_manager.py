@@ -15,7 +15,7 @@ def latest_dirts(keyword):
     | Q(comments__icontains=keyword) \
     | Q(release_id__icontains=keyword)
 
-    return Defect.objects.filter(query).order_by('-date_created')
+    return Defect.objects.latest().filter(query)
 
 def get_new_model(dirt_id):
     events = EventStore.get_events_for('DEFECT', dirt_id)

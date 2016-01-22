@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .managers import DefectsManager
 
 class Status(models.Model):
     name = models.CharField(max_length=20)
@@ -23,6 +24,8 @@ class Defect(models.Model):
     reference = models.CharField(max_length=80)
     description = models.TextField()
     comments = models.TextField(blank=True)
+    
+    objects = DefectsManager()
 
     def is_active(self):
         return self.status.name != "Closed"
