@@ -17,6 +17,9 @@ def latest_dirts(keyword):
 
     return Defect.objects.latest().filter(query)
 
+def active_dirts():
+    return Defect.objects.active()
+
 def get_new_model(dirt_id):
     events = EventStore.get_events_for('DEFECT', dirt_id)
     return DefectViewModel(events)

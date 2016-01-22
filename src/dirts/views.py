@@ -21,6 +21,9 @@ class DefectListView(ListView):
             return query
         return ''
 
+class ActiveDefectListView(DefectListView):
+    def get_queryset(self):
+        return dirt_manager.active_dirts()
 
 def detail(request, dirt_id):
     data = {
