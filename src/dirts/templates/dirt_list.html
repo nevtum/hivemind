@@ -4,6 +4,14 @@
 
 <div class="container-fluid">
   <div class="row">
+    <div class="col-md-6">
+      <ul>
+        <li><a href="{% url 'dirts-landing-url' %}">View all DIRTs</a></li>
+        <li><a href="{% url 'active-dirts' %}">View active DIRTs</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-4">
       <form action="{% url 'dirts-landing-url' %}" method="get">
         <div id="search-control" class="input-group">
