@@ -82,6 +82,8 @@ SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
 
 ALLOWED_HOSTS = ['*']
 
+LOGIN_URL = '/login/'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
