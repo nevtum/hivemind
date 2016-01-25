@@ -81,27 +81,24 @@ class DefectUpdateView(UpdateView):
 
     def form_valid(self, form):
         defect = form.save(commit=False)
-        defect.submitter = self.request.user
         dirt_manager.amend(defect)
         return super(DefectUpdateView, self).form_valid(form)
 
-@login_required(login_url='/login/')
-def close(request, dirt_id):
-    dirt = dirt_manager.get_detail(dirt_id)
-    if request.method == 'GET':
-        form = CloseDirtForm(instance=dirt)
-        return render(request, 'close.html', {'form': form, 'dirt': dirt})
+class DefectCloseView(UpdateView):
+    template_name = 'close.html'
+    context_object_name = 'dirt'
+    form_class = CloseDirtForm
     
-    # otherwise post
-    form = CloseDirtForm(request.POST)
-    if not form.is_valid():
-        return render(request, 'close.html', {'form': form, 'dirt': dirt})
-    
-    reason = request.POST['reason']
-    release_id = request.POST['release_id']
-    
-    dirt_manager.close_dirt(dirt_id, release_id, reason, request.user)
-    return redirect('dirt-detail-url', dirt_id)
+    def get_object(self, request=None):
+        id = self.kwargs['dirt_id']
+        return dirt_manager.get_detail(id)
+
+    def form_valid(self, form):
+        defect = form.save(commit=False)
+        release_id = form.fields['release_id'].label
+        reason = form.fields['reason'].label
+        dirt_manager.close_dirt(defect.id, release_id, reason, self.request.user)
+        return super(DefectCloseView, self).form_valid(form)
 
 @login_required(login_url='/login/')
 def reopen(request, dirt_id):
@@ -128,15 +125,3 @@ def delete(request, dirt_id):
     # otherwise post
     dirt_manager.delete_dirt(dirt_id, request.user)
     return redirect('dirts-landing-url')
-
-def _create_args(request):
-    return {
-        'project_code': request.POST['project_code'],
-        'date_created': timezone.now(),
-        'submitter': request.user,
-        'release_id': request.POST['release_id'],
-        'priority': request.POST['priority'],
-        'reference': request.POST['reference'],
-        'description': request.POST['description'],
-        'comments': request.POST['comments'],
-    }
