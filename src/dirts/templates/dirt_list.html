@@ -70,7 +70,7 @@
             <td>{{ dirt.release_id }}</td>
             <td>{{ dirt.priority.name }}</td>
             <td>
-              <a href="{% url 'dirt-detail-url' dirt.id %}">{{ dirt.reference }}</a>
+              <a href="{% url 'dirt-detail-url' dirt.id %}">{{ dirt.reference | truncatechars:60 }}</a>
             </td>
             <td>{{ dirt.submitter }}</td>
           </tr>
