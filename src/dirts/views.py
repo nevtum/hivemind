@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, UpdateView
+from django.views.generic import ListView, UpdateView, CreateView
 
 from dirts.services import dirt_manager
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm
@@ -43,21 +43,6 @@ def time_travel(request, dirt_id, day, month, year):
     return render(request, 'detail.html', data)
 
 @login_required(login_url='/login/')
-def create(request):
-    if request.method == 'GET':
-        form = CreateDirtForm()
-        return render(request, 'create.html', {'form': form})
-
-    # otherwise post
-    form = CreateDirtForm(request.POST)
-    if not form.is_valid():
-        return render(request, 'create.html', {'form': form})
-
-    args = _create_args(request)
-    dirt_id = dirt_manager.raise_dirt(**args)
-    return redirect('dirt-detail-url', dirt_id)
-
-@login_required(login_url='/login/')
 def copy(request, dirt_id):
     if request.method == 'GET':
         dirt = dirt_manager.get_copy(dirt_id)
@@ -72,6 +57,22 @@ def copy(request, dirt_id):
     args = _create_args(request)
     dirt_id = dirt_manager.raise_dirt(**args)
     return redirect('dirt-detail-url', dirt_id)
+
+class DefectCreateView(CreateView):
+    template_name = 'create.html'
+    context_object_name = 'dirt'
+    form_class = CreateDirtForm
+    
+    def get_object(self, request=None):
+        id = self.kwargs['dirt_id']
+        return dirt_manager.get_detail(id)
+
+    def form_valid(self, form):
+        defect = form.save(commit=False)
+        defect.submitter = self.request.user
+        defect.date_created = timezone.now()
+        dirt_manager.raise_new(defect)
+        return super(DefectCreateView, self).form_valid(form)
 
 class DefectUpdateView(UpdateView):
     template_name = 'amend.html'

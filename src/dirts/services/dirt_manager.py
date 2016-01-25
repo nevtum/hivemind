@@ -38,35 +38,10 @@ def get_copy(dirt_id):
     copy.release_id = defect.release_id
     return copy
 
-def raise_dirt(**kwargs):
-    defect = Defect()
-    defect.project_code = kwargs['project_code']
-    defect.date_created = kwargs['date_created']
-    defect.submitter = kwargs['submitter']
-    defect.release_id = kwargs['release_id']
-    defect.status = Status.objects.get(name='Open')
-    defect.priority = Priority.objects.get(id=kwargs['priority'])
-    defect.reference = kwargs['reference']
-    defect.description = kwargs['description']
-    defect.comments = kwargs['comments']
+def raise_new(defect):
     defect.save()
-    
-    event = _create_new_defect(defect.id, **kwargs)
+    event = _create_event_from(defect)
     EventStore.append_next(event)
-    return defect.id
-
-def _to_kwargs(defect):
-    return dict({
-        'project_code': defect.project_code,
-        'date_created': defect.date_created,
-        'submitter': defect.submitter,
-        'release_id': defect.release_id,
-        'status': defect.status,
-        'priority': defect.priority.name,
-        'reference': defect.reference,
-        'description': defect.description,
-        'comments': defect.comments,
-    })
 
 def amend(defect):
     defect_aggregate = get_new_model(defect.id)
@@ -96,24 +71,36 @@ def delete_dirt(dirt_id, user):
     EventStore.append_next(event)
     
     Defect.objects.get(id=dirt_id).delete()
-    
-def _create_new_defect(dirt_id, **kwargs):
-    priority = Priority.objects.get(pk=kwargs['priority'])
+
+def _to_kwargs(defect):
+    return dict({
+        'project_code': defect.project_code,
+        'date_created': defect.date_created,
+        'submitter': defect.submitter,
+        'release_id': defect.release_id,
+        'status': defect.status,
+        'priority': defect.priority.name,
+        'reference': defect.reference,
+        'description': defect.description,
+        'comments': defect.comments,
+    })
+
+def _create_event_from(defect):
     data = {
-        'project_code': kwargs['project_code'],
-        'release_id': kwargs['release_id'],
-        'priority': priority.name,
-        'reference': kwargs['reference'],
-        'description': kwargs['description'],
-        'comments': kwargs['comments']
+        'project_code': defect.project_code,
+        'release_id': defect.release_id,
+        'priority': defect.priority.name,
+        'reference': defect.reference,
+        'description': defect.description,
+        'comments': defect.comments
     }
     
     event = DomainEvent()
     event.sequence_nr = 0
-    event.aggregate_id = dirt_id
+    event.aggregate_id = defect.id
     event.aggregate_type = 'DEFECT'
     event.event_type = DIRT_OPENED
-    event.date_occurred = kwargs['date_created']
-    event.username = kwargs['submitter']
+    event.date_occurred = defect.date_created
+    event.username = defect.submitter
     event.blob = json.dumps(data, indent=2)
     return event

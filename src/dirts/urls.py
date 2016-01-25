@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^v1/', include(router.urls)),
     url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),
     url(r'^active/$', views.ActiveDefectListView.as_view(), name='active-dirts'),
-    url(r'^create/', views.create, name='create-dirt-url'),
+    url(r'^create/', views.DefectCreateView.as_view(), name='create-dirt-url'),
     url(r'^(?P<dirt_id>\d+?)/create-similar/$', views.copy, name='create-similar-url'),
     url(r'^(?P<dirt_id>\d+?)/$', views.detail, name='dirt-detail-url'),
     url(r'^(?P<dirt_id>\d+?)/(?P<year>\d{4})/(?P<month>\d{1,2})/(?P<day>\d{1,2})/$', views.time_travel, name='dirt-time-travel'),
