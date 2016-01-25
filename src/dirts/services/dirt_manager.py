@@ -55,22 +55,23 @@ def raise_dirt(**kwargs):
     EventStore.append_next(event)
     return defect.id
 
-def amend_dirt(dirt_id, **kwargs):
-    # to prevent domain event from saving priority id instead of description
-    event_args = dict(kwargs)
-    event_args['priority'] = Priority.objects.get(id=kwargs['priority']).name
-    
-    defect = get_new_model(dirt_id)
-    event = defect.amend(event_args['submitter'], **event_args)
-    EventStore.append_next(event)
+def _to_kwargs(defect):
+    return dict({
+        'project_code': defect.project_code,
+        'date_created': defect.date_created,
+        'submitter': defect.submitter,
+        'release_id': defect.release_id,
+        'status': defect.status,
+        'priority': defect.priority.name,
+        'reference': defect.reference,
+        'description': defect.description,
+        'comments': defect.comments,
+    })
 
-    defect = Defect.objects.get(id=dirt_id)
-    defect.project_code = kwargs['project_code']
-    defect.release_id = kwargs['release_id']
-    defect.priority = Priority.objects.get(id=kwargs['priority'])
-    defect.reference = kwargs['reference']
-    defect.description = kwargs['description']
-    defect.comments = kwargs['comments']
+def amend(defect):
+    defect_aggregate = get_new_model(defect.id)
+    event = defect_aggregate.amend(defect.submitter, **_to_kwargs(defect))
+    EventStore.append_next(event)
     defect.save()
 
 def reopen(dirt_id, user, release_id, reason):

@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView
 
 from dirts.services import dirt_manager
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm
@@ -73,21 +73,20 @@ def copy(request, dirt_id):
     dirt_id = dirt_manager.raise_dirt(**args)
     return redirect('dirt-detail-url', dirt_id)
 
-@login_required(login_url='/login/')
-def amend(request, dirt_id):
-    dirt = dirt_manager.get_detail(dirt_id)
-    if request.method == 'GET':
-        form = CreateDirtForm(instance=dirt)
-        return render(request, 'amend.html', {'form': form, 'dirt': dirt})
+class DefectUpdateView(UpdateView):
+    template_name = 'amend.html'
+    context_object_name = 'dirt'
+    form_class = CreateDirtForm
+    
+    def get_object(self, request=None):
+        id = self.kwargs['dirt_id']
+        return dirt_manager.get_detail(id)
 
-    # otherwise post
-    form = CreateDirtForm(request.POST)
-    if not form.is_valid():
-        return render(request, 'amend.html', {'form': form, 'dirt': dirt})
-
-    args = _create_args(request)
-    dirt_manager.amend_dirt(dirt_id, **args)
-    return redirect('dirt-detail-url', dirt_id)
+    def form_valid(self, form):
+        defect = form.save(commit=False)
+        defect.submitter = self.request.user
+        dirt_manager.amend(defect)
+        return super(DefectUpdateView, self).form_valid(form)
 
 @login_required(login_url='/login/')
 def close(request, dirt_id):

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from .managers import DefectsManager
 
 class Status(models.Model):
@@ -29,6 +30,9 @@ class Defect(models.Model):
 
     def is_active(self):
         return self.status.name != "Closed"
+
+    def get_absolute_url(self):
+        return reverse('dirt-detail-url', kwargs={'dirt_id': self.id})
 
     def reopen(self, release_id):
         if self.status.name != "Closed":
