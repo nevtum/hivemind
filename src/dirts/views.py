@@ -62,10 +62,6 @@ class DefectCreateView(CreateView):
     template_name = 'create.html'
     context_object_name = 'dirt'
     form_class = CreateDirtForm
-    
-    def get_object(self, request=None):
-        id = self.kwargs['dirt_id']
-        return dirt_manager.get_detail(id)
 
     def form_valid(self, form):
         defect = form.save(commit=False)
