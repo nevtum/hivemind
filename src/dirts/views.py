@@ -95,9 +95,16 @@ class DefectCloseView(UpdateView):
 
     def form_valid(self, form):
         defect = form.save(commit=False)
-        release_id = form.fields['release_id'].label
-        reason = form.fields['reason'].label
+        
+        # really ugly fix to get around form_valid call
+        # in base class ModelFormMixin
+        release_id = self.request.POST['release_id']
+        reason = self.request.POST['reason']
+        defect.close(release_id)
+        
         dirt_manager.close_dirt(defect.id, release_id, reason, self.request.user)
+        
+        # bug happens after this method is called
         return super(DefectCloseView, self).form_valid(form)
 
 @login_required(login_url='/login/')
