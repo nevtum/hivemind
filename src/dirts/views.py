@@ -52,6 +52,7 @@ class DefectCreateView(CreateView):
         defect.submitter = self.request.user
         defect.date_created = timezone.now()
         id = dirt_manager.raise_new(defect)
+        assert(id == defect.id)
         return redirect('dirt-detail-url', defect.id)
 
 class DefectCopyView(UpdateView):
@@ -68,7 +69,8 @@ class DefectCopyView(UpdateView):
         defect.submitter = self.request.user
         defect.date_created = timezone.now()
         id = dirt_manager.raise_new(defect)
-        return redirect('dirt-detail-url', id)
+        assert(id == defect.id)
+        return redirect('dirt-detail-url', defect.id)
 
 class DefectUpdateView(UpdateView):
     template_name = 'amend.html'
@@ -100,22 +102,21 @@ class DefectCloseView(UpdateView):
         dirt_manager.close_dirt(defect.id, release_id, reason, self.request.user)
         return redirect('dirt-detail-url', defect.id)
 
-@login_required(login_url='/login/')
-def reopen(request, dirt_id):
-    dirt = dirt_manager.get_detail(dirt_id)
-    if request.method == 'GET':
-        form = ReopenDirtForm(instance=dirt)
-        return render(request, 'reopen.html', {'form': form, 'dirt': dirt})
+class DefectReopenView(UpdateView):
+    template_name = 'reopen.html'
+    context_object_name = 'dirt'
+    form_class = ReopenDirtForm
+    
+    def get_object(self, request=None):
+        id = self.kwargs['dirt_id']
+        return dirt_manager.get_detail(id)
 
-    # otherwise post
-    form = ReopenDirtForm(request.POST)
-    if not form.is_valid():
-        return render(request, 'reopen.html', {'form': form, 'dirt': dirt})
-
-    release_id = request.POST['release_id']
-    reason = request.POST['reason']
-    dirt_manager.reopen(dirt_id, request.user, release_id, reason)
-    return redirect('dirt-detail-url', dirt_id)
+    def form_valid(self, form):
+        defect = form.save(commit=False)
+        release_id = form.data['release_id']
+        reason = form.data['reason']
+        dirt_manager.reopen(defect.id, self.request.user, release_id, reason)
+        return redirect('dirt-detail-url', defect.id)
 
 @login_required(login_url='/login/')
 def delete(request, dirt_id):
