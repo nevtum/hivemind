@@ -51,8 +51,8 @@ class DefectCreateView(CreateView):
         defect = form.save(commit=False)
         defect.submitter = self.request.user
         defect.date_created = timezone.now()
-        dirt_manager.raise_new(defect)
-        return super(DefectCreateView, self).form_valid(form)
+        id = dirt_manager.raise_new(defect)
+        return redirect('dirt-detail-url', defect.id)
 
 class DefectCopyView(UpdateView):
     template_name = 'create.html'
@@ -67,8 +67,8 @@ class DefectCopyView(UpdateView):
         defect = form.save(commit=False)
         defect.submitter = self.request.user
         defect.date_created = timezone.now()
-        dirt_manager.raise_new(defect)
-        return super(DefectCopyView, self).form_valid(form)
+        id = dirt_manager.raise_new(defect)
+        return redirect('dirt-detail-url', id)
 
 class DefectUpdateView(UpdateView):
     template_name = 'amend.html'
@@ -82,7 +82,7 @@ class DefectUpdateView(UpdateView):
     def form_valid(self, form):
         defect = form.save(commit=False)
         dirt_manager.amend(defect)
-        return super(DefectUpdateView, self).form_valid(form)
+        return redirect('dirt-detail-url', defect.id)
 
 class DefectCloseView(UpdateView):
     template_name = 'close.html'
@@ -95,17 +95,10 @@ class DefectCloseView(UpdateView):
 
     def form_valid(self, form):
         defect = form.save(commit=False)
-        
-        # really ugly fix to get around form_valid call
-        # in base class ModelFormMixin
-        release_id = self.request.POST['release_id']
-        reason = self.request.POST['reason']
-        defect.close(release_id)
-        
+        release_id = form.data['release_id']
+        reason = form.data['reason']
         dirt_manager.close_dirt(defect.id, release_id, reason, self.request.user)
-        
-        # bug happens after this method is called
-        return super(DefectCloseView, self).form_valid(form)
+        return redirect('dirt-detail-url', defect.id)
 
 @login_required(login_url='/login/')
 def reopen(request, dirt_id):

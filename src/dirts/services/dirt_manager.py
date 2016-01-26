@@ -42,6 +42,7 @@ def raise_new(defect):
     defect.save()
     event = _create_event_from(defect)
     EventStore.append_next(event)
+    return defect.id
 
 def amend(defect):
     defect_aggregate = get_new_model(defect.id)
