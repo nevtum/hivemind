@@ -43,36 +43,6 @@ body {
   margin-bottom: 4;
 }
 
-#dirt-header {
-  background-color: #A0B2B8;
-  padding: 10;
-}
-
-#dirt-header > h2 {
-  color: #AD4137;
-}
-
-#dirt-detail {
-  margin-top: 10;
-}
-
 #history-list {
   font-size: 12;
-}
-
-#action-panel {
-  background-color: #97BCC8;
-}
-
-#action-panel ul {
-    margin: 0px;
-    padding: 5px 15px;
-    list-style-type: none;
-}
-
-#action-panel ul li {
-    margin: 5px 0px;
-}
-
-#dirt-summary {
 }
