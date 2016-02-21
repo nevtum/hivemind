@@ -3,10 +3,41 @@
 {% block content %}
 {% csrf_token %}
 
-<div class="container">
-  <div class="jumbotron">
-    <h1>Welcome to BMM Echelon</h1>
-    <p>The portal for data! Storage and search are our goals to bring company data to you faster! Please let us know what you think, or suggestions to make Echelon better serve your workflow.</p>
+<div class="jumbotron">
+  <h1>Welcome to BMM Echelon</h1>
+  <p>The site which brings essential company operations data in one place.</p>
+</div>
+<div class="row">
+  <div class="col-sm-4">
+    <p>
+        A feature rich bug tracking system which allows for adding attachments and displaying historic information of DIRTs. A powerful search engine to look for previously raised DIRTs based on their content, tags or comments. And an intelligent system to discover DIRTs similar to those raised. 
+    </p>
+    <p>
+        <a href="{% url 'dirts-landing-url' %}" class="btn btn-primary">Try it out</a>
+    </p>
+  </div>
+  <div class="col-sm-4">
+    <p>
+        Other apps to be added here.
+    </p>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        
+    </p>
+    <p>
+        <a href="#" class="btn btn-primary">Try it out</a>
+    </p>
+  </div>
+  <div class="col-sm-4">
+    <p>
+        Other apps to be added here.
+    </p>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+    <p>
+        <a href="#" class="btn btn-primary">Try it out</a>
+    </p>
   </div>
 </div>
 
