@@ -7,7 +7,6 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     url(r'^$', index, name='home-url'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^clients/', include('clients.urls')),
     url(r'^dirts/', include('dirts.urls')),
     url(r'^auth-token/', obtain_jwt_token),
     url(r'^login/', log_in, name='login-url'),

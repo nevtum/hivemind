@@ -33,7 +33,6 @@ INSTALLED_APPS = [
 
 INSTALLED_APPS += [
     'common',
-    'clients',
     'dirts'
 ]
 
