@@ -21,8 +21,10 @@
           </span>
         </div>
       </form>
-      <div id="action-panel" class="row">
-        <a href="{% url 'create-dirt-url' %}">Raise a DIRT</a>
+      <div id="action-panel">
+        <ul>
+            <li><a href="{% url 'create-dirt-url' %}">Raise a DIRT</a></li>
+        </ul>
       </div>
       {% if is_paginated %}
       <div class="pagination">

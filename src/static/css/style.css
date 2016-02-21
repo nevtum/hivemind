@@ -61,12 +61,17 @@ body {
 }
 
 #action-panel {
-  margin-left: 1;
-  margin-right: 1;
-  margin-bottom: 3;
-  padding: 10;
-  /*min-height: 150;*/
   background-color: #97BCC8;
+}
+
+#action-panel ul {
+    margin: 0px;
+    padding: 5px 15px;
+    list-style-type: none;
+}
+
+#action-panel ul li {
+    margin: 5px 0px;
 }
 
 #dirt-summary {
