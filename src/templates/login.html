@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% load crispy_forms_tags %}
 
-<div class="container">
-  {% if error %}
-  <div class="well well-sm">
+{% if error %}
+<div class="well well-sm">
     {{ error }}
-  </div>
-  {% endif %}
-  <form action="{% url 'login-url' %}" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit" />
-  </form>
 </div>
+{% endif %}
+
+<form class="myform" action="{% url 'login-url' %}" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Submit" />
+</form>
+
+<!--<p>Not a member? <a href="">Register here!</a></p>-->
 
 {% endblock %}
