@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, UpdateView, CreateView
 
 from dirts.services import dirt_manager
+from common import store as EventStore
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm
 
 class DefectListView(ListView):
@@ -45,6 +46,13 @@ def time_travel(request, dirt_id, day, month, year):
         'dirt': dirt_manager.get_historic_dirt(dirt_id, before_date)
     }
     return render(request, 'detail.html', data)
+
+def debug(request, dirt_id):
+    """admin specific view to inspect event sources"""
+    data = {
+        'stream': EventStore.get_events_for('DEFECT', dirt_id)
+    }
+    return render(request, 'debug.html', data)
 
 class DefectCreateView(CreateView):
     template_name = 'create.html'

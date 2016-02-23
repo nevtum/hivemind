@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^create/', auth(views.DefectCreateView.as_view()), name='create-dirt-url'),
     url(r'^(?P<dirt_id>\d+?)/create-similar/$', auth(views.DefectCopyView.as_view()), name='create-similar-url'),
     url(r'^(?P<dirt_id>\d+?)/$', views.detail, name='dirt-detail-url'),
+    url(r'^(?P<dirt_id>\d+?)/debug/$', views.debug, name='dirt-debug'),
     url(r'^(?P<dirt_id>\d+?)/(?P<day>\d{1,2})-(?P<month>\d{1,2})-(?P<year>\d{4})/$', views.time_travel, name='dirt-time-travel'),
     url(r'^(?P<dirt_id>\d+?)/amend/$', auth(views.DefectUpdateView.as_view()), name='dirt-amend-url'),
     url(r'^(?P<dirt_id>\d+?)/close/$', auth(views.DefectCloseView.as_view()), name='dirt-close-url'),

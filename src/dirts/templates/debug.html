@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for event in stream %}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        [{{ event.sequence_nr }}] 
+        {{ event.event_type }} 
+        ({{ event.date_occurred }}) - 
+        submitter: {{ event.username }}
+    </div>
+    <div class="panel-body">
+        <p>{{ event.blob }}</p>
+    </div>
+</div>
+
+{% endfor %}
+
+{% endblock %}
