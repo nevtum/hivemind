@@ -22,6 +22,7 @@ class DefectViewModel(object):
     def apply(self, event):
         e = event.deserialized()
         date = event.date_occurred
+        self.date_changed = event.date_occurred
         username = event.username
         if event.event_type == DIRT_OPENED:
             self._set_headers(event)
