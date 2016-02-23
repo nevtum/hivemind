@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import ListView, UpdateView, CreateView
 
 from dirts.services import dirt_manager
@@ -47,6 +47,7 @@ def time_travel(request, dirt_id, day, month, year):
     }
     return render(request, 'detail.html', data)
 
+@user_passes_test(lambda u: u.is_superuser)
 def debug(request, dirt_id):
     """admin specific view to inspect event sources"""
     data = {
