@@ -129,6 +129,7 @@ class DefectReopenView(UpdateView):
         dirt_manager.reopen(defect.id, self.request.user, release_id, reason)
         return redirect('dirt-detail-url', defect.id)
 
+@user_passes_test(lambda u: u.is_staff)
 @login_required(login_url='/login/')
 def delete(request, dirt_id):
     if request.method == 'GET':
