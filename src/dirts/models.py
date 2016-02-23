@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from .managers import DefectsManager
@@ -17,7 +18,8 @@ class Priority(models.Model):
 
 class Defect(models.Model):
     project_code = models.CharField(max_length=20)
-    date_created = models.DateTimeField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_changed = models.DateTimeField(auto_now_add=True)
     submitter = models.ForeignKey(User)
     release_id = models.CharField(max_length=50)
     status = models.ForeignKey(Status, default=1)
@@ -40,11 +42,13 @@ class Defect(models.Model):
 
         self.status = Status.objects.get(name='Open')
         self.release_id = release_id
+        self.date_changed = timezone.now()
         self.save()
 
     def close(self, release_id):
         self.status = Status.objects.get(name='Closed')
         self.release_id = release_id
+        self.date_changed = timezone.now()
         self.save()
 
 class DefectHistoryItem(models.Model):

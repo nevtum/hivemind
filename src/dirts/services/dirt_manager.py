@@ -17,6 +17,9 @@ def latest_dirts(keyword):
 
     return Defect.objects.latest().filter(query)
 
+def recently_changed():
+    return Defect.objects.order_by('-date_changed')
+
 def active_dirts():
     return Defect.objects.active()
 

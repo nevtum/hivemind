@@ -25,6 +25,10 @@ class ActiveDefectListView(DefectListView):
     def get_queryset(self):
         return dirt_manager.active_dirts()
 
+class RecentlyChangedDefectListView(DefectListView):
+    def get_queryset(self):
+        return dirt_manager.recently_changed()
+
 def detail(request, dirt_id):
     data = {
         'dirt': dirt_manager.get_new_model(dirt_id)
@@ -50,7 +54,6 @@ class DefectCreateView(CreateView):
     def form_valid(self, form):
         defect = form.save(commit=False)
         defect.submitter = self.request.user
-        defect.date_created = timezone.now()
         id = dirt_manager.raise_new(defect)
         assert(id == defect.id)
         return redirect('dirt-detail-url', defect.id)
@@ -67,7 +70,6 @@ class DefectCopyView(UpdateView):
     def form_valid(self, form):
         defect = form.save(commit=False)
         defect.submitter = self.request.user
-        defect.date_created = timezone.now()
         id = dirt_manager.raise_new(defect)
         assert(id == defect.id)
         return redirect('dirt-detail-url', defect.id)

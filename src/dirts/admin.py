@@ -2,7 +2,7 @@ from django.contrib import admin
 from dirts.models import Status, Priority, Defect, DefectHistoryItem
 
 class DefectAdmin(admin.ModelAdmin):
-	list_display = ('date_created', 'project_code', 'release_id', 'submitter', 'priority', 'status',)
+	list_display = ('date_created', 'date_changed', 'project_code', 'release_id', 'submitter', 'status',)
 	list_filter = ('priority', 'status',)
 	search_fields = ['project_code', 'reference', 'description', 'comments']
 

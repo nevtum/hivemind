@@ -7,7 +7,7 @@ class DomainEvent(models.Model):
 	aggregate_type = models.CharField(max_length=30)
 	event_type = models.CharField(max_length=100)
 	blob = models.TextField()
-	date_occurred = models.DateTimeField()
+	date_occurred = models.DateTimeField(auto_now_add=True)
 	username = models.CharField(max_length=50)
 	
 	def deserialized(self):
