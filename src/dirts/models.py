@@ -79,6 +79,7 @@ class Defect(models.Model):
         defect = self.as_domainmodel()
         event = defect.amend(user, **self._to_kwargs())
         EventStore.append_next(event)
+        self.date_changed = timezone.now()
         self.save()
     
     def reopen(self, user, release_id, reason):
