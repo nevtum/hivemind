@@ -6,3 +6,6 @@ class DefectsManager(models.Manager):
     
     def latest(self):
         return self.order_by('-date_created')
+    
+    def recently_changed(self):
+        return self.order_by('-date_changed')

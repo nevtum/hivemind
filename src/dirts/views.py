@@ -1,11 +1,12 @@
 from django.utils import timezone
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import ListView, UpdateView, CreateView
 
 from dirts.services import dirt_manager
 from common import store as EventStore
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm
+from dirts.models import Defect
 
 class DefectListView(ListView):
     template_name = 'dirt_list.html'
@@ -24,15 +25,15 @@ class DefectListView(ListView):
 
 class ActiveDefectListView(DefectListView):
     def get_queryset(self):
-        return dirt_manager.active_dirts()
+        return Defect.objects.active()
 
 class RecentlyChangedDefectListView(DefectListView):
     def get_queryset(self):
-        return dirt_manager.recently_changed()
+        return Defect.objects.recently_changed()
 
 def detail(request, dirt_id):
     data = {
-        'dirt': dirt_manager.get_new_model(dirt_id)
+        'dirt': get_object_or_404(Defect, pk=dirt_id).as_domainmodel()
     }
     return render(request, 'detail.html', data)
 
@@ -43,7 +44,7 @@ def time_travel(request, dirt_id, day, month, year):
     before_date = timezone.datetime(year, month, day)
     before_date += timezone.timedelta(days=1)
     data = {
-        'dirt': dirt_manager.get_historic_dirt(dirt_id, before_date)
+        'dirt': get_object_or_404(Defect, pk=dirt_id).as_domainmodel(before_date)
     }
     return render(request, 'detail.html', data)
 
@@ -63,25 +64,12 @@ class DefectCreateView(CreateView):
     def form_valid(self, form):
         defect = form.save(commit=False)
         defect.submitter = self.request.user
-        id = dirt_manager.raise_new(defect)
-        assert(id == defect.id)
-        return redirect('dirt-detail-url', defect.id)
+        defect.raise_new()
+        return redirect(defect)
 
-class DefectCopyView(UpdateView):
-    template_name = 'create.html'
-    context_object_name = 'dirt'
-    form_class = CreateDirtForm
-    
+class DefectCopyView(DefectCreateView, UpdateView):
     def get_object(self, request=None):
-        id = self.kwargs['dirt_id']
-        return dirt_manager.get_copy(id)
-
-    def form_valid(self, form):
-        defect = form.save(commit=False)
-        defect.submitter = self.request.user
-        id = dirt_manager.raise_new(defect)
-        assert(id == defect.id)
-        return redirect('dirt-detail-url', defect.id)
+        return get_object_or_404(Defect, pk=self.kwargs['dirt_id']).copy()
 
 class DefectUpdateView(UpdateView):
     template_name = 'amend.html'
@@ -90,12 +78,12 @@ class DefectUpdateView(UpdateView):
     
     def get_object(self, request=None):
         id = self.kwargs['dirt_id']
-        return dirt_manager.get_detail(id)
+        return get_object_or_404(Defect, pk=id)
 
     def form_valid(self, form):
         defect = form.save(commit=False)
-        dirt_manager.amend(defect)
-        return redirect('dirt-detail-url', defect.id)
+        defect.amend(self.request.user)
+        return redirect(defect)
 
 class DefectCloseView(UpdateView):
     template_name = 'close.html'
@@ -104,14 +92,14 @@ class DefectCloseView(UpdateView):
     
     def get_object(self, request=None):
         id = self.kwargs['dirt_id']
-        return dirt_manager.get_detail(id)
+        return get_object_or_404(Defect, pk=id)
 
     def form_valid(self, form):
         defect = form.save(commit=False)
         release_id = form.data['release_id']
         reason = form.data['reason']
-        dirt_manager.close_dirt(defect.id, release_id, reason, self.request.user)
-        return redirect('dirt-detail-url', defect.id)
+        defect.close(self.request.user, release_id, reason)
+        return redirect(defect)
 
 class DefectReopenView(UpdateView):
     template_name = 'reopen.html'
@@ -120,14 +108,14 @@ class DefectReopenView(UpdateView):
     
     def get_object(self, request=None):
         id = self.kwargs['dirt_id']
-        return dirt_manager.get_detail(id)
+        return get_object_or_404(Defect, pk=id)
 
     def form_valid(self, form):
         defect = form.save(commit=False)
         release_id = form.data['release_id']
         reason = form.data['reason']
-        dirt_manager.reopen(defect.id, self.request.user, release_id, reason)
-        return redirect('dirt-detail-url', defect.id)
+        defect.reopen(self.request.user, release_id, reason)
+        return redirect(defect)
 
 @user_passes_test(lambda u: u.is_staff)
 @login_required(login_url='/login/')
