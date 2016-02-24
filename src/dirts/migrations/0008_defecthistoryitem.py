@@ -11,6 +11,12 @@ import json
 
 def migrate_to_events(apps, schema_editor):
     defects = Defect.objects.all()
+    
+    # Will fail while installing new instances of Echelon. A hacky workaround
+    # is to comment out lines for fields that have not been added yet (ie 
+    # 'date_changed') and run 'migrate', uncomment lines of code again, then
+    # continue rest of migrations. Once production database is migrated
+    # properly make sure to squash current migrations up to 0010
     for d in defects:
         data = {
             'project_code': d.project_code,
