@@ -60,7 +60,7 @@ def migrate_to_events(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dirts', '0007_auto_20151211_1730'),
+        ('dirts', '0008_auto_20160223_1737'),
     ]
 
     operations = [

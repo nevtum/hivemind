@@ -9,7 +9,7 @@ from django.utils import timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dirts', '0008_defecthistoryitem'),
+        ('dirts', '0007_auto_20151211_1730'),
     ]
 
     operations = [
