@@ -27,6 +27,10 @@ def migrate_to_events(apps, schema_editor):
             'comments': d.comments
         }
         
+        existing = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=d.id)
+        if existing:
+            continue
+        
         openevent = DomainEvent()
         openevent.event_type = DIRT_OPENED
         openevent.sequence_nr = 0
