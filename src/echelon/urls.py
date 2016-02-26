@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^auth-token/', obtain_jwt_token),
     url(r'^login/', log_in, name='login-url'),
     url(r'^logout/', log_out, name='logout-url'),
+    url(r'^common/', include('common.urls')),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

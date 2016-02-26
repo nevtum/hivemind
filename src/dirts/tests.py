@@ -17,11 +17,10 @@ class DefectAcceptanceTests(TestCase):
         Priority.objects.create(name='Observational')
     
     def _create_fake_user(self):
-        self.username = 'test_user'
-        self.email = 'test@test.com'
-        self.password = 'test_password'        
-        self.test_user = User.objects.create_user(
-            self.username, self.email, self.password)
+        username = 'test_user'
+        email = 'test@test.com'
+        password = 'test_password'        
+        self.test_user = User.objects.create_user(username, email, password)
     
     def setUp(self):
         self._load_fixtures()
