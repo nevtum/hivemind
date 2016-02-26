@@ -16,15 +16,22 @@ class DefectAcceptanceTests(TestCase):
         Priority.objects.create(name='Low')
         Priority.objects.create(name='Observational')
     
-    def _create_fake_user(self):
+    
+    def _login_fake_user(self):
         username = 'test_user'
         email = 'test@test.com'
-        password = 'test_password'        
+        password = 'test_password'
         self.test_user = User.objects.create_user(username, email, password)
+        login = self.client.login(username='test_user', password='test_password')
+        self.assertEquals(login, True)
     
     def setUp(self):
         self._load_fixtures()
-        self._create_fake_user()
+        self._login_fake_user()
+        
+    def test_should_open_correct_form_when_create_defect_url_accessed(self):
+        response = self.client.get(reverse('create-dirt-url'))
+        self.assertIsInstance(response.context['form'], CreateDirtForm)
         
     def test_should_create_new_defect(self):
         kwargs = {
