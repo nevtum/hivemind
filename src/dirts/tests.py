@@ -48,10 +48,31 @@ class DefectAcceptanceTests(TestCase):
     def setUp(self):
         self._load_fixtures()
         self._login_fake_user()
-        
+    
     def test_should_open_correct_form_when_create_defect_url_accessed(self):
         response = self.client.get(reverse('create-dirt-url'))
         self.assertIsInstance(response.context['form'], CreateDirtForm)
+    
+    def _assert_empty_field_fail_form(self, field_name, value):
+        kwargs = self._test_form_data_with_comments()
+        kwargs[field_name] = value
+        form = CreateDirtForm(data=kwargs)
+        self.assertEquals(form.is_valid(), False)
+        
+    def test_should_fail_valid_create_defect_form_with_empty_project_code(self):
+        self._assert_empty_field_fail_form('project_code', '')
+        
+    def test_should_fail_valid_create_defect_form_with_empty_release_id(self):
+        self._assert_empty_field_fail_form('release_id', '')
+        
+    def test_should_fail_valid_create_defect_form_with_empty_priority(self):
+        self._assert_empty_field_fail_form('priority', None)
+    
+    def test_should_fail_valid_create_defect_form_with_empty_reference(self):
+        self._assert_empty_field_fail_form('reference', '')
+    
+    def test_should_fail_valid_create_defect_form_with_empty_description(self):
+        self._assert_empty_field_fail_form('description', '')
     
     def test_should_pass_valid_create_defect_form_with_comments(self):
         form = CreateDirtForm(data=self._test_form_data_with_comments())
