@@ -55,7 +55,7 @@ class Defect(models.Model):
         event.username = self.submitter
         event.blob = json.dumps(data, indent=2)
         EventStore.append_next(event)
-        return self.id
+        return event
 
     def copy(self):
         copy = Defect()

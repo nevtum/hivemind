@@ -40,6 +40,7 @@ class DefectAcceptanceTests(TestCase):
         defect.submitter = self.test_user
         defect.raise_new()
         
+        self.assertEquals(form.is_valid(), True)
         self.assertEquals(defect.project_code, 'ABC.123')
         self.assertEquals(defect.release_id, 'v1.2.3.4')
         self.assertEquals(defect.status.name, 'Open')
@@ -60,10 +61,8 @@ class DefectAcceptanceTests(TestCase):
         form = CreateDirtForm(kwargs)
         defect = form.save(commit=False)
         defect.submitter = self.test_user
-        defect.raise_new()
+        event = defect.raise_new()
         
-        events = DomainEvent.objects.filter(aggregate_type='DEFECT', aggregate_id=defect.id)
-        event = events.last()
-        self.assertEquals(len(events), 1)
         self.assertEquals(event.sequence_nr, 0)
         self.assertEquals(event.event_type, 'DIRT.OPENED')
+        self.assertIsNotNone(event.blob)
