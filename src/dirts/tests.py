@@ -132,7 +132,21 @@ class DefectAcceptanceTests(TestCase):
         
         self.assertEquals(result.status, 'Closed')
         self.assertEquals(result.release_id, 'v1.2.3.5')
-        self.assertEquals(result.status, data['status'].name)
+    
+    def test_should_reopen_a_closed_defect(self):
+        data = self._test_form_data_with_comments()
+        create_defect_page = CreateDefectPage(self.client)
+        defect_page = create_defect_page.raise_new_defect(**data)
+        defect_page.close_defect('v1.2.3.5')
+        defect_page.reopen_defect('v1.2.4.2', 'issue regressed')
+        result = defect_page.context
+        
+        self.assertEquals(result.status, 'Open')
+        self.assertEquals(result.release_id, 'v1.2.4.2')
+        
+        # test put here to prevent a bug from the past from regressing
+        expected_priority = Priority.objects.get(pk=data['priority']).name
+        self.assertEquals(result.priority, expected_priority)
         
     def test_should_create_dirt_opened_event(self):
         form = CreateDirtForm(data=self._test_form_data_with_comments())
@@ -170,10 +184,28 @@ class DefectPage:
         )
     
     def close_defect(self, release_id, reason=None):
-        pass
+        post_data = {
+            'release_id': release_id,
+            'reason': reason
+        }
+        self.response = self.client.post(
+            reverse('dirt-close-url', kwargs={'dirt_id': self.id}),
+            data=post_data,
+            follow=True
+        )
+        assert(self.response.status_code == 200)
         
     def reopen_defect(self, release_id, reason):
-        pass
+        post_data = {
+            'release_id': release_id,
+            'reason': reason
+        }
+        self.response = self.client.post(
+            reverse('dirt-reopen-url', kwargs={'dirt_id': self.id}),
+            data=post_data,
+            follow=True
+        )
+        assert(self.response.status_code == 200)
     
     def amend_defect(self, **post_data):
         self.response = self.client.post(
