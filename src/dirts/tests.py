@@ -7,14 +7,14 @@ from dirts.forms import CreateDirtForm
 
 class DefectAcceptanceTests(TestCase):
     
-    @staticmethod
-    def _load_fixtures():
-        Status.objects.create(name='Open')
-        Status.objects.create(name='Closed')
-        Priority.objects.create(name='High')
-        Priority.objects.create(name='Medium')
-        Priority.objects.create(name='Low')
-        Priority.objects.create(name='Observational')
+    # @staticmethod
+    # def _load_fixtures():
+    #     Status.objects.create(name='Open')
+    #     Status.objects.create(name='Closed')
+    #     Priority.objects.create(name='High')
+    #     Priority.objects.create(name='Medium')
+    #     Priority.objects.create(name='Low')
+    #     Priority.objects.create(name='Observational')
     
     def _login_fake_user(self):
         username = 'test_user'
@@ -46,7 +46,7 @@ class DefectAcceptanceTests(TestCase):
         }
 
     def setUp(self):
-        self._load_fixtures()
+        # self._load_fixtures()
         self._login_fake_user()
     
     def test_should_open_correct_form_when_create_defect_url_accessed(self):
