@@ -130,6 +130,8 @@ class DefectAcceptanceTests(TestCase):
         self.assertEquals(result.reference, 'changed title')
         self.assertEquals(result.description, 'modified description')
         self.assertEquals(result.comments, 'updated comments')
+        self.assertEquals(len(result.change_history), 2)
+        self.assertEquals(result.change_history[-1].submitter, 'test_user')
         
     def test_should_create_dirt_opened_event(self):
         form = CreateDirtForm(data=self._test_form_data_with_comments())
