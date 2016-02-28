@@ -83,18 +83,53 @@ class DefectAcceptanceTests(TestCase):
         self.assertEquals(form.is_valid(), True)
     
     def test_should_create_new_defect(self):
-        form = CreateDirtForm(data=self._test_form_data_with_comments())
-        defect = form.save(commit=False)
-        defect.submitter = self.test_user
-        defect.raise_new()
+        response = self.client.post(
+            reverse('create-dirt-url'),
+            data=self._test_form_data_with_comments(),
+            follow=True)
+
+        result = response.context['dirt']
         
-        self.assertEquals(defect.project_code, 'ABC.123')
-        self.assertEquals(defect.release_id, 'v1.2.3.4')
-        self.assertEquals(defect.status.name, 'Open')
-        self.assertEquals(defect.priority.name, 'High')
-        self.assertEquals(defect.reference, 'a title')
-        self.assertEquals(defect.description, 'some defect description')
-        self.assertEquals(defect.comments, 'some comments')
+        self.assertEquals(result.project_code, 'ABC.123')
+        self.assertEquals(result.release_id, 'v1.2.3.4')
+        self.assertEquals(result.status, 'Open')
+        self.assertEquals(result.priority, 'High')
+        self.assertEquals(result.reference, 'a title')
+        self.assertEquals(result.description, 'some defect description')
+        self.assertEquals(result.comments, 'some comments')
+        
+    
+    def test_should_update_existing_defect(self):
+        data = self._test_form_data_with_comments()
+        
+        response = self.client.post(
+            reverse('create-dirt-url'),
+            data=data,
+            follow=True)
+        
+        data['project_code'] = 'ABC.321'
+        data['release_id'] = 'v4.3.2.1'
+        data['priority'] = Priority.objects.get(name='Observational').id
+        data['reference'] = 'changed title'
+        data['description'] = 'modified description'
+        data['comments'] = 'updated comments'
+        
+        dirt_id = response.context['dirt'].id
+        
+        response = self.client.post(
+            reverse('dirt-amend-url', kwargs={'dirt_id': dirt_id}),
+            data=data,
+            follow=True)
+
+        result = response.context['dirt']
+        
+        self.assertEquals(result.project_code, 'ABC.321')
+        self.assertEquals(result.release_id, 'v4.3.2.1')
+        self.assertEquals(result.status, 'Open')
+        self.assertEquals(result.priority, 'Observational')
+        self.assertEquals(result.reference, 'changed title')
+        self.assertEquals(result.description, 'modified description')
+        self.assertEquals(result.comments, 'updated comments')
         
     def test_should_create_dirt_opened_event(self):
         form = CreateDirtForm(data=self._test_form_data_with_comments())
