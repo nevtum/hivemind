@@ -83,12 +83,10 @@ class DefectAcceptanceTests(TestCase):
         self.assertEquals(form.is_valid(), True)
     
     def test_should_create_new_defect(self):
-        response = self.client.post(
-            reverse('create-dirt-url'),
-            data=self._test_form_data_with_comments(),
-            follow=True)
-
-        result = response.context['dirt']
+        data = self._test_form_data_with_comments()
+        create_defect_page = CreateDefectPage(self.client)
+        defect_page = create_defect_page.raise_new_defect(**data)
+        result = defect_page.context
         
         self.assertEquals(result.project_code, 'ABC.123')
         self.assertEquals(result.release_id, 'v1.2.3.4')
@@ -98,14 +96,11 @@ class DefectAcceptanceTests(TestCase):
         self.assertEquals(result.description, 'some defect description')
         self.assertEquals(result.comments, 'some comments')
         
-    
     def test_should_update_existing_defect(self):
         data = self._test_form_data_with_comments()
         
-        response = self.client.post(
-            reverse('create-dirt-url'),
-            data=data,
-            follow=True)
+        create_defect_page = CreateDefectPage(self.client)
+        defect_page = create_defect_page.raise_new_defect(**data)
         
         data['project_code'] = 'ABC.321'
         data['release_id'] = 'v4.3.2.1'
@@ -114,14 +109,8 @@ class DefectAcceptanceTests(TestCase):
         data['description'] = 'modified description'
         data['comments'] = 'updated comments'
         
-        dirt_id = response.context['dirt'].id
-        
-        response = self.client.post(
-            reverse('dirt-amend-url', kwargs={'dirt_id': dirt_id}),
-            data=data,
-            follow=True)
-
-        result = response.context['dirt']
+        defect_page.amend_defect(**data)
+        result = defect_page.context
         
         self.assertEquals(result.project_code, 'ABC.321')
         self.assertEquals(result.release_id, 'v4.3.2.1')
@@ -130,8 +119,20 @@ class DefectAcceptanceTests(TestCase):
         self.assertEquals(result.reference, 'changed title')
         self.assertEquals(result.description, 'modified description')
         self.assertEquals(result.comments, 'updated comments')
+        
         self.assertEquals(len(result.change_history), 2)
         self.assertEquals(result.change_history[-1].submitter, 'test_user')
+    
+    def test_should_close_existing_defect(self):
+        data = self._test_form_data_with_comments()   
+        create_defect_page = CreateDefectPage(self.client)
+        defect_page = create_defect_page.raise_new_defect(**data)
+        defect_page.close_defect('v1.2.3.5')
+        result = defect_page.context
+        
+        self.assertEquals(result.status, 'Closed')
+        self.assertEquals(result.release_id, 'v1.2.3.5')
+        self.assertEquals(result.status, data['status'].name)
         
     def test_should_create_dirt_opened_event(self):
         form = CreateDirtForm(data=self._test_form_data_with_comments())
@@ -142,3 +143,45 @@ class DefectAcceptanceTests(TestCase):
         self.assertEquals(event.sequence_nr, 0)
         self.assertEquals(event.event_type, 'DIRT.OPENED')
         self.assertIsNotNone(event.blob)
+
+class CreateDefectPage:
+    """Helper class abstracting away web call details
+    and focusing on the intent of the tests"""
+    def __init__(self, client):
+        self.client = client
+    
+    def raise_new_defect(self, **post_data):
+        response = self.client.post(
+            reverse('create-dirt-url'),
+            data=post_data,
+            follow=True
+        )
+        assert(response.status_code == 200)
+        return DefectPage(self.client, response.context['dirt'].id)
+
+class DefectPage:
+    """Helper class abstracting away web call details
+    and focusing on the intent of the tests"""
+    def __init__(self, client, id):
+        self.client = client
+        self.id = id
+        self.response = self.client.get(
+            reverse('dirt-detail-url', kwargs={'dirt_id': self.id})
+        )
+    
+    def close_defect(self, release_id, reason=None):
+        pass
+        
+    def reopen_defect(self, release_id, reason):
+        pass
+    
+    def amend_defect(self, **post_data):
+        self.response = self.client.post(
+            reverse('dirt-amend-url', kwargs={'dirt_id': self.id}),
+            data=post_data,
+            follow=True
+        )
+    
+    @property
+    def context(self):
+        return self.response.context['dirt']
