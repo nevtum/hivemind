@@ -3,11 +3,12 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from .managers import DefectsManager
-from .domain.models import DefectViewModel
+from taggit.managers import TaggableManager
 from common import store as EventStore
 from common.models import DomainEvent
-from dirts.constants import (DIRT_OPENED, DIRT_REOPENED, 
+from .managers import DefectsManager
+from .domain.models import DefectViewModel
+from .constants import (DIRT_OPENED, DIRT_REOPENED, 
 DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED)
 
 class Status(models.Model):
@@ -35,6 +36,7 @@ class Defect(models.Model):
     comments = models.TextField(blank=True)
     
     objects = DefectsManager()
+    tags = TaggableManager()
     
     def raise_new(self):
         self.save()

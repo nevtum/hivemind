@@ -5,7 +5,7 @@ from django.views.generic import ListView, UpdateView, CreateView
 
 from dirts.services import dirt_manager
 from common import store as EventStore
-from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm
+from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm
 from dirts.models import Defect
 
 class DefectListView(ListView):
@@ -32,8 +32,10 @@ class RecentlyChangedDefectListView(DefectListView):
         return Defect.objects.recently_changed()
 
 def detail(request, dirt_id):
+    defect = get_object_or_404(Defect, pk=dirt_id)
     data = {
-        'dirt': get_object_or_404(Defect, pk=dirt_id).as_domainmodel()
+        'dirt': defect.as_domainmodel(),
+        'tags': defect.tags.all()
     }
     return render(request, 'detail.html', data)
 
@@ -116,6 +118,15 @@ class DefectReopenView(UpdateView):
         reason = form.data['reason']
         defect.reopen(self.request.user, release_id, reason)
         return redirect(defect)
+
+class EditTagsView(UpdateView):
+    form_class = TagsForm
+    context_object_name = 'dirt'
+    template_name = 'edit_tags.html '
+
+    def get_object(self, request=None):
+        id = self.kwargs['dirt_id']
+        return get_object_or_404(Defect, pk=id)
 
 @user_passes_test(lambda u: u.is_staff)
 @login_required(login_url='/login/')

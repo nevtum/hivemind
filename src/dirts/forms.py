@@ -2,6 +2,13 @@ from django import forms
 from django.forms import ModelForm, Textarea
 from dirts.models import Defect
 
+class TagsForm(ModelForm):
+    class Meta:
+        model = Defect
+        fields = [
+            'tags'
+        ]
+
 class CreateDirtForm(ModelForm):
     class Meta:
         model = Defect

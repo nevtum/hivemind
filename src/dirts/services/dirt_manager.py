@@ -6,7 +6,8 @@ def latest_dirts(keyword):
     | Q(project_code__icontains=keyword) \
     | Q(description__icontains=keyword) \
     | Q(comments__icontains=keyword) \
-    | Q(release_id__icontains=keyword)
+    | Q(release_id__icontains=keyword) \
+    | Q(tags__name__in=[keyword])
 
     return Defect.objects.latest().filter(query)
 

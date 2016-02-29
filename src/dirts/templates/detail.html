@@ -18,6 +18,7 @@
             {% endif %}
             {% endif %}
             <li><a href="{% url 'create-similar-url' dirt.id %}">Raise similar</a></li>              
+            <li><a href="{% url 'tags' dirt.id %}">Add/Edit tags</a></li>              
           </ul>
         </div>
       </div>
@@ -47,6 +48,9 @@
             <p>{{ dirt.comments | linebreaksbr }}</p>
           </div>
         </div>
+        {% endif %}
+        {% if tags %}
+        <p>Tags: {{ tags.all|join:", " }}</p>
         {% endif %}
       </div>
     </div>

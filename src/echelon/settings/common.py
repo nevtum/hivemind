@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'crispy_forms'
+    'crispy_forms',
+    'taggit',
 ]
 
 INSTALLED_APPS += [

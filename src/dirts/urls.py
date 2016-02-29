@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^(?P<dirt_id>\d+?)/close/$', auth(views.DefectCloseView.as_view()), name='dirt-close-url'),
     url(r'^(?P<dirt_id>\d+?)/reopen/$', auth(views.DefectReopenView.as_view()), name='dirt-reopen-url'),
     url(r'^(?P<dirt_id>\d+?)/delete/$', views.delete, name='dirt-delete-url'),
+    url(r'^(?P<dirt_id>\d+?)/tags/$', auth(views.EditTagsView.as_view()), name='tags'),
 ]

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<form class="myform" action="{% url 'tags' dirt.id %}" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Save" />
+</form>
+
+{% endblock %}
