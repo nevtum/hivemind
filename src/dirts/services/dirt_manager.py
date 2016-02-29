@@ -1,5 +1,6 @@
 from django.db.models import Q
 from dirts.models import Defect
+from common import store as EventStore
 
 def latest_dirts(keyword):
     query = Q(reference__icontains=keyword) \
@@ -11,7 +12,7 @@ def latest_dirts(keyword):
     return Defect.objects.latest().filter(query)
 
 def delete_dirt(dirt_id, user):
-    defect = get_detail(dirt_id).as_viewmodel()
+    defect = Defect.objects.get(pk=dirt_id).as_domainmodel()
     event = defect.soft_delete(user)
     EventStore.append_next(event)
     
