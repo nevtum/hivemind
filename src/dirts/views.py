@@ -122,7 +122,7 @@ class DefectReopenView(UpdateView):
 class EditTagsView(UpdateView):
     form_class = TagsForm
     context_object_name = 'dirt'
-    template_name = 'edit_tags.html '
+    template_name = 'edit_tags.html'
 
     def get_object(self, request=None):
         id = self.kwargs['dirt_id']
