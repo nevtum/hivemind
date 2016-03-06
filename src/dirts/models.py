@@ -119,12 +119,3 @@ class Defect(models.Model):
             'description': self.description,
             'comments': self.comments,
         })
-
-class DefectHistoryItem(models.Model):
-    date_created = models.DateTimeField()
-    defect = models.ForeignKey(Defect)
-    short_desc = models.CharField(max_length=80)
-    submitter = models.ForeignKey(User)
-
-    def __str__(self):
-        return "[%s] %s" % (self.defect.project_code, self.short_desc)

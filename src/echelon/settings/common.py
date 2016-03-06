@@ -63,7 +63,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             SRC_DIR + '/templates/',
-            SRC_DIR + '/clients/templates/'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
