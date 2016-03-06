@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'crispy_forms',
     'taggit',
+    'haystack',
 ]
 
 INSTALLED_APPS += [
@@ -76,6 +77,13 @@ TEMPLATES = [
         },
     },
 ]
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
 
 WSGI_APPLICATION = 'echelon.wsgi.application'
 

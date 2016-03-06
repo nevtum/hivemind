@@ -1,0 +1,3 @@
+{{ object.reference }}
+{{ object.description }}
+{{ object.comments }}

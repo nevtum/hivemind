@@ -16,18 +16,17 @@ class DefectListView(ListView):
     def get_queryset(self):
         queryset = Defect.objects.latest()
         keyword = self.request.GET.get('search', '')
-        
-        if not keyword:
-            return queryset
     
-        query = Q(reference__icontains=keyword) \
-        | Q(project_code__icontains=keyword) \
-        | Q(description__icontains=keyword) \
-        | Q(comments__icontains=keyword) \
-        | Q(release_id__icontains=keyword) \
-        | Q(tags__name__in=[keyword])
+        # query = Q(reference__icontains=keyword) \
+        # | Q(project_code__icontains=keyword) \
+        # | Q(description__icontains=keyword) \
+        # | Q(comments__icontains=keyword) \
+        # | Q(release_id__icontains=keyword) \
+        # | Q(tags__name__in=[keyword])
+        
+        from haystack.query import SearchQuerySet
 
-        return queryset.filter(query).distinct()
+        return SearchQuerySet().filter(content=keyword)
 
 class ActiveDefectListView(DefectListView):
     def get_queryset(self):
