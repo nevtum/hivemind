@@ -13,7 +13,7 @@ def latest_dirts(keyword):
     | Q(release_id__icontains=keyword) \
     | Q(tags__name__in=[keyword])
 
-    return Defect.objects.latest().filter(query)    
+    return Defect.objects.latest().filter(query).distinct()  
 
 def delete_dirt(dirt_id, user):
     defect = Defect.objects.get(pk=dirt_id).as_domainmodel()
