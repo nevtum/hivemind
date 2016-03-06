@@ -81,7 +81,6 @@ class Defect(models.Model):
         defect = self.as_domainmodel()
         event = defect.amend(user, **self._to_kwargs())
         EventStore.append_next(event)
-        self.date_changed = timezone.now()
         self.save()
     
     def reopen(self, user, release_id, reason):
@@ -91,7 +90,6 @@ class Defect(models.Model):
 
         self.status = Status.objects.get(name='Open')
         self.release_id = release_id
-        self.date_changed = timezone.now()
         self.save()
 
     def close(self, user, release_id, reason):
@@ -101,8 +99,13 @@ class Defect(models.Model):
     
         self.status = Status.objects.get(name='Closed')
         self.release_id = release_id
-        self.date_changed = timezone.now()
         self.save()
+        
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.date_created = timezone.now()
+        self.date_changed = timezone.now()
+        return super(Defect, self).save(*args, **kwargs)
 
     def _to_kwargs(self):
         return dict({
