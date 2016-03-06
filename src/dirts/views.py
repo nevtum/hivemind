@@ -1,9 +1,9 @@
 from django.utils import timezone
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import ListView, UpdateView, CreateView
 
-from dirts.services import dirt_manager
 from common import store as EventStore
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm
 from dirts.models import Defect
@@ -14,14 +14,20 @@ class DefectListView(ListView):
     paginate_by = 25
     
     def get_queryset(self):
-        search_param = self._extract_search_parameters()
-        return dirt_manager.latest_dirts(search_param)
+        queryset = Defect.objects.latest()
+        keyword = self.request.GET.get('search', '')
+        
+        if not keyword:
+            return queryset
     
-    def _extract_search_parameters(self):
-        query = self.request.GET.get('search')
-        if query:
-            return query
-        return ''
+        query = Q(reference__icontains=keyword) \
+        | Q(project_code__icontains=keyword) \
+        | Q(description__icontains=keyword) \
+        | Q(comments__icontains=keyword) \
+        | Q(release_id__icontains=keyword) \
+        | Q(tags__name__in=[keyword])
+
+        return queryset.filter(query).distinct()
 
 class ActiveDefectListView(DefectListView):
     def get_queryset(self):
@@ -134,6 +140,9 @@ def delete(request, dirt_id):
     if request.method == 'GET':
         return render(request, 'delete_confirmation.html', {'id': dirt_id})
 
-    # otherwise post
-    dirt_manager.delete_dirt(dirt_id, request.user)
+    defect = Defect.objects.get(pk=dirt_id)
+    defect_model = defect.as_domainmodel()
+    event = defect_model.soft_delete(request.user)
+    EventStore.append_next(event)
+    defect.delete()
     return redirect('dirts-landing-url')
