@@ -3,3 +3,5 @@
 {{ object.reference }}
 {{ object.description }}
 {{ object.comments }}
+
+{% for tag in object.tags.all %} {{ tag.name }} {% endfor %}
