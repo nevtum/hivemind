@@ -7,6 +7,7 @@ from django.views.generic import ListView, UpdateView, CreateView
 from common import store as EventStore
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm
 from dirts.models import Defect
+from haystack.query import SearchQuerySet
 
 class DefectListView(ListView):
     template_name = 'dirt_list.html'
@@ -16,17 +17,18 @@ class DefectListView(ListView):
     def get_queryset(self):
         queryset = Defect.objects.latest()
         keyword = self.request.GET.get('search', '')
-    
-        # query = Q(reference__icontains=keyword) \
-        # | Q(project_code__icontains=keyword) \
-        # | Q(description__icontains=keyword) \
-        # | Q(comments__icontains=keyword) \
-        # | Q(release_id__icontains=keyword) \
-        # | Q(tags__name__in=[keyword])
         
-        from haystack.query import SearchQuerySet
-
-        return SearchQuerySet().filter(content=keyword)
+        if not keyword:
+            return queryset
+            
+        query = Q(reference__icontains=keyword) \
+        | Q(project_code__icontains=keyword) \
+        | Q(description__icontains=keyword) \
+        | Q(comments__icontains=keyword) \
+        | Q(release_id__icontains=keyword) \
+        | Q(tags__name__in=[keyword])
+        
+        return queryset.filter(query)
 
 class ActiveDefectListView(DefectListView):
     def get_queryset(self):
@@ -40,7 +42,8 @@ def detail(request, dirt_id):
     defect = get_object_or_404(Defect, pk=dirt_id)
     data = {
         'dirt': defect.as_domainmodel(),
-        'tags': defect.tags.all()
+        'tags': defect.tags.all(),
+        'more_like_this': SearchQuerySet().more_like_this(defect)[:5]
     }
     return render(request, 'detail.html', data)
 

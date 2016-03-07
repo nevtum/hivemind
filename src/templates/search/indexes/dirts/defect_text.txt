@@ -1,3 +1,5 @@
+{{ object.project_code }}
+{{ object.release_id }}
 {{ object.reference }}
 {{ object.description }}
 {{ object.comments }}

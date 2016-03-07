@@ -21,6 +21,19 @@
             <li><a href="{% url 'tags' dirt.id %}">Add/Edit tags</a></li>              
           </ul>
         </div>
+        {% if more_like_this %}
+        <div id="more-like-this">
+          <h4>More like this</h4>
+          <ul>
+          {% for similar in more_like_this %}
+            <li>
+              <a href="{% url 'dirt-detail-url' similar.object.id %}">{{similar.object.reference}}</a>
+              <p>[Updated {{similar.object.date_changed | timesince}} ago]</p>
+            </li>
+          {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
       </div>
       <div class="col-md-9">
         <div class="panel panel-primary">
