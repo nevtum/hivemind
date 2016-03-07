@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+{% with dirt=model.as_domainmodel %}
 <!--<div class="container-fluid">-->
   <div id="dirt-summary">
     <div class="row">
@@ -21,10 +21,11 @@
             <li><a href="{% url 'tags' dirt.id %}">Add/Edit tags</a></li>              
           </ul>
         </div>
-        {% if model.more_like_this %}
+        {% with more_like_this=model.more_like_this %}
+        {% if more_like_this %}
         <div id="more-like-this">
           <h4>More like this:</h4>
-          {% for similar in model.more_like_this %}
+          {% for similar in more_like_this %}
           <p>
             <a href="{% url 'dirt-detail-url' similar.object.id %}">
               {{similar.object.reference}}
@@ -35,6 +36,7 @@
           {% endfor %}
         </div>
         {% endif %}
+        {% endwith %}
       </div>
       <div class="col-md-9">
         <div class="panel panel-primary">
@@ -63,9 +65,11 @@
           </div>
         </div>
         {% endif %}
+        {% with tags=model.tags.all %}
         {% if tags %}
-        <p>Tags: {{ tags.all|join:", " }}</p>
+        <p>Tags: {{ tags.all | join:", " }}</p>
         {% endif %}
+        {% endwith %}
       </div>
     </div>
     {% if dirt.change_history %}
@@ -97,5 +101,6 @@
     {% endif %}
   </div>
 <!--</div>-->
+{% endwith %}
 
 {% endblock %}

@@ -39,12 +39,7 @@ class RecentlyChangedDefectListView(DefectListView):
 
 def detail(request, dirt_id):
     defect = get_object_or_404(Defect, pk=dirt_id)
-    data = {
-        'dirt': defect.as_domainmodel(),
-        'tags': defect.tags.all(),
-        'model': defect,
-    }
-    return render(request, 'detail.html', data)
+    return render(request, 'detail.html', { 'model': defect })
 
 def time_travel(request, dirt_id, day, month, year):
     day = int(day)
@@ -52,10 +47,8 @@ def time_travel(request, dirt_id, day, month, year):
     year = int(year)
     before_date = timezone.datetime(year, month, day)
     before_date += timezone.timedelta(days=1)
-    data = {
-        'dirt': get_object_or_404(Defect, pk=dirt_id).as_domainmodel(before_date)
-    }
-    return render(request, 'detail.html', data)
+    defect = get_object_or_404(Defect, pk=dirt_id)
+    return render(request, 'detail.html', { 'model': defect })
 
 @user_passes_test(lambda u: u.is_superuser)
 def debug(request, dirt_id):
