@@ -85,6 +85,8 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
 WSGI_APPLICATION = 'echelon.wsgi.application'
 
 SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
