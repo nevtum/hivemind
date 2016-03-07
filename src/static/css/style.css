@@ -33,6 +33,11 @@ body {
   padding: 20;
 }
 
+#more-like-this {
+    padding-top: 20;
+    font-size: small;
+}
+
 /* for dirts */
 
 .desc {
