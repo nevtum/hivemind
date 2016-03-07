@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from taggit.managers import TaggableManager
+from haystack.query import SearchQuerySet
+
 from common import store as EventStore
 from common.models import DomainEvent
 from .managers import DefectsManager
@@ -38,6 +40,9 @@ class Defect(models.Model):
     objects = DefectsManager()
     tags = TaggableManager()
     
+    def more_like_this(self):
+        return SearchQuerySet().more_like_this(self)[:5]
+
     def raise_new(self):
         self.save()
         data = {

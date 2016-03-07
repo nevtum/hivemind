@@ -7,7 +7,6 @@ from django.views.generic import ListView, UpdateView, CreateView
 from common import store as EventStore
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm
 from dirts.models import Defect
-from haystack.query import SearchQuerySet
 
 class DefectListView(ListView):
     template_name = 'dirt_list.html'
@@ -43,7 +42,7 @@ def detail(request, dirt_id):
     data = {
         'dirt': defect.as_domainmodel(),
         'tags': defect.tags.all(),
-        'more_like_this': SearchQuerySet().more_like_this(defect)[:5]
+        'model': defect,
     }
     return render(request, 'detail.html', data)
 
