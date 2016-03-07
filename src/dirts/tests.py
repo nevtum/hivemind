@@ -5,6 +5,8 @@ from common.models import DomainEvent
 from dirts.models import Defect, Priority, Status
 from dirts.forms import CreateDirtForm
 
+# NOTE: MAKE SURE TO DELETE HAYSTACK INDEX
+# BEFORE PERFORMING ANY TEST
 class DefectAcceptanceTests(TestCase):
     
     # @staticmethod
