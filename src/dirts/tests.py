@@ -173,7 +173,7 @@ class CreateDefectPage:
             follow=True
         )
         assert(response.status_code == 200)
-        return DefectPage(self.client, response.context['dirt'].id)
+        return DefectPage(self.client, response.context['model'].id)
 
 class DefectPage:
     """Helper class abstracting away web call details
@@ -218,4 +218,5 @@ class DefectPage:
     
     @property
     def context(self):
-        return self.response.context['dirt']
+        defect =  self.response.context['model']
+        return defect.as_domainmodel()
