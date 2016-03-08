@@ -22,6 +22,6 @@ reverse_proxy:
   volumes_from:
     - data
   ports:
-    - "81:8015"
+    - "81:81"
   links:
     - web:localhost
