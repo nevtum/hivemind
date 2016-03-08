@@ -27,7 +27,7 @@ class DefectListView(ListView):
         | Q(release_id__icontains=keyword) \
         | Q(tags__name__in=[keyword])
         
-        return queryset.filter(query)
+        return queryset.filter(query).distinct()
 
 class ActiveDefectListView(DefectListView):
     def get_queryset(self):
