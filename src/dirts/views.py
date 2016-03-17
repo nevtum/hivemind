@@ -3,10 +3,15 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic import ListView, UpdateView, CreateView
+from taggit.models import Tag
 
 from common import store as EventStore
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm
 from dirts.models import Defect
+
+class TagsListView(ListView):
+    template_name = 'tag_list.html'
+    queryset = Tag.objects.all().order_by('name')
 
 class DefectListView(ListView):
     template_name = 'dirt_list.html'
