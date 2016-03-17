@@ -47,6 +47,11 @@ def detail(request, dirt_id):
     defect = get_object_or_404(Defect, pk=dirt_id)
     return render(request, 'detail.html', { 'model': defect })
 
+def dirts_by_tag(request, slug):
+    tag = get_object_or_404(Tag, slug=slug)
+    queryset = Defect.objects.filter(tags__name__in=[tag.name]).distinct()
+    return render(request, 'dirt_list.html', {'defects': queryset})
+
 def time_travel(request, dirt_id, day, month, year):
     day = int(day)
     month = int(month)
