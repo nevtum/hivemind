@@ -67,9 +67,9 @@
         {% endif %}
         {% with tags=model.tags.all %}
         {% if tags %}
-        <p>Tags: 
+        <p>Tags:
         {% for tag in tags %}
-            <a href="{% url 'dirts-by-tag' tag.slug %}">{{tag}}</a>
+            <u><a href="{% url 'dirts-by-tag' tag.slug %}">#{{tag}}</a></u>
         {% endfor %}
         </p>
         {% endif %}
