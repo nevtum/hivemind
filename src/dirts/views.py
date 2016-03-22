@@ -11,8 +11,7 @@ from dirts.models import Defect
 
 class TagsListView(ListView):
     template_name = 'tag_list.html'
-    # queryset = Tag.objects.all().order_by('name')
-    queryset = Defect.tags.most_common().order_by('-num_times', 'name')
+    queryset = Defect.objects.top_tags()
 
 class DefectListView(ListView):
     template_name = 'dirt_list.html'

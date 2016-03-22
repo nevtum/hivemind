@@ -41,7 +41,10 @@ class Defect(models.Model):
     tags = TaggableManager()
     
     def more_like_this(self):
-        return SearchQuerySet().more_like_this(self)[:5]
+        try:
+            return SearchQuerySet().more_like_this(self)[:5]
+        except:
+            return None
 
     def raise_new(self):
         self.save()
