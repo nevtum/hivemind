@@ -20,7 +20,7 @@ def autocomplete(request):
         | Q(release_id__icontains=keyword) \
         | Q(tags__name__in=[keyword])
         
-        result_set = Defect.objects.filter(query)[:10]
+        result_set = Defect.objects.filter(query).distinct()[:10]
         for obj in result_set:
             results.append({
                 'title': obj.reference
