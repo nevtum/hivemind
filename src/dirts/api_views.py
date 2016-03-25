@@ -1,5 +1,4 @@
 import json
-from django.db.models import Q
 from django.http import HttpResponse
 from rest_framework import viewsets, generics
 from .models import Defect
@@ -13,15 +12,8 @@ def autocomplete(request):
     keyword = request.GET.get('q', '')
     results = []
     if len(keyword) > 2:
-        query = Q(reference__icontains=keyword) \
-        | Q(project_code__icontains=keyword) \
-        | Q(description__icontains=keyword) \
-        | Q(comments__icontains=keyword) \
-        | Q(release_id__icontains=keyword) \
-        | Q(tags__name__in=[keyword])
-        
-        result_set = Defect.objects.filter(query).distinct()[:10]
-        for obj in result_set:
+        result_set = Defect.objects.filter(reference__icontains=keyword)
+        for obj in result_set.distinct()[:10]:
             results.append({
                 'title': obj.reference
             })
