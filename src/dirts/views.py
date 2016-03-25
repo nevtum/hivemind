@@ -19,7 +19,7 @@ class DefectListView(ListView):
     paginate_by = 25
     
     def get_queryset(self):
-        queryset = Defect.objects.latest()
+        queryset = Defect.objects.all()
         keyword = self.request.GET.get('search', '')
         
         if not keyword:
