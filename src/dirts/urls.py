@@ -9,7 +9,7 @@ router.register(r'dirts', DefectViewSet)
 
 urlpatterns = [
     url(r'^v1/', include(router.urls)),
-    url(r'^suggest/$', autocomplete),
+    url(r'^suggest/$', autocomplete, name='dirt-search'),
     
     url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),
     url(r'^active/$', views.ActiveDefectListView.as_view(), name='active-dirts'),

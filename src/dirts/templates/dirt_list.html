@@ -2,6 +2,36 @@
 
 {% block content %}
 
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+<script type="text/javascript">
+    $(function() {
+        
+        var url = "{% url 'dirt-search' %}";
+
+        var fetch_results = function(request, response) {
+            var term = request.term;
+            $.getJSON(url, {'q': term}, function(data) {
+                var results = [];
+                $.each(data, function(k, v) {
+                    results.push(v.title);
+                });
+                response(results);
+            });
+        };
+        
+        $("#search-input").autocomplete({
+            minLength: 3,
+            select: function(evt, ui) {
+                // logic on select something
+            },
+            source: function(request, response) {
+                fetch_results(request, response);
+            },
+        });
+    });
+</script>
+
 <!--<div class="container-fluid">-->
   <div class="row">
     <div class="links col-lg-12">
@@ -16,8 +46,8 @@
   <div class="row">
     <div class="col-lg-3 col-lg-push-9">
       <form action="{% url 'dirts-landing-url' %}" method="get">
-        <div id="search-control" class="input-group">
-          <input type="text" name="search" class="form-control" placeholder="Search DIRTs...">
+        <div class="input-group">
+          <input id="search-input" type="text" name="search" class="form-control" placeholder="Search DIRTs...">
           <span class="input-group-btn">
             <button type="submit" class="btn btn-danger">Search</button>
           </span>
