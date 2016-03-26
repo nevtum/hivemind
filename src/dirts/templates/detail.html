@@ -7,19 +7,19 @@
     <div class="row">
       <div class="col-lg-3 col-lg-push-9">
         <div id="action-panel">
-          <ul class="nav nav-pills nav-stacked">
+          <div class="list-group">
             {% if dirt.is_active %}
-            <li><a href="{% url 'dirt-amend-url' dirt.id %}">Amend</a></li>
-            <li><a href="{% url 'dirt-close-url' dirt.id %}">Close</a></li>
+            <a href="{% url 'dirt-amend-url' dirt.id %}" class="list-group-item">Amend</a>
+            <a href="{% url 'dirt-close-url' dirt.id %}" class="list-group-item">Close</a>
             {% else %}
-            <li><a href="{% url 'dirt-reopen-url' dirt.id %}">Re-open</a></li>
+            <a href="{% url 'dirt-reopen-url' dirt.id %}" class="list-group-item">Re-open</a>
             {% if user.is_staff %}
-            <li><a href="{% url 'dirt-delete-url' dirt.id %}">Delete</a></li>
+            <a href="{% url 'dirt-delete-url' dirt.id %}" class="list-group-item">Delete</a>
             {% endif %}
             {% endif %}
-            <li><a href="{% url 'create-similar-url' dirt.id %}">Raise similar</a></li>              
-            <li><a href="{% url 'tags' dirt.id %}">Add/Edit tags</a></li>              
-          </ul>
+            <a href="{% url 'create-similar-url' dirt.id %}" class="list-group-item">Raise similar</a>              
+            <a href="{% url 'tags' dirt.id %}" class="list-group-item">Add/Edit tags</a>           
+          </div>
         </div>
         {% with more_like_this=model.more_like_this %}
         {% if more_like_this %}
