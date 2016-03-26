@@ -53,10 +53,8 @@
           </span>
         </div>
       </form>
-      <div id="action-panel">
-        <ul class="nav nav-pills nav-stacked">
-            <li><a href="{% url 'create-dirt-url' %}">Raise a DIRT</a></li>
-        </ul>
+      <div class="list-group">
+        <a href="{% url 'create-dirt-url' %}" class="list-group-item">Raise a DIRT</a>
       </div>
       {% if is_paginated %}
       <div class="pagination">

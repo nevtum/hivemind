@@ -6,7 +6,7 @@
   <div id="dirt-summary">
     <div class="row">
       <div class="col-lg-3 col-lg-push-9">
-        <div id="action-panel" class="list-group">
+        <div class="list-group">
           {% if dirt.is_active %}
           <a href="{% url 'dirt-amend-url' dirt.id %}" class="list-group-item">Amend</a>
           <a href="{% url 'dirt-close-url' dirt.id %}" class="list-group-item">Close</a>
