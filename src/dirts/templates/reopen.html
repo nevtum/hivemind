@@ -3,6 +3,8 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
+<h4>Enter release info and reason for this DIRT to be reopened.</h4>
+
 <form class="myform" action="{% url 'dirt-reopen-url' dirt.id %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}

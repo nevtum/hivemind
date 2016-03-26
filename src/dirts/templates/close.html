@@ -3,6 +3,9 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
+<h4>Enter release info for this DIRT to be closed.</h4>
+<p><i>Note: Reason field is optional. For future reference it is recommended to be filled in.</i></p>
+
 <form class="myform" action="{% url 'dirt-close-url' dirt.id %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
