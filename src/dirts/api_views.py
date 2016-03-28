@@ -1,8 +1,7 @@
-import json
-from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from common import store as EventStore
 from common.serializers import DomainEventSerializer
 from .models import Defect
@@ -20,14 +19,16 @@ class DefectViewSet(viewsets.ModelViewSet):
         
     @detail_route(methods=['put'])
     def close(self):
-    """Custom method and route for closing existing DIRT"""
+        """Custom method and route for closing existing DIRT"""
         pass
     
     @detail_route(methods=['put'])
     def reopen(self):
-    """Custom method and route for reopening existing DIRT"""
+        """Custom method and route for reopening existing DIRT"""
         pass
 
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
 def autocomplete(request):
     keyword = request.GET.get('q', '')
     results = []
@@ -37,4 +38,4 @@ def autocomplete(request):
             results.append({
                 'title': obj.reference
             })
-    return HttpResponse(json.dumps(results), content_type='application/json')
+    return Response(results)
