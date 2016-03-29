@@ -20,6 +20,9 @@ class Project(models.Model):
         self.code = self.code.upper()
         self.slug = slugify(self.code)
         super(Project, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.code
 
 class DomainEvent(models.Model):
 	sequence_nr = models.IntegerField()
