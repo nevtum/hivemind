@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route, api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from common import store as EventStore
+from common.models import Project
 from common.serializers import DomainEventSerializer
 from .models import Defect
 from .serializers import DefectSerializer
@@ -29,7 +30,25 @@ class DefectViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def autocomplete(request):
+def autocomplete_projects(request):
+    keyword = request.GET.get('q', '')
+    results = []
+    if len(keyword) > 2:
+        result_set = Project.objects.filter(
+                description__icontains=keyword
+            ).order_by(
+                '-date_created'
+            ).distinct()
+        for obj in result_set[:10]:
+            results.append({
+                'label': "{} - {}".format(obj.code, obj.description),
+                'value': obj.code
+            })
+    return Response(results)
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+def autocomplete_titles(request):
     keyword = request.GET.get('q', '')
     results = []
     if len(keyword) > 2:

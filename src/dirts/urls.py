@@ -1,7 +1,11 @@
 from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required as auth
 from rest_framework import routers
-from .api_views import DefectViewSet, autocomplete
+from .api_views import (
+    DefectViewSet,
+    autocomplete_titles,
+    autocomplete_projects
+)
 from . import views
 
 router = routers.DefaultRouter()
@@ -9,7 +13,8 @@ router.register(r'dirts', DefectViewSet)
 
 urlpatterns = [
     url(r'^v1/', include(router.urls)),
-    url(r'^suggest/$', autocomplete, name='dirt-search'),
+    url(r'^suggest_dirt/$', autocomplete_titles, name='dirt-search'),
+    url(r'^suggest_project/$', autocomplete_projects, name='project-search'),
     
     url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),
     url(r'^active/$', views.ActiveDefectListView.as_view(), name='active-dirts'),
