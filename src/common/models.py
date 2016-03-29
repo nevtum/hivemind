@@ -1,5 +1,24 @@
 import json
 from django.db import models
+from django.template.defaultfilters import slugify
+
+class Manufacturer(models.Model):
+    name = models.CharField(max_length=80)
+    is_operational = models.BooleanField()
+    
+    def __str__(self):
+        return self.name
+
+class Project(models.Model):
+    code = models.CharField(max_length=30, unique=True)
+    slug = models.SlugField()
+    manufacturer = models.ForeignKey(Manufacturer)
+    description = models.CharField(max_length=120)
+    date_created = models.DateField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.code)
+        super(Project, self).save(*args, **kwargs)
 
 class DomainEvent(models.Model):
 	sequence_nr = models.IntegerField()
