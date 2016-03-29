@@ -7,7 +7,7 @@ from taggit.managers import TaggableManager
 from haystack.query import SearchQuerySet
 
 from common import store as EventStore
-from common.models import DomainEvent
+from common.models import DomainEvent, Project
 from .managers import DefectsManager
 from .domain.models import DefectViewModel
 from .constants import (DIRT_OPENED, DIRT_REOPENED, 
@@ -27,6 +27,7 @@ class Priority(models.Model):
 
 class Defect(models.Model):
     project_code = models.CharField(max_length=20)
+    project = models.ForeignKey(Project)
     date_created = models.DateTimeField(auto_now_add=True)
     date_changed = models.DateTimeField(auto_now_add=True)
     submitter = models.ForeignKey(User)
