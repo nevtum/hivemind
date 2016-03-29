@@ -13,7 +13,7 @@ class CreateDirtForm(ModelForm):
     class Meta:
         model = Defect
         fields = [
-            'project_code',
+            'project',
             'release_id',
             'priority',
             'reference',

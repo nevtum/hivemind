@@ -1,4 +1,4 @@
-{{ object.project_code }}
+{{ object.project.code }}
 {{ object.release_id }}
 {{ object.reference }}
 {{ object.description }}

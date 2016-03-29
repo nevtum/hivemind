@@ -6,7 +6,6 @@ from django.views.generic import ListView, UpdateView, CreateView
 from taggit.models import Tag
 
 from common import store as EventStore
-from common.models import Project
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm
 from dirts.models import Defect
 
@@ -77,8 +76,6 @@ class DefectCreateView(CreateView):
     def form_valid(self, form):
         defect = form.save(commit=False)
         defect.submitter = self.request.user
-        # ugh, yuck!
-        defect.project = get_object_or_404(Project, code=defect.project_code)
         defect.raise_new()
         return redirect(defect)
 
