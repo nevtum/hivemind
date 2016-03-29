@@ -14,9 +14,10 @@ class Project(models.Model):
     slug = models.SlugField()
     manufacturer = models.ForeignKey(Manufacturer)
     description = models.CharField(max_length=120)
-    date_created = models.DateField(auto_now_add=True)
+    date_created = models.DateField()
     
     def save(self, *args, **kwargs):
+        self.code = self.code.upper()
         self.slug = slugify(self.code)
         super(Project, self).save(*args, **kwargs)
 

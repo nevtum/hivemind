@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('code', models.CharField(max_length=30, unique=True)),
                 ('slug', models.SlugField()),
                 ('description', models.CharField(max_length=120)),
-                ('date_created', models.DateField(auto_now_add=True)),
+                ('date_created', models.DateField()),
                 ('manufacturer', models.ForeignKey(to='common.Manufacturer')),
             ],
         ),
