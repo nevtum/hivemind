@@ -12,6 +12,7 @@ class ManufacturerAdmin(admin.ModelAdmin):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('date_created', 'code', 'description')
     list_filter = ('manufacturer',)
+    ordering = ('-date_created',)
     prepopulated_fields = { 'slug': ('code',) }
 
 # Register your models here.
