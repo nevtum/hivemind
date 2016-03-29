@@ -10,8 +10,13 @@ from common import store as EventStore
 from common.models import DomainEvent, Project
 from .managers import DefectsManager
 from .domain.models import DefectViewModel
-from .constants import (DIRT_OPENED, DIRT_REOPENED, 
-DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED)
+from .constants import (
+    DIRT_OPENED,
+    DIRT_REOPENED, 
+    DIRT_AMENDED,
+    DIRT_CLOSED,
+    DIRT_DELETED
+)
 
 class Status(models.Model):
     name = models.CharField(max_length=20)
