@@ -71,6 +71,7 @@ class Defect(models.Model):
     def copy(self):
         copy = Defect()
         copy.project_code = self.project_code
+        copy.project = self.project
         copy.release_id = self.release_id
         assert(self.project_code != "")
         assert(self.release_id != "")
