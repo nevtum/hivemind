@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Attention!!
 # Update this settings variable when releasing a new version of Echelon
 # such as when there are changes to db models
-RELEASE_VERSION = 'v0.1.16'
+RELEASE_VERSION = 'v0.1.17'
 
 # Build paths inside the project like this: os.path.join(SRC_DIR, ...)
 import os
