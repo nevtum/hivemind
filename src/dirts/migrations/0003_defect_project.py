@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='defect',
             name='project',
-            field=models.ForeignKey(to='common.Project', default=0),
+            field=models.ForeignKey(to='common.Project', default=1),
             preserve_default=False,
         ),
     ]
