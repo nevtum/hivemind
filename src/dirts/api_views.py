@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route, api_view, permission_classes
@@ -34,9 +35,9 @@ def autocomplete_projects(request):
     keyword = request.GET.get('q', '')
     results = []
     if len(keyword) > 2:
-        result_set = Project.objects.filter(
-                description__icontains=keyword
-            ).order_by(
+        query = Q(description__icontains=keyword) \
+            | Q(code__icontains=keyword)
+        result_set = Project.objects.filter(query).order_by(
                 '-date_created'
             ).distinct()
         for obj in result_set[:10]:
