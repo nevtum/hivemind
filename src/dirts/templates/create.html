@@ -12,3 +12,38 @@
 </form>
 
 {% endblock %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" />
+{% endblock %}
+
+{% block custom_javascript %}
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            
+            var url = "{% url 'project-search' %}";
+
+            var fetch_results = function(request, response) {
+                var term = request.term;
+                $.getJSON(url, {'q': term}, function(data) {
+                    var results = [];
+                    $.each(data, function(k, v) {
+                        results.push(v);
+                    });
+                    response(results);
+                });
+            };
+            
+            $("#id_project_code").autocomplete({
+                minLength: 3,
+                select: function(evt, ui) {
+                    // logic on select something
+                },
+                source: function(request, response) {
+                    fetch_results(request, response);
+                },
+            });
+        });
+    </script>
+{% endblock %}
