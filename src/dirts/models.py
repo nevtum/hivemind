@@ -120,6 +120,7 @@ class Defect(models.Model):
         if not self.id:
             self.date_created = timezone.now()
         self.date_changed = timezone.now()
+        self.project = Project.objects.get(code=self.project_code)
         return super(Defect, self).save(*args, **kwargs)
 
     def _to_kwargs(self):
