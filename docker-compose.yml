@@ -17,7 +17,10 @@ web:
     - "8001"
   links:
     - postgresdb:pgdb
-reverseproxy:
+  environment:
+    PASSWORD: mypassword
+    USER: echelon_user
+reverse_proxy:
   build: ./nginx
   volumes_from:
     - data

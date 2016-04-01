@@ -1,3 +1,4 @@
+import os
 from .common import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -10,8 +11,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
-        'USER': 'echelon_user',
-        'PASSWORD': 'mypassword',
+        'USER': os.environ['USER'],
+        'PASSWORD': os.environ['PASSWORD'],
         'HOST': 'pgdb',
         'PORT': 5432,
     }
