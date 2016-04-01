@@ -33,12 +33,16 @@ INSTALLED_APPS = [
     'crispy_forms',
     'taggit',
     'haystack',
+    'dbbackup',
 ]
 
 INSTALLED_APPS += [
     'common',
     'dirts'
 ]
+
+DBBACKUP_STORAGE = 'dbbackup.storage.filesystem_storage'
+DBBACKUP_STORAGE_OPTIONS = { 'location': SRC_DIR }
 
 # Import third party libraries
 from .drf import *
