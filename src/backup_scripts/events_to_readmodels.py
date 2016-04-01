@@ -1,9 +1,11 @@
+# an emergency script to build Defect objects out of domain events 
+
 import os, sys
 from django.core.wsgi import get_wsgi_application
 
 proj_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(proj_path)
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "echelon.settings.dev")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "echelon.settings.prod")
 application = get_wsgi_application()
 
 from django.contrib.auth.models import User
@@ -17,6 +19,7 @@ def main():
         events = Eventstore.get_events_for('DEFECT', id)
         defect = build_defect_read_model(events)
         defect.save()
+    update_dates()
 
 def unique_ids():
     defect_events = DomainEvent.objects.filter(aggregate_type='DEFECT')
@@ -38,6 +41,13 @@ def build_defect_read_model(events):
     d.description = aggregate.description
     d.comments = aggregate.comments
     return d
+    
+def update_dates():
+    for defect in Defect.objects.all():
+        aggregate = defect.as_domainmodel()
+        defect.date_created = aggregate.date_created
+        defect.date_changed = aggregate.date_changed
+        defect.save()
 
 if __name__ == '__main__':
     main()
