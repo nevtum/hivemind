@@ -1,27 +1,12 @@
-{% extends "base.html" %}
+{% extends "new_project.html" %}
 
 {% block content %}
 {% load crispy_forms_tags %}
 
-<form class="myform" action="{% url 'create-project' %}" method="post">
+<form class="myform" action="{% url 'edit-project' project.slug %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Submit" />
 </form>
 
-{% endblock %}
-
-{% block custom_css %}
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" />
-{% endblock %}
-
-{% block custom_javascript %}
-    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('.dateinput').datepicker({
-                format: "yyyy/mm/dd" 
-            });
-        });
-    </script>
 {% endblock %}
