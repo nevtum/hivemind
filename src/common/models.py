@@ -17,7 +17,7 @@ class Project(models.Model):
     date_created = models.DateField()
     
     def save(self, *args, **kwargs):
-        self.code = self.code.upper()
+        self.code = self.code.strip().upper()
         self.slug = slugify(self.code)
         super(Project, self).save(*args, **kwargs)
     
