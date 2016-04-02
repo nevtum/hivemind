@@ -38,6 +38,10 @@ body {
     font-size: small;
 }
 
+.textinput {
+    width: 25%
+}
+
 /* for dirts */
 
 .desc {
