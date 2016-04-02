@@ -21,7 +21,7 @@
               <td>{{ project.code }}</td>
               <td>{{ project.date_created }}</td>
               <td>{{ project.description }}</td>
-              <td><a href="">edit</a></td>
+              <td><a href="{% url 'edit-project' project.slug %}">[Edit]</a></td>
             </tr>
             {% endfor %}
           </tbody>
