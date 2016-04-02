@@ -4,7 +4,7 @@ data:
     - /web_app/volume/
     - /web_app/static/
 postgresdb:
-  image: postgres:9.5.1
+  image: postgres:9.4.5
   environment:
     POSTGRES_PASSWORD: mypassword
     POSTGRES_USER: echelon_user
