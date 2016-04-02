@@ -3,8 +3,8 @@ data:
   volumes:
     - /web_app/volume/
     - /web_app/static/
-postgres_db:
-  image: postgres
+postgresdb:
+  image: postgres:9.5.1
   environment:
     POSTGRES_PASSWORD: mypassword
     POSTGRES_USER: echelon_user
@@ -16,8 +16,8 @@ web:
   ports:
     - "8001"
   links:
-    - postgres_db:pgdb
-reverse_proxy:
+    - postgresdb:pgdb
+reverseproxy:
   build: ./nginx
   volumes_from:
     - data
