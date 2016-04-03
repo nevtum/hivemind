@@ -9,7 +9,11 @@
 </div>
 {% endif %}
 
+{% if next %}
+<form action="{% url 'login-url' %}?next={{next}}" method="post" >
+{%else%}
 <form class="myform" action="{% url 'login-url' %}" method="post">
+{% endif %}
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Submit" />

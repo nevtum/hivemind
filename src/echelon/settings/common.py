@@ -93,7 +93,9 @@ SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
 
 ALLOWED_HOSTS = ['*']
 
-LOGIN_URL = '/login/'
+from django.core.urlresolvers import reverse_lazy
+LOGIN_URL = reverse_lazy('login-url')
+LOGIN_REDIRECT_URL = reverse_lazy('home-url')
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
