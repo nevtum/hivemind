@@ -6,7 +6,7 @@ from django.views.generic import ListView, UpdateView, CreateView
 from taggit.models import Tag
 
 from common import store as EventStore
-from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm
+from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm, ViewDirtReportForm
 from dirts.models import Defect
 
 class TagsListView(ListView):
@@ -61,10 +61,26 @@ def time_travel(request, dirt_id, day, month, year):
     return render(request, 'detail.html', { 'model': defect })
 
 def report(request):
-    if request.method == "POST":
-        raise Exception("not implemented")
-        
-    return render(request, 'report_request.html')
+    if request.GET.get('project_code'):
+        form = ViewDirtReportForm(request.GET)
+        if form.is_valid():
+            kwargs = {
+                'project_code': form.data['project_code'],
+                'date_created__lte': form.data['prior_to_date'],
+                'status__name': 'Open'
+            }
+            defects = Defect.objects.filter(kwargs)
+        else:
+            defects = None
+    else:
+        form = ViewDirtReportForm()
+        defects = None
+    
+    res = {
+        'form': form,
+        'defects': defects
+    }
+    return render(request, 'report_request.html', res)
 
 @user_passes_test(lambda u: u.is_superuser)
 def debug(request, dirt_id):

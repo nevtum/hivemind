@@ -1,6 +1,18 @@
+from dirts.models import Defect
 from django import forms
 from django.forms import ModelForm, Textarea
-from dirts.models import Defect
+from django.utils import timezone
+
+
+class ViewDirtReportForm(ModelForm, forms.Form):
+    prior_to_date = forms.DateField(initial=timezone.now)
+    view_only_active = forms.BooleanField(required=False)
+    
+    class Meta:
+        model = Defect
+        fields = [
+            'project_code'
+        ]
 
 class TagsForm(ModelForm):
     class Meta:
