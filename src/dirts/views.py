@@ -79,6 +79,7 @@ def _to_dto(defect, index, report_date):
     }
 
 def report(request):
+    items = None
     if request.GET.get('project_code'):
         form = ViewDirtReportForm(request.GET)
         if form.is_valid():
@@ -89,14 +90,18 @@ def report(request):
             
             items = []
             index = 1001
-            for defect in Defect.objects.filter(**kwargs):
+            for defect in Defect.objects.filter(**kwargs).order_by('date_created'):
                 items.append(_to_dto(defect, index, form.data['prior_to_date']))
                 index = index + 1
-        else:
-            items = None
+                
+            # if form.data.get('sort_by_priority') is not None:
+            #     items = sorted(items, key=lambda x: x['level'], reverse=False)
+            
+            if form.data.get('show_active_only') is not None:
+                items = filter(lambda x: x['status'] == 'Active', items)
+            
     else:
         form = ViewDirtReportForm()
-        items = None
     
     res = {
         'form': form,

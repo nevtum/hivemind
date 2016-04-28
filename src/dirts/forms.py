@@ -6,7 +6,8 @@ from django.utils import timezone
 
 class ViewDirtReportForm(ModelForm, forms.Form):
     prior_to_date = forms.DateField(initial=timezone.now)
-    view_only_active = forms.BooleanField(required=False)
+    show_active_only = forms.BooleanField(required=False, initial=True)
+    # sort_by_priority = forms.BooleanField(required=False)
     
     class Meta:
         model = Defect
