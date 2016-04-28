@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^suggest_dirt/$', autocomplete_titles, name='dirt-search'),
     url(r'^suggest_project/$', autocomplete_projects, name='project-search'),
     
+    url(r'^report/$', views.report, name='report'),
     url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),
     url(r'^active/$', views.ActiveDefectListView.as_view(), name='active-dirts'),
     url(r'^most-recent/$', views.RecentlyChangedDefectListView.as_view(), name='recent-dirts'),

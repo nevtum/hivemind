@@ -60,6 +60,12 @@ def time_travel(request, dirt_id, day, month, year):
     defect = get_object_or_404(Defect, pk=dirt_id)
     return render(request, 'detail.html', { 'model': defect })
 
+def report(request):
+    if request.method == "POST":
+        raise Exception("not implemented")
+        
+    return render(request, 'report_request.html')
+
 @user_passes_test(lambda u: u.is_superuser)
 def debug(request, dirt_id):
     """admin specific view to inspect event sources"""
