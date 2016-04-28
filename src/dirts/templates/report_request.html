@@ -65,9 +65,12 @@
             <td>{{ dirt.owner }}</td>
             <td>
               <p>Version: {{ dirt.version }}</p>
-              <p>Reference: {{ dirt.reference }}</p>
+              <p>Summary: {{ dirt.reference }}</p>
+              <p>Description:</p>
               <p>{{ dirt.description }}</p>
               {% if dirt.comments %}
+                <br>
+                <p>Comments:</p>
                 <p>{{ dirt.comments }}</p>
               {% endif %}
               </p>
