@@ -44,7 +44,6 @@
 
 <div class="col-lg-12">
     <form class="myform" action="{% url 'report' %}" method="get">
-        <!--{% csrf_token %}-->
         {{ form|crispy }}
         <input type="submit" value="View Report" />
     </form>
@@ -62,10 +61,10 @@
           </tr>
           {% for dirt in defects %}
           <tr>
-            <td>1001</td>
-            <td>{{ dirt.submitter.first_name }} {{ dirt.submitter.last_name }}</td>
+            <td>{{ dirt.id }}</td>
+            <td>{{ dirt.owner }}</td>
             <td>
-              <p>Version: {{ dirt.release_id }}</p>
+              <p>Version: {{ dirt.version }}</p>
               <p>Reference: {{ dirt.reference }}</p>
               <p>{{ dirt.description }}</p>
               {% if dirt.comments %}
@@ -73,9 +72,9 @@
               {% endif %}
               </p>
             </td>
-            <td>{{ dirt.status.name }}</td>
-            <td>{{ dirt.priority.name }}</td>
-            <td>{{ dirt.date_created | date:"d/m/Y" }}</td>
+            <td>{{ dirt.status }}</td>
+            <td>{{ dirt.level }}</td>
+            <td>{{ dirt.date_logged | date:"d/m/Y" }}</td>
           </tr>
           {% endfor %}
         </tbody>

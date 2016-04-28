@@ -67,18 +67,38 @@ def report(request):
             kwargs = {
                 'project_code': form.data['project_code'],
                 'date_created__lte': form.data['prior_to_date'],
-                'status__name': 'Open'
             }
-            defects = Defect.objects.filter(**kwargs)
+            
+            items = []
+            index = 1001
+            for defect in Defect.objects.filter(**kwargs):
+                if defect.status.name == 'Open':
+                    status = 'Active'
+                else:
+                    # if form.data.get('view_only_active') is None:
+                    #     continue 
+                    status = 'Closed'
+                dto = {
+                    'id': index,
+                    'version': defect.release_id,
+                    'reference': defect.reference,
+                    'date_logged': defect.date_created,
+                    'level': defect.priority.name,
+                    'owner': "%s %s" % (defect.submitter.first_name, defect.submitter.last_name),
+                    'description': defect.description,
+                    'status': status
+                }
+                items.append(dto)
+                index = index + 1
         else:
-            defects = None
+            items = None
     else:
         form = ViewDirtReportForm()
-        defects = None
+        items = None
     
     res = {
         'form': form,
-        'defects': defects
+        'defects': items
     }
     return render(request, 'report_request.html', res)
 
