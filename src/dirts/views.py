@@ -60,6 +60,24 @@ def time_travel(request, dirt_id, day, month, year):
     defect = get_object_or_404(Defect, pk=dirt_id)
     return render(request, 'detail.html', { 'model': defect })
 
+def _to_dto(defect, index, report_date):
+    defect_model = defect.as_domainmodel(report_date)
+    if defect_model.status == 'Open':
+        status = 'Active'
+    else:
+        status = 'Closed'
+    return {
+        'id': index,
+        'version': defect_model.release_id,
+        'reference': defect_model.reference,
+        'date_logged': defect_model.date_created,
+        'level': defect_model.priority,
+        'owner': "%s %s" % (defect.submitter.first_name, defect.submitter.last_name),
+        'description': defect_model.description,
+        'comments': defect_model.comments,
+        'status': status
+    }
+
 def report(request):
     if request.GET.get('project_code'):
         form = ViewDirtReportForm(request.GET)
@@ -72,23 +90,7 @@ def report(request):
             items = []
             index = 1001
             for defect in Defect.objects.filter(**kwargs):
-                if defect.status.name == 'Open':
-                    status = 'Active'
-                else:
-                    # if form.data.get('view_only_active') is None:
-                    #     continue 
-                    status = 'Closed'
-                dto = {
-                    'id': index,
-                    'version': defect.release_id,
-                    'reference': defect.reference,
-                    'date_logged': defect.date_created,
-                    'level': defect.priority.name,
-                    'owner': "%s %s" % (defect.submitter.first_name, defect.submitter.last_name),
-                    'description': defect.description,
-                    'status': status
-                }
-                items.append(dto)
+                items.append(_to_dto(defect, index, form.data['prior_to_date']))
                 index = index + 1
         else:
             items = None
