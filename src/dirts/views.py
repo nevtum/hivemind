@@ -69,7 +69,7 @@ def report(request):
                 'date_created__lte': form.data['prior_to_date'],
                 'status__name': 'Open'
             }
-            defects = Defect.objects.filter(kwargs)
+            defects = Defect.objects.filter(**kwargs)
         else:
             defects = None
     else:
