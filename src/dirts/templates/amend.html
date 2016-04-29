@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block content %}
 {% load crispy_forms_tags %}
@@ -12,11 +13,11 @@
 {% endblock %}
 
 {% block custom_css %}
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="{% static "css/jquery-ui.css" %}" />
 {% endblock %}
 
 {% block custom_javascript %}
-    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+    <script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
     <script type="text/javascript">
         $(function() {
             
