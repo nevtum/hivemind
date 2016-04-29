@@ -37,16 +37,7 @@ class DefectViewModel(object):
         if self.status != "Open":
             raise Exception("DIRT must be in open state to amend.")
         
-        data = {
-            'project_code': kwargs['project_code'],
-            'release_id': kwargs['release_id'],
-            'priority': kwargs['priority'],
-            'reference': kwargs['reference'],
-            'description': kwargs['description'],
-            'comments': kwargs['comments']
-        }
-        
-        return self._create_event(DIRT_AMENDED, data, user)
+        return self._create_event(DIRT_AMENDED, kwargs, user)
     
     def close(self, user, release_id, reason):
         if self.status == "Closed":
