@@ -8,11 +8,11 @@
     <div class="panel-heading">
         [{{ event.sequence_nr }}] 
         {{ event.event_type }} 
-        ({{ event.date_occurred }}) - 
-        submitter: {{ event.username }}
+        ({{ event.created }}) - 
+        submitter: {{ event.created_by }}
     </div>
     <div class="panel-body">
-        <p>{{ event.blob }}</p>
+        <p>{{ event.payload }}</p>
     </div>
 </div>
 
