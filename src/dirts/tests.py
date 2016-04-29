@@ -1,22 +1,34 @@
-from django.test import TestCase
+from common.models import DomainEvent, Manufacturer, Project
+from dirts.forms import CreateDirtForm
+from dirts.models import Defect, Priority, Status
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from common.models import DomainEvent
-from dirts.models import Defect, Priority, Status
-from dirts.forms import CreateDirtForm
+from django.test import TestCase
+from django.utils import timezone
+
 
 # NOTE: MAKE SURE TO DELETE HAYSTACK INDEX
 # BEFORE PERFORMING ANY TEST
 class DefectAcceptanceTests(TestCase):
     
-    # @staticmethod
-    # def _load_fixtures():
-    #     Status.objects.create(name='Open')
-    #     Status.objects.create(name='Closed')
-    #     Priority.objects.create(name='High')
-    #     Priority.objects.create(name='Medium')
-    #     Priority.objects.create(name='Low')
-    #     Priority.objects.create(name='Observational')
+    @staticmethod
+    def _load_fixtures():
+        manufacturer = Manufacturer.objects.create(
+            name='Example Manufacturer',
+            is_operational=True
+        )
+        Project.objects.create(
+            code='ABC.123',
+            manufacturer=manufacturer,
+            description='Project 1',
+            date_created=timezone.now()
+        )
+        Project.objects.create(
+            code='ABC.321',
+            manufacturer=manufacturer,
+            description='Project 2',
+            date_created=timezone.now()
+        )
     
     def _login_fake_user(self):
         username = 'test_user'
@@ -48,7 +60,7 @@ class DefectAcceptanceTests(TestCase):
         }
 
     def setUp(self):
-        # self._load_fixtures()
+        self._load_fixtures()
         self._login_fake_user()
     
     def test_should_open_correct_form_when_create_defect_url_accessed(self):
@@ -218,5 +230,5 @@ class DefectPage:
     
     @property
     def context(self):
-        defect =  self.response.context['model']
+        defect = self.response.context['model']
         return defect.as_domainmodel()
