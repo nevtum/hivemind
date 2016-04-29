@@ -67,11 +67,11 @@
               <p>Version: {{ dirt.version }}</p>
               <p>Summary: {{ dirt.reference }}</p>
               <p>Description:</p>
-              <p>{{ dirt.description }}</p>
+              <p>{{ dirt.description | linebreaksbr }}</p>
               {% if dirt.comments %}
                 <br>
                 <p>Comments:</p>
-                <p>{{ dirt.comments }}</p>
+                <p>{{ dirt.comments | linebreaksbr }}</p>
               {% endif %}
               </p>
             </td>
