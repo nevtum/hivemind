@@ -81,45 +81,33 @@ class DefectViewModel(object):
     def is_active(self):
         return self.status != "Closed"
     
-    def _set_headers(self, event):
-        self.id = event['aggregate_id']
-        self.submitter = event['created_by']
-        self.date_created = event['created']
-    
-    def _add_change_dirt_closed(self, event):
+    def _add_changeset_dirt_closed(self, event):
         payload = event['payload']    
-        ch = ChangeHistory()
-        ch.date_created = event['created']
-        ch.submitter = event['created_by']
-        ch.description = "DIRT closed."
-        ch.description += "\nVersion: %s" % payload['release_id']
+        description = "DIRT closed."
+        description += "\nVersion: %s" % payload['release_id']
         if payload['reason'] != "":
-            ch.description += "\nReason: \"%s\"" % payload['reason']
-        self.change_history.insert(0, ch)
+            description += "\nReason: \"%s\"" % payload['reason']
+        ch = self._add_changeset(event, description)
     
-    def _add_change_dirt_reopened(self, event):
+    def _add_changeset_dirt_reopened(self, event):
         payload = event['payload']
-        ch = ChangeHistory()
-        ch.date_created = event['created']
-        ch.submitter = event['created_by']
-        ch.description = "DIRT has been reopened."
-        ch.description += "\nVersion: %s" % payload['release_id']
+        description = "DIRT has been reopened."
+        description += "\nVersion: %s" % payload['release_id']
         if payload['reason'] != "":
-            ch.description += "\nReason: \"%s\"" % payload['reason']
-        self.change_history.insert(0, ch)
+            description += "\nReason: \"%s\"" % payload['reason']
+        ch = self._add_changeset(event, description)
 
-    def _add_change_dirt_amended(self, event):
-        ch = ChangeHistory()
-        ch.date_created = event['created']
-        ch.submitter = event['created_by']
-        ch.description = "DIRT has been modified."
-        self.change_history.insert(0, ch)
+    def _add_changeset_dirt_amended(self, event):
+        ch = self._add_changeset(event, "DIRT has been updated.")
     
-    def _create_change_dirt_opened(self, event):
+    def _create_changeset_dirt_opened(self, event):
+        ch = self._add_changeset(event, "New DIRT created.")
+    
+    def _add_changeset(self, event, description):
         ch = ChangeHistory()
         ch.date_created = event['created']
         ch.submitter = event['created_by']
-        ch.description = "New DIRT created."
+        ch.description = description
         self.change_history.insert(0, ch)
     
     def _replay_from(self, defect_events):
@@ -129,23 +117,25 @@ class DefectViewModel(object):
             self.apply(event)
 
     def _on_opened(self, event):
-        self._create_change_dirt_opened(event)
-        self._set_headers(event)
-        self._set_properties(event)
+        self._create_changeset_dirt_opened(event)
+        self.id = event['aggregate_id']
+        self.submitter = event['created_by']
+        self.date_created = event['created']
         self.status = 'Open'
+        self._set_properties(event)
         
     def _on_closed(self, event):
-        self._add_change_dirt_closed(event)    
+        self._add_changeset_dirt_closed(event)
         self.status = 'Closed'
         self.release_id = event['payload']['release_id']
     
     def _on_reopened(self, event):
-        self._add_change_dirt_reopened(event)    
+        self._add_changeset_dirt_reopened(event)    
         self.status = 'Open'
         self.release_id = event['payload']['release_id']
     
     def _on_amended(self, event):
-        self._add_change_dirt_amended(event)    
+        self._add_changeset_dirt_amended(event)    
         self._set_properties(event)
     
     def _on_deleted(self, event):
