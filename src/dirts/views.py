@@ -6,6 +6,7 @@ from django.views.generic import ListView, UpdateView, CreateView
 from taggit.models import Tag
 
 from common import store as EventStore
+from common.models import Project
 from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm, ViewDirtReportForm
 from dirts.models import Defect
 
@@ -105,7 +106,8 @@ def report(request):
     
     res = {
         'form': form,
-        'defects': items
+        'defects': items,
+        'project': get_object_or_404(Project, code=form.data['project_code'])
     }
     return render(request, 'report_request.html', res)
 
