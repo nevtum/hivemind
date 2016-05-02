@@ -126,7 +126,6 @@ class Defect(models.Model):
     def _to_kwargs(self):
         return dict({
             'project_code': self.project_code,
-            'date_created': self.date_created,
             'submitter': self.submitter.username,
             'release_id': self.release_id,
             'status': self.status.name,

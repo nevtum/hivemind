@@ -168,9 +168,9 @@ class DefectAcceptanceTests(TestCase):
         defect.submitter = self.test_user
         event = defect.raise_new()
         
-        self.assertEquals(event.sequence_nr, 0)
-        self.assertEquals(event.event_type, 'DIRT.OPENED')
-        self.assertIsNotNone(event.blob)
+        self.assertEquals(event['sequence_nr'], 0)
+        self.assertEquals(event['event_type'], 'DIRT.OPENED')
+        self.assertIsNotNone(event['payload'])
 
 class CreateDefectPage:
     """Helper class abstracting away web call details
