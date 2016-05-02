@@ -127,9 +127,9 @@ class Defect(models.Model):
         return dict({
             'project_code': self.project_code,
             'date_created': self.date_created,
-            'submitter': self.submitter,
+            'submitter': self.submitter.username,
             'release_id': self.release_id,
-            'status': self.status,
+            'status': self.status.name,
             'priority': self.priority.name,
             'reference': self.reference,
             'description': self.description,
