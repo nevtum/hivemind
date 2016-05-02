@@ -7,7 +7,7 @@ from taggit.managers import TaggableManager
 from haystack.query import SearchQuerySet
 
 from common import store as EventStore
-from common.models import DomainEvent, Project
+from common.models import Project
 from .managers import DefectsManager
 from .domain.models import DefectViewModel
 from .constants import (
@@ -54,22 +54,22 @@ class Defect(models.Model):
 
     def raise_new(self):
         self.save()
-        data = {
-            'project_code': self.project_code,
-            'release_id': self.release_id,
-            'priority': self.priority.name,
-            'reference': self.reference,
-            'description': self.description,
-            'comments': self.comments
+        event = {
+            'sequence_nr': 0,
+            'aggregate_id': self.id,
+            'aggregate_type': 'DEFECT',
+            'event_type': DIRT_OPENED,
+            'created': self.date_created,
+            'created_by': self.submitter,
+            'payload': {
+                'project_code': self.project_code,
+                'release_id': self.release_id,
+                'priority': self.priority.name,
+                'reference': self.reference,
+                'description': self.description,
+                'comments': self.comments
+            }
         }
-        event = DomainEvent()
-        event.sequence_nr = 0
-        event.aggregate_id = self.id
-        event.aggregate_type = 'DEFECT'
-        event.event_type = DIRT_OPENED
-        event.date_occurred = self.date_created
-        event.username = self.submitter
-        event.blob = json.dumps(data, indent=2)
         EventStore.append_next(event)
         return event
 
