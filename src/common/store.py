@@ -7,7 +7,7 @@ def get_events_for(agg_type, agg_id, before_date = None):
 	if before_date:
 		queryset = DomainEvent.objects \
 			.filter(aggregate_type=agg_type, aggregate_id=agg_id) \
-			.filter(date_occurred__lt=before_date) \
+			.filter(date_occurred__lte=before_date) \
 			.order_by('sequence_nr')
 	else:
 		queryset = DomainEvent.objects \

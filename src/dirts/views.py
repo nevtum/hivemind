@@ -1,4 +1,4 @@
-from django.utils import timezone
+from django.utils import timezone, dateparse
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -88,12 +88,16 @@ def report(request):
             items = []
             index = 1001
             
+            # not sure if this implementation is right. Needs more testing
+            before_date = dateparse.parse_date(form.data['prior_to_date'])
+            before_date += timezone.timedelta(days=1)
+            
             kwargs = {
                 'project_code': form.data['project_code'],
-                'date_created__lte': form.data['prior_to_date'],
+                'date_created__lte': before_date,
             }
             for defect in Defect.objects.filter(**kwargs).order_by('date_created'):
-                items.append(_to_dto(defect, index, form.data['prior_to_date']))
+                items.append(_to_dto(defect, index, before_date))
                 index = index + 1
             
             if form.data.get('show_active_only') is not None:
