@@ -19,7 +19,6 @@ def main():
         events = Eventstore.get_events_for('DEFECT', id)
         defect = build_defect_read_model(events)
         defect.save()
-    update_dates()
 
 def unique_ids():
     defect_events = DomainEvent.objects.filter(aggregate_type='DEFECT')
@@ -41,13 +40,6 @@ def build_defect_read_model(events):
     d.description = aggregate.description
     d.comments = aggregate.comments
     return d
-    
-def update_dates():
-    for defect in Defect.objects.all():
-        aggregate = defect.as_domainmodel()
-        defect.date_created = aggregate.date_created
-        defect.date_changed = aggregate.date_changed
-        defect.save()
 
 if __name__ == '__main__':
     main()
