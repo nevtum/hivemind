@@ -46,9 +46,9 @@ class Defect(models.Model):
     objects = DefectsManager()
     tags = TaggableManager()
     
-    def more_like_this(self):
+    def more_like_this(self, count = 5):
         try:
-            return SearchQuerySet().more_like_this(self)[:5]
+            return SearchQuerySet().more_like_this(self)[:count]
         except:
             return None
 

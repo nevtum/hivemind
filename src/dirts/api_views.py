@@ -31,6 +31,37 @@ class DefectBaseViewSet(viewsets.ModelViewSet):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
+def more_like_this_defect(request):
+    DEFAULT_COUNT = '5'
+    id = request.GET.get('id', '')
+    if id == '':
+        return Response("could not find id")
+
+    count = request.GET.get('count', DEFAULT_COUNT)
+    count = int(count)
+
+    defect = Defect.objects.get(pk=id)
+    similar = defect.more_like_this(count)
+    similar = map(lambda x: x.object, similar)
+    similar = map(lambda x: to_serializable(x), similar)
+
+    data = {
+        "current": to_serializable(defect),
+        "similar": similar,
+    }
+    return Response(data)
+
+def to_serializable(defect):
+    return {
+        "id": defect.id,
+        "reference": defect.reference,
+        "created": defect.date_created,
+        "created_by": defect.submitter.username,
+        "status": defect.status.name,
+    }
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
 def autocomplete_projects(request):
     keyword = request.GET.get('q', '')
     results = []

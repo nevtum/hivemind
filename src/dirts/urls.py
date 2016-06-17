@@ -4,7 +4,8 @@ from rest_framework import routers
 from .api_views import (
     DefectBaseViewSet,
     autocomplete_titles,
-    autocomplete_projects
+    autocomplete_projects,
+    more_like_this_defect
 )
 from . import views
 
@@ -15,6 +16,7 @@ urlpatterns = [
     url(r'^v1/', include(router.urls)),
     url(r'^suggest_dirt/$', autocomplete_titles, name='dirt-search'),
     url(r'^suggest_project/$', autocomplete_projects, name='project-search'),
+    url(r'^more-like-this/$', more_like_this_defect, name='similar-defects'),
     
     url(r'^report/$', views.report, name='report'),
     url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),
