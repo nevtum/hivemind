@@ -2,14 +2,14 @@ from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required as auth
 from rest_framework import routers
 from .api_views import (
-    DefectViewSet,
+    DefectBaseViewSet,
     autocomplete_titles,
     autocomplete_projects
 )
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'dirts', DefectViewSet)
+router.register(r'all', DefectBaseViewSet)
 
 urlpatterns = [
     url(r'^v1/', include(router.urls)),

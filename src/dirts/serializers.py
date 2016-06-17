@@ -7,6 +7,7 @@ class DefectSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'date_created',
+            'date_changed',
             'status',
             'project_code',
             'release_id',

@@ -9,7 +9,7 @@ from common.serializers import DomainEventSerializer
 from .models import Defect
 from .serializers import DefectSerializer
 
-class DefectViewSet(viewsets.ModelViewSet):
+class DefectBaseViewSet(viewsets.ModelViewSet):
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
     
