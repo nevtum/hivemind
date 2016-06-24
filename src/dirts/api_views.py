@@ -12,6 +12,7 @@ from .serializers import DefectSerializer
 class DefectBaseViewSet(viewsets.ModelViewSet):
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
+    permission_classes = [AllowAny]
     
     def retrieve(self, request, *args, **kwargs):
         id = kwargs.get('pk')
