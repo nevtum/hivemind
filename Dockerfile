@@ -2,6 +2,10 @@ FROM django:1.8.7
 
 MAINTAINER Neville Tummon
 
+RUN apt-get update && apt-get install -y \
+    wget \
+    curl
+
 ADD requirements/ .
 RUN pip install -r dev.txt
 
