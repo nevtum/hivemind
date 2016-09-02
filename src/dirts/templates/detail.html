@@ -7,7 +7,6 @@
     <div class="row">
       <div class="col-lg-3 col-lg-push-9">
         <div class="list-group">
-          <h4>Actions:</h4>          
           {% if dirt.is_active %}
           <a href="{% url 'dirt-amend-url' dirt.id %}" class="list-group-item">Amend</a>
           <a href="{% url 'dirt-close-url' dirt.id %}" class="list-group-item">Close</a>
@@ -20,8 +19,9 @@
           <a href="{% url 'create-similar-url' dirt.id %}" class="list-group-item">Raise similar</a>              
           <a href="{% url 'tags' dirt.id %}" class="list-group-item">Add/Edit tags</a>           
         </div>
+
+        <h4>Navigate {{ dirt.project_code }}:</h4>                    
         <div class="list-group">
-          <h4>Navigate {{ dirt.project_code }}:</h4>                    
           {% if model.prev_in_project %}
           <a href="{{ model.prev_in_project.get_absolute_url }}" class="list-group-item">Previous</a>
           {% endif %}
@@ -29,10 +29,11 @@
           <a href="{{ model.next_in_project.get_absolute_url }}" class="list-group-item">Next</a>
           {% endif %}            
         </div>
+        
         {% with more_like_this=model.more_like_this %}
         {% if more_like_this %}
+        <h4>More like this:</h4>
         <div id="more-like-this" class="list-group">
-          <h4>More like this:</h4>
           {% for similar in more_like_this %}
           <a href="{% url 'dirt-detail-url' similar.object.id %}" class="list-group-item">
             {{similar.object.reference}} [{{similar.object.date_created | timesince}} ago]
@@ -43,7 +44,11 @@
         {% endwith %}
       </div>
       <div class="col-lg-9 col-lg-pull-3">
-        <div class="panel panel-primary">
+        {% if dirt.is_active %}
+        <div class="panel panel-info">
+        {% else %}
+        <div class="panel panel-default">
+        {% endif %}
           <div class="panel-heading">
             <h1 class="panel-title">
                 {{ dirt.reference }} ({{ dirt.status }})
@@ -56,13 +61,13 @@
             <h4>Priority: {{ dirt.priority }}</h4>
           </div>
         </div>
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
           <div class="panel-body">
             <p>{{ dirt.description | linebreaksbr }}</p>
           </div>
         </div>
         {% if dirt.comments %}
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
           <div class="panel-heading">Comments:</div>
           <div class="panel-body">
             <p>{{ dirt.comments | linebreaksbr }}</p>
