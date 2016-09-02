@@ -45,6 +45,16 @@ class Defect(models.Model):
     
     objects = DefectsManager()
     tags = TaggableManager()
+
+    def next_in_project(self):
+        later = Defect.objects.filter(project=self.project).filter(id__gt=self.id)
+        if later:
+            return later.reverse()[0] # yuck, but does the job!
+    
+    def prev_in_project(self):
+        earlier = Defect.objects.filter(project=self.project).filter(id__lt=self.id)
+        if earlier:
+            return earlier[0]
     
     def more_like_this(self, count = 5):
         try:

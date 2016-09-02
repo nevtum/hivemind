@@ -7,6 +7,7 @@
     <div class="row">
       <div class="col-lg-3 col-lg-push-9">
         <div class="list-group">
+          <h4>Actions:</h4>          
           {% if dirt.is_active %}
           <a href="{% url 'dirt-amend-url' dirt.id %}" class="list-group-item">Amend</a>
           <a href="{% url 'dirt-close-url' dirt.id %}" class="list-group-item">Close</a>
@@ -19,18 +20,23 @@
           <a href="{% url 'create-similar-url' dirt.id %}" class="list-group-item">Raise similar</a>              
           <a href="{% url 'tags' dirt.id %}" class="list-group-item">Add/Edit tags</a>           
         </div>
+        <div class="list-group">
+          <h4>Navigate {{ dirt.project_code }}:</h4>                    
+          {% if model.prev_in_project %}
+          <a href="{{ model.prev_in_project.get_absolute_url }}" class="list-group-item">Previous</a>
+          {% endif %}
+          {% if model.next_in_project %}
+          <a href="{{ model.next_in_project.get_absolute_url }}" class="list-group-item">Next</a>
+          {% endif %}            
+        </div>
         {% with more_like_this=model.more_like_this %}
         {% if more_like_this %}
-        <div id="more-like-this">
+        <div id="more-like-this" class="list-group">
           <h4>More like this:</h4>
           {% for similar in more_like_this %}
-          <p>
-            <a href="{% url 'dirt-detail-url' similar.object.id %}">
-              {{similar.object.reference}}
-            </a>
-            [{{similar.object.date_created | timesince}} ago]
-          </p>
-              
+          <a href="{% url 'dirt-detail-url' similar.object.id %}" class="list-group-item">
+            {{similar.object.reference}} [{{similar.object.date_created | timesince}} ago]
+          </a>
           {% endfor %}
         </div>
         {% endif %}

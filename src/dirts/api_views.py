@@ -13,12 +13,6 @@ class DefectBaseViewSet(viewsets.ModelViewSet):
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
     permission_classes = [AllowAny]
-    
-    def retrieve(self, request, *args, **kwargs):
-        id = kwargs.get('pk')
-        events = EventStore.get_events_for('DEFECT', id)
-        serializer = DomainEventSerializer(events, many=True)
-        return Response(serializer.data)
         
     @detail_route(methods=['put'])
     def close(self):
