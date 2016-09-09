@@ -37,7 +37,8 @@ INSTALLED_APPS = [
 
 INSTALLED_APPS += [
     'common',
-    'dirts'
+    'dirts',
+    'feed'
 ]
 
 # Import third party libraries
