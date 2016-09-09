@@ -1,1 +1,20 @@
-well hellow
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    {% for activity in feed %}
+        <div class="activity-item">
+        {{activity.project}}
+        {{activity.summary}}
+        {{activity.url}}
+        {{activity.submitter}}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block custom_css %}
+{% endblock %}
+
+{% block custom_javascript %}
+{% endblock %}
