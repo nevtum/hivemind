@@ -1,7 +1,7 @@
 /* base css */
 
 body {
-  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   padding-bottom: 30;
   background-color: #595959;
 }
@@ -53,4 +53,26 @@ body {
 
 #history-list {
   font-size: 12;
+}
+
+/* for feeds */
+
+.activity-item {
+  background-color: white;
+  border-radius: 5px;
+  border: 1px dotted dodgerblue;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+.activity-item .project {
+  font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+  font-size: 12px;
+  border-bottom: 1px solid crimson;
+}
+
+.activity-item .summary {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }

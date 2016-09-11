@@ -4,10 +4,22 @@
 <div class="row">
     {% for activity in feed %}
         <div class="activity-item">
-        {{activity.project}}
-        {{activity.summary}}
-        {{activity.url}}
-        {{activity.submitter}}
+            <div class="container-fluid">
+                <div class="project row">
+                    <div class="col-sm-9">
+                    <h5>{{activity.project}} - {{activity.project.description}}</h5>
+                    </div>
+                    <div class="col-sm-3 pull-right">
+                        <p><u>{{activity.submitter.get_full_name}}</u> ({{activity.date_occurred}})</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="summary col-sm-12">
+                    {{activity.summary}}
+                    {{activity.url}}
+                    </div>
+                </div>
+            </div>
         </div>
     {% endfor %}
 </div>
