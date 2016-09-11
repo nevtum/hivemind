@@ -15,8 +15,10 @@
                 </div>
                 <div class="row">
                     <div class="summary col-sm-12">
-                    {{activity.summary}}
-                    {{activity.url}}
+                        <p>
+                            {{activity.summary}} 
+                            <a href="{{activity.content_object.get_absolute_url}}">[Link]</a>
+                        </p>
                     </div>
                 </div>
             </div>
