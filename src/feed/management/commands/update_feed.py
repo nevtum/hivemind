@@ -5,12 +5,13 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
 from django.shortcuts import get_object_or_404
-from feed.models import Activity
 from django.utils import timezone
+from feed.models import Activity
 
 
 class Command(BaseCommand):
-    help = """fix for updating last updated dates in DIRTs"""
+    help = """background running process which updates feed
+    base on events that have occurred."""
 
     def handle(self, *args, **options):
         latest_datetime = self._get_datetime_last_activity()
