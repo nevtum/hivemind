@@ -41,6 +41,13 @@ body {
     width: 25%
 }
 
+.pagination {
+  font-size: smaller;
+  padding-left: 10px;
+  margin: inherit auto;
+  width: auto;
+}
+
 /* for dirts */
 
 .desc {

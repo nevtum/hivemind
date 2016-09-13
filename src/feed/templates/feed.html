@@ -2,6 +2,27 @@
 
 {% block content %}
 <div class="row">
+    {% if is_paginated %}
+      <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+              <a href="?&page={{ page_obj.previous_page_number }}">
+                  &laquo;&nbsp;Previous
+              </a>
+            {% endif %}
+    
+            <span class="current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">
+                  Next&nbsp;&raquo;
+              </a>
+            {% endif %}
+        </span>
+      </div>
+      {% endif %}
     {% for activity in feed %}
         <div class="activity-item">
             <div class="container-fluid">
