@@ -16,16 +16,30 @@ class Command(BaseCommand):
         latest_datetime = self._get_datetime_last_activity()
         for event in DomainEvent.objects.filter(date_occurred__gt=latest_datetime):
             if event.event_type == constants.DIRT_OPENED:
-                act = Activity()
-                act.date_occurred = event.date_occurred
-                act.summary = "A new DIRT has been created."
-                act.submitter = get_object_or_404(User, username=event.username)
-                act.project = get_object_or_404(Defect, id=event.aggregate_id).project
-                act.content_type = ContentType.objects.get_for_model(Defect)
-                act.object_id = event.aggregate_id
-                act.save()
+                self._handle_DIRT_OPENED(event)
+            if event.event_type == constants.DIRT_CLOSED:
+                self._handle_DIRT_CLOSED(event)
         
         self.stdout.write('updated feed')
+
+    def _handle_DIRT_OPENED(self, event):
+        act = self._to_activity(event)
+        act.summary = "A new DIRT has been created."
+        act.save()
+    
+    def _handle_DIRT_CLOSED(self, event):
+        act = self._to_activity(event)
+        act.summary = "A DIRT has been closed."
+        act.save()
+    
+    def _to_activity(self, event):
+        act = Activity()
+        act.date_occurred = event.date_occurred
+        act.submitter = get_object_or_404(User, username=event.username)
+        act.project = get_object_or_404(Defect, id=event.aggregate_id).project
+        act.content_type = ContentType.objects.get_for_model(Defect)
+        act.object_id = event.aggregate_id
+        return act
     
     def _get_datetime_last_activity(self):
         last_activity = Activity.objects.last()
