@@ -12,7 +12,7 @@ from .models import Defect
 from .serializers import DefectSerializer
 
 
-class DefectBaseViewSet(viewsets.ModelViewSet):
+class DefectBaseViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
     permission_classes = (AllowAny,)
