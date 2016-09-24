@@ -11,7 +11,7 @@ from rest_framework.response import Response
 
 from .mixins import DefectSearchMixin
 from .models import Defect
-from .serializers import DefectSerializer
+from .serializers import DefectSerializer, MoreLikeThisSerializer
 
 
 class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
@@ -62,22 +62,12 @@ def more_like_this_defect(request):
     defect = get_object_or_404(Defect, pk=id)
     similar = defect.more_like_this(count)
     similar = map(lambda x: x.object, similar)
-    similar = map(lambda x: to_serializable(x), similar)
 
     data = {
-        "current": to_serializable(defect),
-        "similar": similar,
+        "current": MoreLikeThisSerializer(defect).data,
+        "similar": MoreLikeThisSerializer(similar, many=True).data,
     }
     return Response(data)
-
-def to_serializable(defect):
-    return {
-        "id": defect.id,
-        "reference": defect.reference,
-        "created": defect.date_created,
-        "created_by": defect.submitter.username,
-        "status": defect.status.name,
-    }
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))

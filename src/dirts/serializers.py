@@ -29,4 +29,18 @@ class DefectSerializer(serializers.ModelSerializer):
             'reference',
             'submitter'
         )
-        
+
+class MoreLikeThisSerializer(serializers.Serializer):
+    id = serializers.ReadOnlyField()
+    reference = serializers.ReadOnlyField()
+    date_created = serializers.ReadOnlyField()
+    created_by = serializers.ReadOnlyField(source='submitter.username')
+
+    class Meta:
+        model = Defect
+        fields = (
+            'id',
+            'reference',
+            'date_created'
+            'created_by'
+        )
