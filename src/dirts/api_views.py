@@ -17,7 +17,6 @@ class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
     Returns a list of all defects.
 
     For optional search, add ?q=**[keyword]** query string to the url
-
     where **[keyword]** is replaced with your search parameter.
     """
     query_string_key = 'q'
@@ -28,9 +27,8 @@ class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
 class DefectActiveViewSet(DefectBaseViewSet):
     """
     Returns a list of all **opened** defects.
-
+    
     For optional search, add ?q=**[keyword]** query string to the url
-
     where **[keyword]** is replaced with your search parameter.
     """
     queryset = Defect.objects.active()
@@ -38,9 +36,8 @@ class DefectActiveViewSet(DefectBaseViewSet):
 class RecentlyChangedDefectViewSet(DefectBaseViewSet):
     """
     Returns a list of all **recently changed** defects.
-
+    
     For optional search, add ?q=**[keyword]** query string to the url
-
     where **[keyword]** is replaced with your search parameter.
     """
     queryset = Defect.objects.recently_changed()
