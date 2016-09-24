@@ -33,7 +33,17 @@ class DefectActiveViewSet(DefectBaseViewSet):
 
     where **[keyword]** is replaced with your search parameter.
     """
-    queryset = Defect.objects.active()   
+    queryset = Defect.objects.active()
+
+class RecentlyChangedDefectViewSet(DefectBaseViewSet):
+    """
+    Returns a list of all **recently changed** defects.
+
+    For optional search, add ?q=**[keyword]** query string to the url
+
+    where **[keyword]** is replaced with your search parameter.
+    """
+    queryset = Defect.objects.recently_changed()
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
