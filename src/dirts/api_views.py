@@ -1,4 +1,3 @@
-from common import store as EventStore
 from common.models import Project
 from common.serializers import DomainEventSerializer
 from django.shortcuts import get_object_or_404
@@ -25,6 +24,13 @@ class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
     permission_classes = (AllowAny,)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        events = instance.get_events()
+        serializer = DomainEventSerializer(events, many=True)
+        return Response(serializer.data)
+
 
 class DefectActiveViewSet(DefectBaseViewSet):
     """

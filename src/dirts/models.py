@@ -91,6 +91,9 @@ class Defect(models.Model):
         assert(self.project_code != "")
         assert(self.release_id != "")
         return copy
+
+    def get_events(self):
+        return EventStore.get_events_for('DEFECT', self.id)
     
     def as_domainmodel(self, before_date = None):
         events = EventStore.get_events_for('DEFECT', self.id, before_date)
