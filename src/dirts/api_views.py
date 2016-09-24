@@ -8,34 +8,28 @@ from rest_framework.decorators import (api_view, detail_route,
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from .mixins import DefectSearchMixin
 from .models import Defect
 from .serializers import DefectSerializer
 
-
-class DefectBaseViewSet(viewsets.ReadOnlyModelViewSet):
+class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
     """
     Returns a list of all defects.
 
-    For optional search, add ?search=**[keyword]** query string to the url
+    For optional search, add ?q=**[keyword]** query string to the url
 
     where **[keyword]** is replaced with your search parameter.
     """
+    query_string_key = 'q'
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
     permission_classes = (AllowAny,)
-
-    def get_queryset(self):
-        keyword = self.request.GET.get('search', '')
-        if not keyword:
-            return super(DefectBaseViewSet, self).get_queryset()
-
-        return Defect.objects.search(keyword) 
 
 class DefectActiveViewSet(DefectBaseViewSet):
     """
     Returns a list of all **opened** defects.
 
-    For optional search, add ?search=**[keyword]** query string to the url
+    For optional search, add ?q=**[keyword]** query string to the url
 
     where **[keyword]** is replaced with your search parameter.
     """

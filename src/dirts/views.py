@@ -1,39 +1,32 @@
 from common import store as EventStore
 from common.models import Project
-from dirts.forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm,
-                         TagsForm, ViewDirtReportForm)
-from dirts.models import Defect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import dateparse, timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from taggit.models import Tag
 
+from .forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
+                    ViewDirtReportForm)
+from .mixins import DefectSearchMixin
+from .models import Defect
+
 
 class TagsListView(ListView):
     template_name = 'tag_list.html'
     queryset = Defect.objects.top_tags()
 
-class DefectListView(ListView):
+class DefectListView(DefectSearchMixin, ListView):
+    queryset = Defect.objects.all()
     template_name = 'dirt_list.html'
     context_object_name = 'defects'
     paginate_by = 25
-    
-    def get_queryset(self):
-        keyword = self.request.GET.get('search', '')
-        
-        if not keyword:
-            return Defect.objects.all()
-            
-        return Defect.objects.search(keyword)  
 
 class ActiveDefectListView(DefectListView):
-    def get_queryset(self):
-        return Defect.objects.active()
+    queryset = Defect.objects.active()
 
 class RecentlyChangedDefectListView(DefectListView):
-    def get_queryset(self):
-        return Defect.objects.recently_changed()
+    queryset = Defect.objects.recently_changed()
 
 class DefectDetailView(DetailView):
     model = Defect
