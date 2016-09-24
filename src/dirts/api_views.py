@@ -1,28 +1,21 @@
-from django.db.models import Q
-from rest_framework import viewsets
-from rest_framework.response import Response
-from rest_framework.decorators import detail_route, api_view, permission_classes
-from rest_framework.permissions import AllowAny
 from common import store as EventStore
 from common.models import Project
 from common.serializers import DomainEventSerializer
+from django.db.models import Q
+from rest_framework import viewsets
+from rest_framework.decorators import (api_view, detail_route,
+                                       permission_classes)
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+
 from .models import Defect
 from .serializers import DefectSerializer
+
 
 class DefectBaseViewSet(viewsets.ModelViewSet):
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
-    permission_classes = [AllowAny]
-        
-    @detail_route(methods=['put'])
-    def close(self):
-        """Custom method and route for closing existing DIRT"""
-        pass
-    
-    @detail_route(methods=['put'])
-    def reopen(self):
-        """Custom method and route for reopening existing DIRT"""
-        pass
+    permission_classes = (AllowAny,)
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
@@ -77,9 +70,10 @@ def autocomplete_projects(request):
 @permission_classes((AllowAny, ))
 def autocomplete_titles(request):
     keyword = request.GET.get('q', '')
-    results = []
-    if len(keyword) > 2:
-        result_set = Defect.objects.filter(reference__icontains=keyword)
-        result_set = result_set.distinct()
-        result_set = map(lambda x: {'title' : x.reference}, result_set[:10])
+    if len(keyword) <= 2:
+        return[]
+
+    result_set = Defect.objects.filter(reference__icontains=keyword)
+    result_set = result_set.distinct()
+    result_set = map(lambda x: {'title' : x.reference}, result_set[:10])
     return Response(list(result_set))
