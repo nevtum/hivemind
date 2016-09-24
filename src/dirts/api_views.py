@@ -80,8 +80,6 @@ def autocomplete_titles(request):
     results = []
     if len(keyword) > 2:
         result_set = Defect.objects.filter(reference__icontains=keyword)
-        for obj in result_set.distinct()[:10]:
-            results.append({
-                'title': obj.reference
-            })
-    return Response(results)
+        result_set = result_set.distinct()
+        result_set = map(lambda x: {'title' : x.reference}, result_set[:10])
+    return Response(list(result_set))
