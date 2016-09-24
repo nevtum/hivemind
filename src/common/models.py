@@ -1,6 +1,10 @@
 import json
+
 from django.db import models
 from django.template.defaultfilters import slugify
+
+from .managers import ProjectsManager
+
 
 class Manufacturer(models.Model):
     name = models.CharField(max_length=80)
@@ -15,6 +19,7 @@ class Project(models.Model):
     manufacturer = models.ForeignKey(Manufacturer)
     description = models.CharField(max_length=120)
     date_created = models.DateField()
+    objects = ProjectsManager()
     
     def save(self, *args, **kwargs):
         self.code = self.code.strip().upper()

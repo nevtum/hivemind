@@ -1,7 +1,6 @@
 from common import store as EventStore
 from common.models import Project
 from common.serializers import DomainEventSerializer
-from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.decorators import (api_view, detail_route,
                                        permission_classes)
@@ -11,6 +10,7 @@ from rest_framework.response import Response
 from .mixins import DefectSearchMixin
 from .models import Defect
 from .serializers import DefectSerializer
+
 
 class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
     """
@@ -76,27 +76,32 @@ def to_serializable(defect):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def autocomplete_projects(request):
+    """
+    Returns a list of max 10 projects that match the [keyword]
+    specified in ?q=[keyword] query string.
+    """
     keyword = request.GET.get('q', '')
+    if len(keyword) <= 2:
+        return Response([])
+
     results = []
-    if len(keyword) > 2:
-        query = Q(description__icontains=keyword) \
-            | Q(code__icontains=keyword)
-        result_set = Project.objects.filter(query).order_by(
-                '-date_created'
-            ).distinct()
-        for obj in result_set[:10]:
-            results.append({
-                'label': "{} - {}".format(obj.code, obj.description),
-                'value': obj.code
-            })
+    for obj in Project.objects.search(keyword)[:10]:
+        results.append({
+            'label': "{} - {}".format(obj.code, obj.description),
+            'value': obj.code
+        })
     return Response(results)
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def autocomplete_titles(request):
+    """
+    Returns a list of max 10 defects where their title
+    matches the [keyword] specified in ?q=[keyword] query string.
+    """
     keyword = request.GET.get('q', '')
     if len(keyword) <= 2:
-        return[]
+        return Response([])
 
     result_set = Defect.objects.filter(reference__icontains=keyword)
     result_set = result_set.distinct()
