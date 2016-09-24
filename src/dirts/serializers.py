@@ -32,6 +32,7 @@ class DefectSerializer(serializers.ModelSerializer):
 
 class MoreLikeThisSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
+    link = serializers.HyperlinkedRelatedField(source='id', view_name='similar-defects', read_only=True)
     reference = serializers.ReadOnlyField()
     date_created = serializers.ReadOnlyField()
     created_by = serializers.ReadOnlyField(source='submitter.username')

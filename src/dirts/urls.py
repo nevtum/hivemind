@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api/suggest_dirt/$', api_views.autocomplete_titles, name='dirt-search'),
     url(r'^api/suggest_project/$', api_views.autocomplete_projects, name='project-search'),
-    url(r'^api/more-like-this/$', api_views.more_like_this_defect, name='similar-defects'),
+    url(r'^api/more-like-this/(?P<pk>\d+?)/$', api_views.more_like_this_defect, name='similar-defects'),
     
     url(r'^report/$', views.report, name='report'),
     url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),

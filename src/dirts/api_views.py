@@ -46,26 +46,33 @@ class RecentlyChangedDefectViewSet(DefectBaseViewSet):
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def more_like_this_defect(request):
+def more_like_this_defect(request, pk):
     """
-    Returns a list of 5 defects that are similar in content
-    to the [id] specified in ?pk=[id] query string.
+    Returns a list of 5 defects that are similar in content to the pk
+    specified.
+    
+    Set the optional query string ?count to show a custom number of
+    similar items.
     """
     DEFAULT_COUNT = '5'
-    id = request.GET.get('pk', '')
-    if not id:
-        raise ParseError("must specify an id in query string")
 
     count = request.GET.get('count', DEFAULT_COUNT)
     count = int(count)
 
-    defect = get_object_or_404(Defect, pk=id)
+    defect = get_object_or_404(Defect, pk=pk)
     similar = defect.more_like_this(count)
     similar = map(lambda x: x.object, similar)
 
     data = {
-        "current": MoreLikeThisSerializer(defect).data,
-        "similar": MoreLikeThisSerializer(similar, many=True).data,
+        "current": MoreLikeThisSerializer(
+            defect,
+            context={'request': request}
+        ).data,
+        "similar": MoreLikeThisSerializer(
+            similar,
+            many=True,
+            context={'request': request}
+        ).data,
     }
     return Response(data)
 
