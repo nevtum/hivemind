@@ -5,9 +5,9 @@ from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.decorators import (api_view, detail_route,
                                        permission_classes)
+from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.exceptions import ParseError
 
 from .models import Defect
 from .serializers import DefectSerializer
@@ -26,16 +26,8 @@ class DefectsFilteredViewSet(DefectBaseViewSet):
         keyword = self.request.GET.get('search', '')
         if not keyword:
             raise ParseError("Must specify 'search' query string in url")
-            
-        queryset = Defect.objects.all()
-        query = Q(reference__icontains=keyword) \
-        | Q(project_code__icontains=keyword) \
-        | Q(description__icontains=keyword) \
-        | Q(comments__icontains=keyword) \
-        | Q(release_id__icontains=keyword) \
-        | Q(tags__name__in=[keyword])
-        
-        return queryset.filter(query).distinct()
+
+        return Defect.objects.search(keyword)    
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))

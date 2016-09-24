@@ -1,8 +1,8 @@
 from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required as auth
 from rest_framework import routers
-from . import api_views
-from . import views
+
+from . import api_views, views
 
 router = routers.DefaultRouter()
 router.register(r'all', api_views.DefectBaseViewSet, 'all')

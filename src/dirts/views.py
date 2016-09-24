@@ -1,14 +1,14 @@
-from django.utils import timezone, dateparse
-from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.views.generic import ListView, UpdateView, CreateView, DetailView
-from taggit.models import Tag
-
 from common import store as EventStore
 from common.models import Project
-from dirts.forms import CreateDirtForm, ReopenDirtForm, CloseDirtForm, TagsForm, ViewDirtReportForm
+from dirts.forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm,
+                         TagsForm, ViewDirtReportForm)
 from dirts.models import Defect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import dateparse, timezone
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from taggit.models import Tag
+
 
 class TagsListView(ListView):
     template_name = 'tag_list.html'
@@ -25,15 +25,7 @@ class DefectListView(ListView):
         if not keyword:
             return Defect.objects.all()
             
-        queryset = Defect.objects.all()
-        query = Q(reference__icontains=keyword) \
-        | Q(project_code__icontains=keyword) \
-        | Q(description__icontains=keyword) \
-        | Q(comments__icontains=keyword) \
-        | Q(release_id__icontains=keyword) \
-        | Q(tags__name__in=[keyword])
-        
-        return queryset.filter(query).distinct()
+        return Defect.objects.search(keyword)  
 
 class ActiveDefectListView(DefectListView):
     def get_queryset(self):
