@@ -7,7 +7,6 @@ from . import api_views, views
 router = routers.DefaultRouter()
 router.register(r'all', api_views.DefectBaseViewSet, 'all')
 router.register(r'active', api_views.DefectActiveViewSet, 'active')
-router.register(r'filtered', api_views.DefectsFilteredViewSet, 'filtered')
 
 urlpatterns = [
     url(r'^api/', include(router.urls)),

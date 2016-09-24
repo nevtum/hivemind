@@ -5,7 +5,6 @@ from django.db.models import Q
 from rest_framework import viewsets
 from rest_framework.decorators import (api_view, detail_route,
                                        permission_classes)
-from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -14,20 +13,33 @@ from .serializers import DefectSerializer
 
 
 class DefectBaseViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Returns a list of all defects.
+
+    For optional search, add ?search=**[keyword]** query string to the url
+
+    where **[keyword]** is replaced with your search parameter.
+    """
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
     permission_classes = (AllowAny,)
 
-class DefectActiveViewSet(DefectBaseViewSet):
-    queryset = Defect.objects.active()
-
-class DefectsFilteredViewSet(DefectBaseViewSet):
     def get_queryset(self):
         keyword = self.request.GET.get('search', '')
         if not keyword:
-            raise ParseError("Must specify 'search' query string in url")
+            return super(DefectBaseViewSet, self).get_queryset()
 
-        return Defect.objects.search(keyword)    
+        return Defect.objects.search(keyword) 
+
+class DefectActiveViewSet(DefectBaseViewSet):
+    """
+    Returns a list of all **opened** defects.
+
+    For optional search, add ?search=**[keyword]** query string to the url
+
+    where **[keyword]** is replaced with your search parameter.
+    """
+    queryset = Defect.objects.active()   
 
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
