@@ -20,12 +20,12 @@ class DefectListView(ListView):
     paginate_by = 25
     
     def get_queryset(self):
-        queryset = Defect.objects.all()
         keyword = self.request.GET.get('search', '')
         
         if not keyword:
-            return queryset
+            return Defect.objects.all()
             
+        queryset = Defect.objects.all()
         query = Q(reference__icontains=keyword) \
         | Q(project_code__icontains=keyword) \
         | Q(description__icontains=keyword) \
