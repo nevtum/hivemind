@@ -1,9 +1,11 @@
 from common import store as EventStore
 from common.models import Project
 from common.serializers import DomainEventSerializer
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import (api_view, detail_route,
                                        permission_classes)
+from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
@@ -45,15 +47,19 @@ class RecentlyChangedDefectViewSet(DefectBaseViewSet):
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 def more_like_this_defect(request):
+    """
+    Returns a list of 5 defects that are similar in content
+    to the [id] specified in ?pk=[id] query string.
+    """
     DEFAULT_COUNT = '5'
-    id = request.GET.get('id', '')
-    if id == '':
-        return Response("could not find id")
+    id = request.GET.get('pk', '')
+    if not id:
+        raise ParseError("must specify an id in query string")
 
     count = request.GET.get('count', DEFAULT_COUNT)
     count = int(count)
 
-    defect = Defect.objects.get(pk=id)
+    defect = get_object_or_404(Defect, pk=id)
     similar = defect.more_like_this(count)
     similar = map(lambda x: x.object, similar)
     similar = map(lambda x: to_serializable(x), similar)
