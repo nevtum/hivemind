@@ -1,22 +1,17 @@
 from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required as auth
 from rest_framework import routers
-from .api_views import (
-    DefectBaseViewSet,
-    autocomplete_titles,
-    autocomplete_projects,
-    more_like_this_defect
-)
+from . import api_views
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'all', DefectBaseViewSet)
+router.register(r'all', api_views.DefectBaseViewSet)
 
 urlpatterns = [
-    url(r'^v1/', include(router.urls)),
-    url(r'^suggest_dirt/$', autocomplete_titles, name='dirt-search'),
-    url(r'^suggest_project/$', autocomplete_projects, name='project-search'),
-    url(r'^more-like-this/$', more_like_this_defect, name='similar-defects'),
+    url(r'^api/', include(router.urls)),
+    url(r'^api/suggest_dirt/$', api_views.autocomplete_titles, name='dirt-search'),
+    url(r'^api/suggest_project/$', api_views.autocomplete_projects, name='project-search'),
+    url(r'^api/more-like-this/$', api_views.more_like_this_defect, name='similar-defects'),
     
     url(r'^report/$', views.report, name='report'),
     url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),
