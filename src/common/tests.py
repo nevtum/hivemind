@@ -7,7 +7,7 @@ class CommandHandlerTests(APITestCase):
     def setUp(self):
         username = 'test_user'
         email = 'test@test.com'
-        password = 'test_password'        
+        password = 'test_password'
         user = User.objects.create_user(username, email, password)
         self.client.force_authenticate(user)
 
