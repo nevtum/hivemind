@@ -63,9 +63,6 @@
         <a href="{% url 'create-dirt-url' %}" class="list-group-item">Raise a DIRT</a>
         <a href="{% url 'report' %}" class="list-group-item">View DIRT report</a>
       </div>
-      <div>
-        <a href="{% url 'dirts:api-root' %}">View DIRT API</a>
-      </div>
       {% if is_paginated %}
       <div class="pagination">
         <span class="step-links">

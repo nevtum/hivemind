@@ -10,7 +10,7 @@
     <script type="text/javascript">
         $(function() {
             
-            var url = "{% url 'project-search' %}";
+            var url = "{% url 'dirts:project-suggest-list' %}";
 
             var fetch_results = function(request, response) {
                 var term = request.term;
