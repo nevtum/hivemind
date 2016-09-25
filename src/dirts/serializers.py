@@ -14,12 +14,14 @@ class UserSerializer(serializers.Serializer):
 class DefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.ReadOnlyField(source='priority.name')
+    detail = serializers.HyperlinkedRelatedField(source='id', view_name='all-detail', read_only=True)    
     submitter = UserSerializer()
 
     class Meta:
         model = Defect
         fields = (
             'id',
+            'detail',
             'date_created',
             'date_changed',
             'status',
