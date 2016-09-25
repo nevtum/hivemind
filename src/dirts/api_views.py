@@ -67,7 +67,6 @@ def more_like_this_defect(request, pk):
 
     defect = get_object_or_404(Defect, pk=pk)
     similar = defect.more_like_this(count)
-    similar = map(lambda x: x.object, similar)
 
     data = {
         "current": MoreLikeThisSerializer(

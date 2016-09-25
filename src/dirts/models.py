@@ -58,7 +58,8 @@ class Defect(models.Model):
     
     def more_like_this(self, count = 5):
         try:
-            return SearchQuerySet().more_like_this(self)[:count]
+            sqs = SearchQuerySet().more_like_this(self)[:count]
+            return map(lambda x: x.object, sqs)
         except:
             return None
 

@@ -35,8 +35,8 @@
         <h4>More like this:</h4>
         <div id="more-like-this" class="list-group">
           {% for similar in more_like_this %}
-          <a href="{% url 'dirt-detail-url' similar.object.id %}" class="list-group-item">
-            {{similar.object.reference}} [{{similar.object.date_created | timesince}} ago]
+          <a href="{% url 'dirt-detail-url' similar.id %}" class="list-group-item">
+            {{similar.reference}} [{{similar.date_created | timesince}} ago]
           </a>
           {% endfor %}
         </div>
