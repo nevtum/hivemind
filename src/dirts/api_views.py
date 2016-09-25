@@ -87,24 +87,27 @@ def more_like_this_defect(request, pk):
     }
     return Response(data)
 
-@api_view(['GET'])
-@permission_classes((AllowAny, ))
-def autocomplete_projects(request):
+class AutoCompleteProjects(ReadOnlyModelViewSet):
     """
     Returns a list of max 10 projects that match the [keyword]
     specified in ?q=[keyword] query string.
     """
-    keyword = request.GET.get('q', '')
-    if len(keyword) <= 2:
-        return Response([])
+    serializer_class = SuggestionSerializer
+    permission_classes = (AllowAny,)
+    paginator = None
 
-    results = []
-    for obj in Project.objects.search(keyword)[:10]:
-        results.append({
-            'label': "{} - {}".format(obj.code, obj.description),
-            'value': obj.code
-        })
-    return Response(results)
+    def get_queryset(self):
+        keyword = self.request.GET.get('q', '')
+        if len(keyword) <= 2:
+            return []
+
+        results = []
+        for obj in Project.objects.search(keyword)[:10]:
+            results.append({
+                'label': "{} - {}".format(obj.code, obj.description),
+                'value': obj.code
+            })
+        return results
 
 class AutoCompleteDefectTitles(ReadOnlyModelViewSet):
     """
@@ -114,6 +117,7 @@ class AutoCompleteDefectTitles(ReadOnlyModelViewSet):
     serializer_class = SuggestionSerializer
     permission_classes = (AllowAny,)
     paginator = None
+
     def get_queryset(self):
         keyword = self.request.GET.get('q', '')
         if len(keyword) <= 2:
