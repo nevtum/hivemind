@@ -54,8 +54,8 @@ class RecentlyChangedDefectViewSet(DefectBaseViewSet):
 @permission_classes((AllowAny, ))
 def more_like_this_defect(request, pk):
     """
-    Returns a list of 5 defects that are similar in content to the pk
-    specified.
+    Returns a list of 5 to a maximum of 20 defects that are similar
+    in content to the pk specified.
     
     Set the optional query string ?count to show a custom number of
     similar items.
@@ -64,6 +64,10 @@ def more_like_this_defect(request, pk):
 
     count = request.GET.get('count', DEFAULT_COUNT)
     count = int(count)
+
+    MAX_COUNT = 20
+    if count > MAX_COUNT:
+        count = MAX_COUNT
 
     defect = get_object_or_404(Defect, pk=pk)
     similar = defect.more_like_this(count)
