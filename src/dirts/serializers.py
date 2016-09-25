@@ -1,5 +1,11 @@
-from .models import Defect, Status, Priority
 from rest_framework import serializers
+
+from .models import Defect, Priority, Status
+
+
+class SuggestionSerializer(serializers.Serializer):
+    label = serializers.CharField()
+    value = serializers.CharField()
 
 class UserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=100)

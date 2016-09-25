@@ -7,10 +7,12 @@ from rest_framework.decorators import (api_view, detail_route,
 from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .mixins import DefectSearchMixin
 from .models import Defect
-from .serializers import DefectSerializer, MoreLikeThisSerializer
+from .serializers import (DefectSerializer, MoreLikeThisSerializer,
+                          SuggestionSerializer)
 
 
 class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
@@ -104,18 +106,20 @@ def autocomplete_projects(request):
         })
     return Response(results)
 
-@api_view(['GET'])
-@permission_classes((AllowAny, ))
-def autocomplete_titles(request):
+class AutoCompleteDefectTitles(ReadOnlyModelViewSet):
     """
     Returns a list of max 10 defects where their title
     matches the [keyword] specified in ?q=[keyword] query string.
     """
-    keyword = request.GET.get('q', '')
-    if len(keyword) <= 2:
-        return Response([])
+    serializer_class = SuggestionSerializer
+    permission_classes = (AllowAny,)
+    paginator = None
+    def get_queryset(self):
+        keyword = self.request.GET.get('q', '')
+        if len(keyword) <= 2:
+            return []
 
-    result_set = Defect.objects.filter(reference__icontains=keyword)
-    result_set = result_set.distinct()
-    result_set = map(lambda x: {'title' : x.reference}, result_set[:10])
-    return Response(list(result_set))
+        result_set = Defect.objects.filter(reference__icontains=keyword)
+        result_set = result_set.distinct()
+        result_set = map(lambda x: {'label' : x.reference, 'value': x.reference}, result_set[:10])
+        return list(result_set)

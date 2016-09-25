@@ -10,14 +10,14 @@
     <script type="text/javascript">
         $(function() {
             
-            var url = "{% url 'dirt-search' %}";
+            var url = "{% url 'dirt-suggest-list' %}";
 
             var fetch_results = function(request, response) {
                 var term = request.term;
                 $.getJSON(url, {'q': term}, function(data) {
                     var results = [];
                     $.each(data, function(k, v) {
-                        results.push(v.title);
+                        results.push(v);
                     });
                     response(results);
                 });
