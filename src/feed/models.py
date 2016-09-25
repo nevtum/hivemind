@@ -7,7 +7,7 @@ from common.models import Project
 class Activity(models.Model):
     project = models.ForeignKey(Project)
     summary = models.CharField(max_length=80)
-    date_occurred = models.DateTimeField(auto_now_add=True)
+    date_occurred = models.DateTimeField()
     submitter = models.ForeignKey(User)
 
     content_type = models.ForeignKey(ContentType)

@@ -45,6 +45,7 @@ class Command(BaseCommand):
     
     def _to_activity(self, event):
         act = Activity()
+        print(event.date_occurred)
         act.date_occurred = event.date_occurred
         act.submitter = get_object_or_404(User, username=event.username)
         act.project = get_object_or_404(Defect, id=event.aggregate_id).project
