@@ -7,7 +7,6 @@ from rest_framework.decorators import (api_view, detail_route,
 from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .mixins import DefectSearchMixin
 from .models import Defect
@@ -87,7 +86,7 @@ def more_like_this_defect(request, pk):
     }
     return Response(data)
 
-class AutoCompleteProjects(ReadOnlyModelViewSet):
+class AutoCompleteProjects(viewsets.ReadOnlyModelViewSet):
     """
     Returns a list of max 10 projects that match the [keyword]
     specified in ?q=[keyword] query string.
@@ -109,7 +108,7 @@ class AutoCompleteProjects(ReadOnlyModelViewSet):
             })
         return results
 
-class AutoCompleteDefectTitles(ReadOnlyModelViewSet):
+class AutoCompleteDefectTitles(viewsets.ReadOnlyModelViewSet):
     """
     Returns a list of max 10 defects where their title
     matches the [keyword] specified in ?q=[keyword] query string.
