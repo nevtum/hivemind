@@ -16,10 +16,15 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         latest_datetime = self._get_datetime_last_activity()
         for event in DomainEvent.objects.filter(date_occurred__gt=latest_datetime):
-            if event.event_type == constants.DIRT_OPENED:
-                self._handle_DIRT_OPENED(event)
-            if event.event_type == constants.DIRT_CLOSED:
-                self._handle_DIRT_CLOSED(event)
+            try:
+                if event.event_type == constants.DIRT_OPENED:
+                    self._handle_DIRT_OPENED(event)
+                if event.event_type == constants.DIRT_CLOSED:
+                    self._handle_DIRT_CLOSED(event)
+                if event.event_type == constants.DIRT_REOPENED:
+                    self._handle_DIRT_REOPENED(event)
+            except Exception as e:
+                print(e)
         
         self.stdout.write('updated feed')
 
@@ -31,6 +36,11 @@ class Command(BaseCommand):
     def _handle_DIRT_CLOSED(self, event):
         act = self._to_activity(event)
         act.summary = "A DIRT has been closed."
+        act.save()
+
+    def _handle_DIRT_REOPENED(self, event):
+        act = self._to_activity(event)
+        act.summary = "An existing DIRT has been reopened."
         act.save()
     
     def _to_activity(self, event):
