@@ -10,7 +10,7 @@
     <script type="text/javascript">
         $(function() {
             
-            var url = "{% url 'dirt-suggest-list' %}";
+            var url = "{% url 'dirts:suggest-list' %}";
 
             var fetch_results = function(request, response) {
                 var term = request.term;
@@ -64,7 +64,7 @@
         <a href="{% url 'report' %}" class="list-group-item">View DIRT report</a>
       </div>
       <div>
-        <a href="{% url 'api-root' %}">View DIRT API</a>
+        <a href="{% url 'dirts:api-root' %}">View DIRT API</a>
       </div>
       {% if is_paginated %}
       <div class="pagination">

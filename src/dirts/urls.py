@@ -8,11 +8,11 @@ router = routers.DefaultRouter()
 router.register(r'all', api_views.DefectBaseViewSet, 'all')
 router.register(r'active', api_views.DefectActiveViewSet, 'active')
 router.register(r'recent', api_views.RecentlyChangedDefectViewSet, 'recent')
-router.register(r'suggest_defects', api_views.AutoCompleteDefectTitles, 'dirt-suggest')
+router.register(r'suggest_defects', api_views.AutoCompleteDefectTitles, 'suggest')
 router.register(r'suggest_projects', api_views.AutoCompleteProjects, 'project-suggest')
 
 urlpatterns = [
-    url(r'^api/', include(router.urls)),
+    url(r'^api/', include(router.urls, namespace='dirts')),
     url(r'^api/more-like-this/(?P<pk>\d+?)/$', api_views.more_like_this_defect, name='similar-defects'),
     
     url(r'^report/$', views.report, name='report'),
