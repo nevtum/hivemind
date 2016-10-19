@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     curl
 
 ADD requirements/ .
-RUN pip install -r dev.txt
+RUN pip install -r prod.txt
 
 RUN mkdir -p web_app/echelon
 ADD src/ entry-point.sh /web_app/echelon/
