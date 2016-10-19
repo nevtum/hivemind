@@ -12,9 +12,9 @@
         </div>
         <div id="navbarCollapse" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{% url 'feed-url' %}">Feed</a></li>
-                <li><a href="{% url 'projects' %}">Projects</a></li>
-                <li><a href="{% url 'dirts-landing-url' %}">DIRTs</a></li>
+                {% for app in APP_LINKS %}
+                    <li><a href="{{app.url}}">{{app.title}}</a></li>
+                {% endfor %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}

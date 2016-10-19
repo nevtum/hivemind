@@ -42,7 +42,7 @@
   <div class="row">
     <div class="links col-lg-12">
       <p>
-        <a href="{% url 'dirts-landing-url' %}">View all</a> | 
+        <a href="{% url 'dirts-list' %}">View all</a> | 
         <a href="{% url 'active-dirts' %}">View active</a> |
         <a href="{% url 'recent-dirts' %}">View recently changed</a> |
         <a href="{% url 'tags-list' %}">Top tags</a>
@@ -51,7 +51,7 @@
   </div>
   <div class="row">
     <div class="col-lg-3 col-lg-push-9">
-      <form action="{% url 'dirts-landing-url' %}" method="get">
+      <form action="{% url 'dirts-list' %}" method="get">
         <div class="input-group">
           <input id="search-input" type="text" name="search" class="form-control" placeholder="Search DIRTs...">
           <span class="input-group-btn">

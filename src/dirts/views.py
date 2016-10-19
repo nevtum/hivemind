@@ -180,4 +180,4 @@ def delete(request, pk):
     event = defect_model.soft_delete(request.user)
     EventStore.append_next(event)
     defect.delete()
-    return redirect('dirts-landing-url')
+    return redirect('dirts-list')

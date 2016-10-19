@@ -74,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'echelon.context_processors.app_version',
+                'echelon.context_processors.app_links',
             ],
         },
     },

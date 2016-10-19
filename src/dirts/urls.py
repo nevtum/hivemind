@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^api/more-like-this/(?P<pk>\d+?)/$', api_views.more_like_this_defect, name='similar-defects'),
     
     url(r'^report/$', views.report, name='report'),
-    url(r'^$', views.DefectListView.as_view(), name='dirts-landing-url'),
+    url(r'^$', views.DefectListView.as_view(), name='dirts-list'),
     url(r'^active/$', views.ActiveDefectListView.as_view(), name='active-dirts'),
     url(r'^most-recent/$', views.RecentlyChangedDefectListView.as_view(), name='recent-dirts'),
     url(r'^create/', auth(views.DefectCreateView.as_view()), name='create-dirt-url'),
