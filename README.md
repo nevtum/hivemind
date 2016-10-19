@@ -1,12 +1,27 @@
+Prerequisites for production
+==================
+
+The following software is essential to have installed prior to development or deploying Echelon to production:
+ 
+* Linux OS running kernel 3.10 or higher (prod)
+* Python 3.3+ (dev or prod)
+* Pip (dev or prod)
+* Virtualenv (dev or prod)
+* Docker daemon (prod)
+* Docker-compose (prod)
+
 Development
 ==================
 
 Before starting development make sure a fresh isolated python virtual environment is installed and activated:
 
     $ virtualenv <environment name>
+
+If you are developing on Linux run the following from the command line:
+
     $ source <environment name>/bin/activate
 
-If you are developing on Windows run the following from the command line:
+If on Windows run instead the following from the command line:
 
     $ <environment name>\Scripts\activate
 
