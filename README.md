@@ -8,7 +8,7 @@ Before starting development make sure a fresh isolated python virtual environmen
 
 If you are developing on Windows run the following from the command line:
 
-		$ <environment name>\Scripts\activate
+    $ <environment name>\Scripts\activate
 
 Install the required PyPi packages listed within the dev.txt:
 

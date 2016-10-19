@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export DJANGO_SETTINGS_MODULE="echelon.settings.prod"
-
 sleep 10 # give other services time to spin up
 python manage.py collectstatic --noinput
 python manage.py migrate --noinput
