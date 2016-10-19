@@ -8,7 +8,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     url(r'^$', index, name='home-url'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^feed/', include('feed.urls')),
+    # url(r'^feed/', include('feed.urls')),
     url(r'^dirts/', include('dirts.urls')),
     url(r'^auth-token/', obtain_jwt_token),
     url(r'^login/', login, {'template_name': 'login.html'}, name='login-url'),

@@ -38,13 +38,13 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'common',
     'dirts',
-    'feed'
+    # 'feed'
 ]
 
 from django.core.urlresolvers import reverse_lazy
 
 APP_LINKS = [
-    { 'title': 'Feed', 'url': reverse_lazy('feed-url') },
+    # { 'title': 'Feed', 'url': reverse_lazy('feed-url') },
     { 'title': 'Projects', 'url': reverse_lazy('projects') },
     { 'title': 'DIRTs', 'url': reverse_lazy('dirts-list') },
 ]
