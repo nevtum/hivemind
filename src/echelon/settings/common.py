@@ -35,11 +35,13 @@ INSTALLED_APPS = [
     'haystack',
 ]
 
-INSTALLED_APPS += [
+ECHELON_APPS = [
     'common',
     'dirts',
     # 'feed'
 ]
+
+INSTALLED_APPS.extend(ECHELON_APPS)
 
 from django.core.urlresolvers import reverse_lazy
 
