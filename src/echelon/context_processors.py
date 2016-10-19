@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.urlresolvers import reverse_lazy
 
 def app_version(request):
     """Context processor to take custom constants
@@ -8,17 +7,6 @@ def app_version(request):
     return { 'RELEASE_VERSION': settings.RELEASE_VERSION }
 
 def app_links(request):
-    return { 'APP_LINKS': [
-        {
-            'title': 'Feed',
-            'url': reverse_lazy('feed-url')
-        },
-        {
-            'title': 'Projects',
-            'url': reverse_lazy('projects')
-        },
-        {
-            'title': 'DIRTs',
-            'url': reverse_lazy('dirts-list')
-        },
-    ]}
+    """Context processor to enumerate and render
+    all apps with title and url in the navbar"""
+    return { 'APP_LINKS': settings.APP_LINKS }

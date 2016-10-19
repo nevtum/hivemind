@@ -41,6 +41,14 @@ INSTALLED_APPS += [
     'feed'
 ]
 
+from django.core.urlresolvers import reverse_lazy
+
+APP_LINKS = [
+    { 'title': 'Feed', 'url': reverse_lazy('feed-url') },
+    { 'title': 'Projects', 'url': reverse_lazy('projects') },
+    { 'title': 'DIRTs', 'url': reverse_lazy('dirts-list') },
+]
+
 # Import third party libraries
 from .drf import *
 
@@ -95,7 +103,6 @@ SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
 
 ALLOWED_HOSTS = ['*']
 
-from django.core.urlresolvers import reverse_lazy
 LOGIN_URL = reverse_lazy('login-url')
 LOGIN_REDIRECT_URL = reverse_lazy('home-url')
 
