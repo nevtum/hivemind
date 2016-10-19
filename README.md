@@ -16,7 +16,7 @@ Install the required PyPi packages listed within the dev.txt:
 
 To get started with a debug instance of the django server run the following:
 
-    $ python dev_manage.py runserver
+    $ python manage.py runserver
 
 Build & Deploy
 ==================
