@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class SignupRequest(models.Model):
     pending_approval = models.BooleanField(default=True)
     date_submitted = models.DateTimeField(auto_now_add=True)

@@ -3,14 +3,28 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
-{% if error %}
-<div class="well well-sm">
-    {{ error }}
+<div class="col-md-5 pull-right">
+    <h4>Our registration process</h4>
+    <p>
+        It is not required to own an account to view most of the content on this site. 
+        If you do wish to take part in contributing and improving Echelon, please fill in and 
+        submit a registration form. Once submitted, a site administrator will need to review 
+        your registration request before granting you membership into Echelon. 
+    </p>
+    <h4>Did you know?</h4>
+    <p>
+        Any account password data is hashed using a "Password-Based Key Derivation Function 2" 
+        algorithm when stored to our database. This means only <b>you</b> will know your password. 
+        But it also means that if you forget it, the site administrator cannot help guess your 
+        password without generating a new one for you.
+    </p>
 </div>
-{% endif %}
-
-<div>
-    Sign up form
+<div class="col-md-7">
+    <form class="myform" action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Submit" />
+    </form>
 </div>
 
 {% endblock %}
