@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table class="table">
+    <th>Submitted Date</th>
+    <th>Username</th>
+    <th>E-mail</th>
+    {% for registration in registrations %}
+    <tr>
+        <td>{{registration.date_submitted}}</td>
+        <td>{{registration.username}}</td>
+        <td>{{registration.email}}</td>
+        <td><a href="">Approve</a></td>
+        <td><a href="">Reject</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
