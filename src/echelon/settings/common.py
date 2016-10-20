@@ -86,6 +86,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'echelon.context_processors.app_version',
                 'echelon.context_processors.app_links',
+                'echelon.context_processors.pending_registrations',                
             ],
         },
     },
