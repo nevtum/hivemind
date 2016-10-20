@@ -18,7 +18,5 @@
     {{ form|crispy }}
     <input type="submit" value="Submit" />
 </form>
-
-<!--<p>Not a member? <a href="">Register here!</a></p>-->
-
+<p>Not a member? <a href="{% url 'register' %}">Create an account!</a></p>
 {% endblock %}

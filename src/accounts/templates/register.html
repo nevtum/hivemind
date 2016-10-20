@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+{% if error %}
+<div class="well well-sm">
+    {{ error }}
+</div>
+{% endif %}
+
+<div>
+    Sign up form
+</div>
+
+{% endblock %}
