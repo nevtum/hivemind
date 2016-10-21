@@ -3,11 +3,15 @@
 {% block content %}
 <table class="table">
     <th>Submitted Date</th>
+    <th>First name</th>
+    <th>Last name</th>
     <th>Username</th>
     <th>E-mail</th>
     {% for registration in registrations %}
     <tr>
         <td>{{registration.date_submitted}}</td>
+        <td>{{registration.first_name}}</td>
+        <td>{{registration.last_name}}</td>
         <td>{{registration.username}}</td>
         <td>{{registration.email}}</td>
         <td><a href="">Approve</a></td>

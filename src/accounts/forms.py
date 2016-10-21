@@ -6,7 +6,13 @@ from django.contrib.auth.models import User
 class SignupForm(forms.ModelForm):
     class Meta:
         model = SignupRequest
-        fields = ['username', 'email', 'password']
+        fields = [
+            'first_name',
+            'last_name',
+            'username',
+            'email',
+            'password'
+        ]
         widgets = {
             'password': forms.PasswordInput()
         }
