@@ -1,22 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<table class="table">
-    <th>Submitted Date</th>
-    <th>First name</th>
-    <th>Last name</th>
-    <th>Username</th>
-    <th>E-mail</th>
-    {% for registration in registrations %}
-    <tr>
-        <td>{{registration.date_submitted}}</td>
-        <td>{{registration.first_name}}</td>
-        <td>{{registration.last_name}}</td>
-        <td>{{registration.username}}</td>
-        <td>{{registration.email}}</td>
-        <td><a href="">Approve</a></td>
-        <td><a href="">Reject</a></td>
-    </tr>
+{% if registrations %}
+<table class="table table-condensed">
+    <tbody>
+        <tr>
+            <th>Submitted Date</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Username</th>
+            <th>E-mail</th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for registration in registrations %}
+        <tr>
+            <td>{{registration.date_submitted}}</td>
+            <td>{{registration.first_name}}</td>
+            <td>{{registration.last_name}}</td>
+            <td>{{registration.username}}</td>
+            <td>{{registration.email}}</td>   
+            <td><a href="{% url 'approve' registration.id %}">Approve</a></td>
+            <td><a href="{% url 'reject' registration.id %}">Reject</a></td>
+        </tr>
+    </tbody>
     {% endfor %}
 </table>
+{% else %}
+<p>There are currently no registrations pending approval.</p>
+{%endif%}
 {% endblock %}

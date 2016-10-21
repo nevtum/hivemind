@@ -20,6 +20,18 @@ class SignupRequestView(CreateView):
 def register_complete(request):
     return render(request, 'wait_admin.html')
 
+# not best practice to mutate data on a get request
+def reject_registration(request, pk):
+    registration = SignupRequest.objects.get(pk=pk)
+    registration.reject()
+    return redirect('pending')
+
+# not best practice to mutate data on a get request
+def approve_registration(request, pk):
+    registration = SignupRequest.objects.get(pk=pk)
+    registration.approve()
+    return redirect('pending')
+
 class SignupListView(ListView):
     queryset = SignupRequest.objects.filter(pending_approval=True)
     context_object_name = 'registrations'
