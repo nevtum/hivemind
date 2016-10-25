@@ -38,8 +38,7 @@ INSTALLED_APPS = [
 ECHELON_APPS = [
     'common',
     'dirts',
-    'accounts',
-    # 'feed'
+    'accounts'
 ]
 
 INSTALLED_APPS.extend(ECHELON_APPS)
@@ -47,7 +46,6 @@ INSTALLED_APPS.extend(ECHELON_APPS)
 from django.core.urlresolvers import reverse_lazy
 
 APP_LINKS = [
-    # { 'title': 'Feed', 'url': reverse_lazy('feed-url') },
     { 'title': 'Projects', 'url': reverse_lazy('projects') },
     { 'title': 'DIRTs', 'url': reverse_lazy('dirts-list') },
 ]
