@@ -6,7 +6,7 @@
   <div id="dirt-summary">
     <div class="row">
       <div class="col-lg-3 col-lg-push-9">
-        <div class="list-group">
+        <div class="list-group z-height-1">
           {% if dirt.is_active %}
           <a href="{% url 'dirt-amend-url' dirt.id %}" class="list-group-item">Amend</a>
           <a href="{% url 'dirt-close-url' dirt.id %}" class="list-group-item">Close</a>
@@ -21,7 +21,7 @@
         </div>
 
         <h4>Navigate {{ dirt.project_code }}:</h4>                    
-        <div class="list-group">
+        <div class="list-group z-height-1">
           {% if model.prev_in_project %}
           <a href="{{ model.prev_in_project.get_absolute_url }}" class="list-group-item">Previous</a>
           {% endif %}
@@ -33,7 +33,7 @@
         {% with more_like_this=model.more_like_this %}
         {% if more_like_this %}
         <h4>More like this:</h4>
-        <div id="more-like-this" class="list-group">
+        <div id="more-like-this" class="list-group z-height-1">
           {% for similar in more_like_this %}
           <a href="{% url 'dirt-detail-url' similar.id %}" class="list-group-item">
             {{similar.reference}} [{{similar.date_created | timesince}} ago]
