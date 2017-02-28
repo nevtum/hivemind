@@ -15,4 +15,5 @@ class CommandHandlerTests(APITestCase):
         data = { 'id': 123 }
         response = self.client.post(reverse('commands'), data, format='json')
         self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEquals(response.data.get('request-data'), data)
+        error_msg = 'Please provide a COMMAND type in request header'
+        self.assertEquals(response.data.get('detail'), error_msg)

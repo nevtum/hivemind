@@ -194,7 +194,7 @@ class DefectPage:
         self.client = client
         self.id = id
         self.response = self.client.get(
-            reverse('dirt-detail-url', kwargs={'dirt_id': self.id})
+            reverse('dirt-detail-url', kwargs={'pk': self.id})
         )
     
     def close_defect(self, release_id, reason=None):
@@ -203,7 +203,7 @@ class DefectPage:
             'reason': reason
         }
         self.response = self.client.post(
-            reverse('dirt-close-url', kwargs={'dirt_id': self.id}),
+            reverse('dirt-close-url', kwargs={'pk': self.id}),
             data=post_data,
             follow=True
         )
@@ -215,7 +215,7 @@ class DefectPage:
             'reason': reason
         }
         self.response = self.client.post(
-            reverse('dirt-reopen-url', kwargs={'dirt_id': self.id}),
+            reverse('dirt-reopen-url', kwargs={'pk': self.id}),
             data=post_data,
             follow=True
         )
@@ -223,7 +223,7 @@ class DefectPage:
     
     def amend_defect(self, **post_data):
         self.response = self.client.post(
-            reverse('dirt-amend-url', kwargs={'dirt_id': self.id}),
+            reverse('dirt-amend-url', kwargs={'pk': self.id}),
             data=post_data,
             follow=True
         )
