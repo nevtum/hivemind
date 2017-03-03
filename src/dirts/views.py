@@ -33,6 +33,9 @@ class DefectDetailView(DetailView):
     context_object_name = 'model'
     template_name = 'detail.html'
 
+def begin_import(request):
+    return render(request, 'begin_import.html')
+
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     queryset = Defect.objects.filter(tags__name__in=[tag.name]).distinct()

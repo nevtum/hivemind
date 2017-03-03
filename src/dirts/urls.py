@@ -14,7 +14,7 @@ router.register(r'suggest_projects', api_views.AutoCompleteProjects, 'project-su
 urlpatterns = [
     url(r'^api/', include(router.urls, namespace='dirts')),
     url(r'^api/more-like-this/(?P<pk>\d+?)/$', api_views.more_like_this_defect, name='similar-defects'),
-    
+    url(r'^import/$', views.begin_import, name='import-list'),    
     url(r'^report/$', views.report, name='report'),
     url(r'^$', views.DefectListView.as_view(), name='dirts-list'),
     url(r'^active/$', views.ActiveDefectListView.as_view(), name='active-dirts'),
