@@ -1,5 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h4>Begin Import</h4>
+{% load crispy_forms_tags %}
+
+{% if error %}
+<div class="well well-sm">
+    {{ error }}
+</div>
+{% endif %}
+
+<form
+    class="myform"
+    enctype="multipart/form-data"
+    action="{% url 'import-list' %}"
+    method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Import" />
+</form>
+
 {% endblock %}

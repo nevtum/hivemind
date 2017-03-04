@@ -7,9 +7,10 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from taggit.models import Tag
 
 from .forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
-                    ViewDirtReportForm)
+                    ViewDirtReportForm, ImportDirtsForm)
 from .mixins import DefectSearchMixin
 from .models import Defect
+from .utils import import_data
 
 
 class TagsListView(ListView):
@@ -34,7 +35,15 @@ class DefectDetailView(DetailView):
     template_name = 'detail.html'
 
 def begin_import(request):
-    return render(request, 'begin_import.html')
+    initial={'fn': request.session.get('fn', None)}
+    form = ImportDirtsForm(request.POST or None, initial)
+    if request.method == 'POST':
+        if form.is_valid():
+            request.session['raw_data'] = import_data(form.cleaned_data['fn'])
+            return redirect('complete-import')
+        else:
+            print('not valid')
+    return render(request, 'begin_import.html', {'form': form})
 
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
