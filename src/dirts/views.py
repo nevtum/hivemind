@@ -35,15 +35,19 @@ class DefectDetailView(DetailView):
     template_name = 'detail.html'
 
 def begin_import(request):
-    initial={'fn': request.session.get('fn', None)}
-    form = ImportDirtsForm(request.POST or None, initial)
     if request.method == 'POST':
+        form = ImportDirtsForm(request.POST, request.FILES)
         if form.is_valid():
-            request.session['raw_data'] = import_data(form.cleaned_data['fn'])
+            request.session['data'] = import_data(form.cleaned_data['import_file'])
             return redirect('complete-import')
         else:
-            print('not valid')
+            return render(request, 'begin_import.html', {'form': form})
+    form = ImportDirtsForm()
     return render(request, 'begin_import.html', {'form': form})
+
+def complete_import(request):
+    data = request.session.get('data', None)
+    return render(request, 'begin_import.html', {'data': data})
 
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
