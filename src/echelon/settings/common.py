@@ -31,8 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'crispy_forms',
-    'taggit',
-    'haystack',
+    'taggit'
 ]
 
 ECHELON_APPS = [
@@ -52,19 +51,7 @@ APP_LINKS = [
 
 # Import third party libraries
 from .drf import *
-
-MIDDLEWARE_CLASSES = (
-    'django.middleware.security.SecurityMiddleware',
-    'django.middleware.gzip.GZipMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-)
+from .haystack import *
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -90,15 +77,6 @@ TEMPLATES = [
         },
     },
 ]
-
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-    },
-}
-
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 WSGI_APPLICATION = 'echelon.wsgi.application'
 
