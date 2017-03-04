@@ -1,4 +1,4 @@
-from .common import *
+from .base import *
 
 INSTALLED_APPS += ['debug_toolbar']
 

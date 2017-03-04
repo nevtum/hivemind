@@ -1,4 +1,4 @@
-from .common import INSTALLED_APPS
+from .base import INSTALLED_APPS
 
 INSTALLED_APPS += [
     'rest_framework'
