@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block content %}
 {% load crispy_forms_tags %}
@@ -9,18 +10,94 @@
 </div>
 {% endif %}
 
-{% if data %}
-{{ data }}
-{% endif %}
+<div id="help" class="col-md-8 pull-right">
+    <h4>Import requirements</h4>
+    <span>
+        <p>This utility helps in uploading and importing into our Echelon database a list of DIRTs from files. In order to succeed with the import, the file must meet the following criteria:</p>
+        <ul>
+            <li>The file must be a comma separated values file (CSV)</li>
+            <li>The first row must have the following columns in this order:
+                <ol>
+                    <li>Date Created</li>
+                    <li>Status</li>
+                    <li>Priority</li>
+                    <li>Version</li>
+                    <li>Reference</li>
+                    <li>Description</li>
+                    <li>Comment</li>
+                    <li>Date Closed</li>
+                </ol>
+            </li>
+            <li>Data rows columns must match with first row columns</li>
+        </ul>
+        <p>Formatting criteria applies to each column, described below:</p>
+        <ul>
+            <li>Date Created - (dd/mm/yyyy). Must not be empty.</li>
+            <li>Status - ('Open', 'Closed'). Must not be empty.</li>
+            <li>Priority - ('High', 'Medium', 'Low', 'Observation'). Must not be empty.</li>
+            <li>Version - Software or hardware version number. Must not be empty.</li>
+            <li>Reference - One line summary of DIRT. Must not be empty.</li>
+            <li>Description - Body of DIRT. Must not be empty.</li>
+            <li>Comment - Additional information of DIRT. Optional.</li>
+            <li>Date Closed - (dd/mm/yy). Optional.</li>
+        </ul>
+    </span>
+</div>
 
-<form
-    class="myform"
-    enctype="multipart/form-data"
-    action="{% url 'import-list' %}"
-    method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <input type="submit" value="Import" />
-</form>
+<div class="col-md-4">
+    <form
+        class="myform"
+        enctype="multipart/form-data"
+        action="{% url 'import-list' %}"
+        method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Import" />
+    </form>
+</div>
 
+{% endblock %}
+
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static "css/jquery-ui.css" %}" />
+    <style>
+        #id_project_code {
+            width: 70%;
+        }
+        #help {
+            margin-bottom: 30px;
+        }
+    </style>
+{% endblock %}
+
+{% block custom_javascript %}
+    <script type="text/javascript" src="{% static "js/jquery-ui.js" %}"></script>
+    <script type="text/javascript">
+        $(function() {
+            
+            var url = "{% url 'dirts:project-suggest-list' %}";
+
+            var fetch_results = function(request, response) {
+                var term = request.term;
+                $.getJSON(url, {'q': term}, function(data) {
+                    var results = [];
+                    $.each(data, function(k, v) {
+                        results.push(v);
+                    });
+                    response(results);
+                });
+            };
+            
+            $("#id_project_code").autocomplete({
+                minLength: 3,
+                select: function(evt, ui) {
+                    // logic on select something
+                },
+                source: function(request, response) {
+                    fetch_results(request, response);
+                },
+            });
+        });
+    </script>
 {% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<h4>Please review list of DIRTs before proceeding with import:</h4>
+
+<form class="myform" action="{% url 'complete-import' %}" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Submit" />
+</form>
+
+{% endblock %}

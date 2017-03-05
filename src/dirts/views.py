@@ -47,7 +47,7 @@ def begin_import(request):
 
 def complete_import(request):
     data = request.session.get('data', None)
-    return render(request, 'begin_import.html', {'data': data})
+    return render(request, 'confirm_import.html', {'data': data})
 
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
