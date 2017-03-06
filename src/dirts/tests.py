@@ -6,9 +6,6 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
-
-# NOTE: MAKE SURE TO DELETE HAYSTACK INDEX
-# BEFORE PERFORMING ANY TEST
 class DefectAcceptanceTests(TestCase):
     
     @staticmethod

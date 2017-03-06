@@ -8,10 +8,10 @@ from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
+from ..models import Defect
+from ..serializers import (DefectSerializer, MoreLikeThisSerializer,
+                           SuggestionSerializer)
 from .mixins import DefectSearchMixin
-from .models import Defect
-from .serializers import (DefectSerializer, MoreLikeThisSerializer,
-                          SuggestionSerializer)
 
 
 class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):

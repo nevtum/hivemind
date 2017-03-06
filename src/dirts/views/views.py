@@ -6,11 +6,10 @@ from django.utils import dateparse, timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from taggit.models import Tag
 
-from .forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
-                    ViewDirtReportForm, ImportDirtsForm)
+from ..forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
+                    ViewDirtReportForm)
 from .mixins import DefectSearchMixin
-from .models import Defect
-from .utils import import_data
+from ..models import Defect
 
 
 class TagsListView(ListView):
@@ -33,30 +32,6 @@ class DefectDetailView(DetailView):
     model = Defect
     context_object_name = 'model'
     template_name = 'detail.html'
-
-@login_required(login_url='/login/')
-def begin_import(request):
-    if request.method == 'POST':
-        form = ImportDirtsForm(request.POST, request.FILES)
-        if form.is_valid():
-            request.session['project'] = form.cleaned_data['project_code']
-            request.session['defects'] = import_data(form.cleaned_data['import_file'])
-            return redirect('complete-import')
-        else:
-            return render(request, 'begin_import.html', {'form': form})
-    form = ImportDirtsForm()
-    return render(request, 'begin_import.html', {'form': form})
-
-@login_required(login_url='/login/')
-def complete_import(request):
-    defects = request.session.get('defects', None)
-    code = request.session.get('project', None)
-    project = get_object_or_404(Project, code=code)
-    res = {
-        'defects': defects,
-        'project': project
-    }
-    return render(request, 'confirm_import.html', res)
 
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
