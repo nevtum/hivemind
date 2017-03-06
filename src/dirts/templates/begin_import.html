@@ -24,7 +24,7 @@
                     <li>Version</li>
                     <li>Reference</li>
                     <li>Description</li>
-                    <li>Comment</li>
+                    <li>Comments</li>
                     <li>Date Closed</li>
                 </ol>
             </li>
@@ -38,7 +38,7 @@
             <li>Version - Software or hardware version number. Must not be empty.</li>
             <li>Reference - One line summary of DIRT. Must not be empty.</li>
             <li>Description - Body of DIRT. Must not be empty.</li>
-            <li>Comment - Additional information of DIRT. Optional.</li>
+            <li>Comments - Additional information of DIRT. Optional.</li>
             <li>Date Closed - (dd/mm/yy). Optional.</li>
         </ul>
     </span>
@@ -52,7 +52,7 @@
         method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="submit" value="Import" />
+        <input type="submit" value="Process" />
     </form>
 </div>
 

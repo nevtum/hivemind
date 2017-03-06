@@ -4,8 +4,8 @@ from django.forms import ModelForm, Textarea
 from django.utils import timezone
 
 class ImportDirtsForm(forms.Form):
-    import_file = forms.FileField(allow_empty_file=False)
     project_code = forms.CharField(label='Enter project code to save under')
+    import_file = forms.FileField(allow_empty_file=False)
 
 class ViewDirtReportForm(ModelForm, forms.Form):
     prior_to_date = forms.DateField(initial=timezone.now)
