@@ -34,8 +34,8 @@ class Priority(models.Model):
 class Defect(models.Model):
     project_code = models.CharField(max_length=20)
     project = models.ForeignKey(Project)
-    date_created = models.DateTimeField(auto_now_add=True)
-    date_changed = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField()
+    date_changed = models.DateTimeField()
     submitter = models.ForeignKey(User)
     release_id = models.CharField(max_length=50)
     status = models.ForeignKey(Status, default=1)

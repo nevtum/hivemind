@@ -1,5 +1,5 @@
 from common.models import DomainEvent, Manufacturer, Project
-from dirts.forms import CreateDirtForm
+from dirts.forms import CreateDirtForm, ImportDirtForm
 from dirts.models import Defect, Priority, Status
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -168,6 +168,15 @@ class DefectAcceptanceTests(TestCase):
         self.assertEquals(event['sequence_nr'], 0)
         self.assertEquals(event['event_type'], 'DIRT.OPENED')
         self.assertIsNotNone(event['payload'])
+    
+    def test_should_import_dirt_date_provided(self):
+        data = self._test_form_data_with_comments()
+        data['date_created'] = timezone.datetime(2017, 3, 7)
+        form = ImportDirtForm(data=data)
+        self.assertEquals(form.is_valid(), True)
+        tzdate = form.cleaned_data['date_created']
+        defect = form.save(commit=False)
+        self.assertEquals(defect.date_created, tzdate) 
 
 class CreateDefectPage:
     """Helper class abstracting away web call details
