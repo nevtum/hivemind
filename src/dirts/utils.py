@@ -5,7 +5,15 @@ def json_from(contents):
     data = StringIO(contents.read().decode('utf-8'))
     reader = csv.DictReader(data, delimiter=',')
     for row in reader:
-        yield row
+        yield {
+            'date_created': row['Date Created'],
+            'description': row['Description'],
+            'comments': row['Comments'],
+            'priority': row['Priority'],
+            'status': row['Status'],
+            'reference': row['Reference'],
+            'version': row['Version']
+        }
 
 def import_data(contents):
     """A function which reads converts the contents
@@ -13,30 +21,3 @@ def import_data(contents):
     properties, validated and ready for
     conversion to Defect model objects"""
     return [item for item in json_from(contents)]
-
-    return [
-        {
-            'date_created': '3/03/2017',
-            'description': 'Some description',
-            'comments': 'Example comments',
-            'status': 'Open',
-            'priority': 'High',
-            'reference': 'A title'
-        },
-        {
-            'date_created': '4/03/2017',
-            'description': 'Some description',
-            'comments': 'Example comments',
-            'status': 'Open',
-            'priority': 'High',
-            'reference': 'A title'
-        },
-        {
-            'date_created': '5/03/2017',
-            'description': 'Some description',
-            'comments': 'Example comments',
-            'status': 'Open',
-            'priority': 'High',
-            'reference': 'A title'
-        }
-    ]
