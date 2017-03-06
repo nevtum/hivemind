@@ -12,7 +12,7 @@ def begin_import(request):
         form = ImportDirtsForm(request.POST, request.FILES)
         if form.is_valid():
             request.session['project'] = form.cleaned_data['project_code']
-            request.session['defects'] = import_data(form.cleaned_data['import_file'])
+            request.session['defects'] = import_data(request)
             return redirect('complete-import')
         else:
             return render(request, 'begin_import.html', {'form': form})
