@@ -1,4 +1,5 @@
 import json
+import os
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -57,6 +58,8 @@ class Defect(models.Model):
             return earlier[0]
     
     def more_like_this(self, count = 5):
+        if os.environ.get("DJANGO_SETTINGS_MODULE") != "echelon.settings.prod":
+            return []
         try:
             sqs = SearchQuerySet().more_like_this(self)[:count]
             return map(lambda x: x.object, sqs)
