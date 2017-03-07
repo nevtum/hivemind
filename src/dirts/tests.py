@@ -192,6 +192,8 @@ class DefectAcceptanceTests(TestCase):
         data = {
             'project_code': 'ABC.321',
             'date_created': '2017-03-06T00:00:00+11:00',
+            'priority': 'High',
+            'status': 'Open',
             'submitter': self.test_user.username,
             'release_id': 'v1.23.456',
             'reference': 'Failed to get into particular state',
@@ -201,7 +203,7 @@ class DefectAcceptanceTests(TestCase):
         serializer = ImportDefectSerializer(data=data)
         self.assertEqual(serializer.is_valid(), True, serializer.errors)
         defect = serializer.save()
-        self.assertEqual(isinstance(Defect, defect), True)
+        self.assertEqual(isinstance(defect, Defect), True)
 
 
 class CreateDefectPage:

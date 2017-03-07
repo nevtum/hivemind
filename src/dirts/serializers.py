@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 
 from .models import Defect, Priority, Status
 
@@ -18,9 +19,9 @@ class UserSerializer(serializers.Serializer):
         return "{0} {1}".format(user.first_name, user.last_name)
 
 class ImportDefectSerializer(serializers.ModelSerializer):
-    status = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    priority = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    submitter = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    status = serializers.SlugRelatedField(slug_field='name', queryset=Status.objects.all())
+    priority = serializers.SlugRelatedField(slug_field='name', queryset=Priority.objects.all())
+    submitter = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
     class Meta:
         model = Defect
         fields = (
@@ -36,7 +37,7 @@ class ImportDefectSerializer(serializers.ModelSerializer):
         )
     
     def create(self, validated_data):
-        Defect.objects.create(**validated_data)
+        return Defect.objects.create(**validated_data)
 
 class DefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')
