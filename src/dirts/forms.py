@@ -18,6 +18,8 @@ class ImportDirtForm(ModelForm):
             'reference',
             'description',
             'comments',
+            'status',
+            'submitter',
         ]
 
 class ViewDirtReportForm(ModelForm, forms.Form):
