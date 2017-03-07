@@ -171,12 +171,16 @@ class DefectAcceptanceTests(TestCase):
     
     def test_should_import_dirt_date_provided(self):
         data = self._test_form_data_with_comments()
+        
         data['date_created'] = timezone.datetime(2017, 3, 7)
+        data['submitter'] = self.test_user.id
+        data['status'] = Status.objects.get(name='Open').id
+
         form = ImportDirtForm(data=data)
         self.assertEquals(form.is_valid(), True)
         tzdate = form.cleaned_data['date_created']
         defect = form.save(commit=False)
-        self.assertEquals(defect.date_created, tzdate) 
+        self.assertEquals(defect.date_created, tzdate)
 
 class CreateDefectPage:
     """Helper class abstracting away web call details
