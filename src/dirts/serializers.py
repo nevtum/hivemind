@@ -18,9 +18,9 @@ class UserSerializer(serializers.Serializer):
         return "{0} {1}".format(user.first_name, user.last_name)
 
 class ImportDefectSerializer(serializers.ModelSerializer):
-    status = serializers.ReadOnlyField(source='status.name')
-    priority = serializers.ReadOnlyField(source='priority.name')
-    submitter = serializers.ReadOnlyField(source='submitter.username')
+    status = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    priority = serializers.SlugRelatedField(slug_field='name', read_only=True)
+    submitter = serializers.SlugRelatedField(slug_field='username', read_only=True)
     class Meta:
         model = Defect
         fields = (
@@ -34,6 +34,9 @@ class ImportDefectSerializer(serializers.ModelSerializer):
             'reference',
             'submitter'
         )
+    
+    def create(self, validated_data):
+        Defect.objects.create(**validated_data)
 
 class DefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')

@@ -1,6 +1,7 @@
 from common.models import DomainEvent, Manufacturer, Project
-from dirts.forms import CreateDirtForm, ImportDirtForm
-from dirts.models import Defect, Priority, Status
+from .forms import CreateDirtForm, ImportDirtForm
+from .models import Defect, Priority, Status
+from .serializers import ImportDefectSerializer
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
@@ -186,6 +187,22 @@ class DefectAcceptanceTests(TestCase):
         self.assertEqual(defect.release_id, data['release_id'])
         self.assertEqual(defect.status, status)
         self.assertEqual(defect.date_created, tzdate)
+    
+    def test_should_deserialize_json_defect(self):
+        data = {
+            'project_code': 'ABC.321',
+            'date_created': '2017-03-06T00:00:00+11:00',
+            'submitter': self.test_user.username,
+            'release_id': 'v1.23.456',
+            'reference': 'Failed to get into particular state',
+            'description': 'Simple description',
+            'comments': ''
+        }
+        serializer = ImportDefectSerializer(data=data)
+        self.assertEqual(serializer.is_valid(), True, serializer.errors)
+        defect = serializer.save()
+        self.assertEqual(isinstance(Defect, defect), True)
+
 
 class CreateDefectPage:
     """Helper class abstracting away web call details
