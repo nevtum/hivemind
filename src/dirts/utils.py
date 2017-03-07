@@ -7,7 +7,7 @@ from django.utils.timezone import datetime
 from .forms import ImportDirtForm
 from .models import Status, Priority
 from django.shortcuts import get_object_or_404
-from .serializers import SimpleDefectSerializer
+from .serializers import ImportDefectSerializer
 
 def parse_datetime(datestring) -> datetime:
     expr = re.compile('^(?P<day>\d{1,2})\/(?P<month>\d{1,2})\/(?P<year>\d{4})$')
@@ -65,7 +65,8 @@ def json_from(request) -> list:
             error = form.errors
             raise ValueError("Form is not valid")
         defect = form.save(commit=False)
-        yield SimpleDefectSerializer(defect).data
+        serializer = ImportDefectSerializer(defect)
+        yield serializer.data
 
 
 def import_data(request):
