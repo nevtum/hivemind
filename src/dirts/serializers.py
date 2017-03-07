@@ -20,9 +20,20 @@ class UserSerializer(serializers.Serializer):
 class SimpleDefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.ReadOnlyField(source='priority.name')
-    submitter = UserSerializer()
+    # submitter = serializers.ReadOnlyField(source='submitter.name')
     class Meta:
         model = Defect
+        fields = (
+            'id',
+            'description',
+            'date_created',
+            'status',
+            'project_code',
+            'release_id',
+            'priority',
+            'reference',
+            'submitter'
+        )
 
 class DefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')

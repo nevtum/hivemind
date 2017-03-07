@@ -20,7 +20,8 @@
         </tr>
         {% for dirt in defects %}
         <tr>
-            <td>{{ dirt.date_created | date:"d/m/Y" }}</td>
+            <!--<td>{{ dirt.date_created | date:"d/m/Y" }}</td>-->
+            <td>{{ dirt.date_created }}</td>
             <td>{{ dirt.status }}</td>
             <td>{{ dirt.priority }}</td>
             <td>

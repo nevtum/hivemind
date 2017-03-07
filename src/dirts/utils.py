@@ -52,12 +52,12 @@ def json_from(request) -> list:
             'date_created': date_created,
             'description': row['Description'],
             'comments': row['Comments'],
+            'submitter': submitter.id,
+            'status': status.id,
             'priority': priority.id,
-            'status': status,
             'reference': row['Reference'],
             'release_id': row['Version'],
             'date_closed': row['Date Closed'],
-            'submitter': submitter,
             'project_code': code
         }
         form = ImportDirtForm(data=data)
