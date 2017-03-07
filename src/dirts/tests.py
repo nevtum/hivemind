@@ -204,6 +204,10 @@ class DefectAcceptanceTests(TestCase):
         self.assertEqual(serializer.is_valid(), True, serializer.errors)
         defect = serializer.save()
         self.assertEqual(isinstance(defect, Defect), True)
+        self.assertEqual(defect.project, Project.objects.get(code='ABC.321'))
+        self.assertEqual(defect.submitter, self.test_user)
+        self.assertEqual(defect.priority, Priority.objects.get(name='High'))
+        self.assertEqual(defect.status, Status.objects.get(name='Open'))
 
 
 class CreateDefectPage:
