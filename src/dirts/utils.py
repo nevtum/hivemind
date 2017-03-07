@@ -41,7 +41,6 @@ def _format_status(status):
 def json_from(request) -> list:
     contents = request.FILES['import_file']
     code = request.POST['project_code']
-    submitter = request.user
     data = StringIO(contents.read().decode('utf-8'))
     reader = csv.DictReader(data, delimiter=',')
     for row in reader:
@@ -52,20 +51,19 @@ def json_from(request) -> list:
             'date_created': date_created,
             'description': row['Description'],
             'comments': row['Comments'],
-            'submitter': submitter.id,
-            'status': status.id,
-            'priority': priority.id,
+            'submitter': request.user.username,
+            'status': status.name,
+            'priority': priority.name,
             'reference': row['Reference'],
             'release_id': row['Version'],
             'date_closed': row['Date Closed'],
             'project_code': code
         }
-        form = ImportDirtForm(data=data)
-        if not form.is_valid():
-            error = form.errors
-            raise ValueError("Form is not valid")
-        defect = form.save(commit=False)
-        serializer = ImportDefectSerializer(defect)
+        serializer = ImportDefectSerializer(data=data)
+        if not serializer.is_valid():
+            yield {
+                'errors': serializer.errors
+            }
         yield serializer.data
 
 
