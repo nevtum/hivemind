@@ -33,7 +33,7 @@ class DefectAcceptanceTests(TestCase):
         password = 'test_password'
         self.test_user = User.objects.create_user(username, email, password)
         login = self.client.login(username='test_user', password='test_password')
-        self.assertEquals(login, True)
+        self.assertEqual(login, True)
 
     @staticmethod
     def _test_form_data_with_comments():
@@ -68,7 +68,7 @@ class DefectAcceptanceTests(TestCase):
         kwargs = self._test_form_data_with_comments()
         kwargs[field_name] = value
         form = CreateDirtForm(data=kwargs)
-        self.assertEquals(form.is_valid(), False)
+        self.assertEqual(form.is_valid(), False)
         
     def test_should_fail_valid_create_defect_form_with_empty_project_code(self):
         self._assert_empty_field_fail_form('project_code', '')
@@ -87,11 +87,11 @@ class DefectAcceptanceTests(TestCase):
     
     def test_should_pass_valid_create_defect_form_with_comments(self):
         form = CreateDirtForm(data=self._test_form_data_with_comments())
-        self.assertEquals(form.is_valid(), True)
+        self.assertEqual(form.is_valid(), True)
     
     def test_should_pass_valid_create_defect_form_without_comments(self):
         form = CreateDirtForm(data=self._test_form_data_without_comments())
-        self.assertEquals(form.is_valid(), True)
+        self.assertEqual(form.is_valid(), True)
     
     def test_should_create_new_defect(self):
         data = self._test_form_data_with_comments()
@@ -99,13 +99,13 @@ class DefectAcceptanceTests(TestCase):
         defect_page = create_defect_page.raise_new_defect(**data)
         result = defect_page.context
         
-        self.assertEquals(result.project_code, 'ABC.123')
-        self.assertEquals(result.release_id, 'v1.2.3.4')
-        self.assertEquals(result.status, 'Open')
-        self.assertEquals(result.priority, 'High')
-        self.assertEquals(result.reference, 'a title')
-        self.assertEquals(result.description, 'some defect description')
-        self.assertEquals(result.comments, 'some comments')
+        self.assertEqual(result.project_code, 'ABC.123')
+        self.assertEqual(result.release_id, 'v1.2.3.4')
+        self.assertEqual(result.status, 'Open')
+        self.assertEqual(result.priority, 'High')
+        self.assertEqual(result.reference, 'a title')
+        self.assertEqual(result.description, 'some defect description')
+        self.assertEqual(result.comments, 'some comments')
         
     def test_should_update_existing_defect(self):
         data = self._test_form_data_with_comments()
@@ -123,16 +123,16 @@ class DefectAcceptanceTests(TestCase):
         defect_page.amend_defect(**data)
         result = defect_page.context
         
-        self.assertEquals(result.project_code, 'ABC.321')
-        self.assertEquals(result.release_id, 'v4.3.2.1')
-        self.assertEquals(result.status, 'Open')
-        self.assertEquals(result.priority, 'Observational')
-        self.assertEquals(result.reference, 'changed title')
-        self.assertEquals(result.description, 'modified description')
-        self.assertEquals(result.comments, 'updated comments')
+        self.assertEqual(result.project_code, 'ABC.321')
+        self.assertEqual(result.release_id, 'v4.3.2.1')
+        self.assertEqual(result.status, 'Open')
+        self.assertEqual(result.priority, 'Observational')
+        self.assertEqual(result.reference, 'changed title')
+        self.assertEqual(result.description, 'modified description')
+        self.assertEqual(result.comments, 'updated comments')
         
-        self.assertEquals(len(result.change_history), 2)
-        self.assertEquals(result.change_history[-1].submitter, 'test_user')
+        self.assertEqual(len(result.change_history), 2)
+        self.assertEqual(result.change_history[-1].submitter, 'test_user')
     
     def test_should_close_existing_defect(self):
         data = self._test_form_data_with_comments()   
@@ -141,8 +141,8 @@ class DefectAcceptanceTests(TestCase):
         defect_page.close_defect('v1.2.3.5')
         result = defect_page.context
         
-        self.assertEquals(result.status, 'Closed')
-        self.assertEquals(result.release_id, 'v1.2.3.5')
+        self.assertEqual(result.status, 'Closed')
+        self.assertEqual(result.release_id, 'v1.2.3.5')
     
     def test_should_reopen_a_closed_defect(self):
         data = self._test_form_data_with_comments()
@@ -152,12 +152,12 @@ class DefectAcceptanceTests(TestCase):
         defect_page.reopen_defect('v1.2.4.2', 'issue regressed')
         result = defect_page.context
         
-        self.assertEquals(result.status, 'Open')
-        self.assertEquals(result.release_id, 'v1.2.4.2')
+        self.assertEqual(result.status, 'Open')
+        self.assertEqual(result.release_id, 'v1.2.4.2')
         
         # test put here to prevent a bug from the past from regressing
         expected_priority = Priority.objects.get(pk=data['priority']).name
-        self.assertEquals(result.priority, expected_priority)
+        self.assertEqual(result.priority, expected_priority)
         
     def test_should_create_dirt_opened_event(self):
         form = CreateDirtForm(data=self._test_form_data_with_comments())
@@ -165,22 +165,27 @@ class DefectAcceptanceTests(TestCase):
         defect.submitter = self.test_user
         event = defect.raise_new()
         
-        self.assertEquals(event['sequence_nr'], 0)
-        self.assertEquals(event['event_type'], 'DIRT.OPENED')
+        self.assertEqual(event['sequence_nr'], 0)
+        self.assertEqual(event['event_type'], 'DIRT.OPENED')
         self.assertIsNotNone(event['payload'])
     
     def test_should_import_dirt_date_provided(self):
         data = self._test_form_data_with_comments()
         
+        status = Status.objects.get(name='Open')
         data['date_created'] = timezone.datetime(2017, 3, 7)
         data['submitter'] = self.test_user.id
-        data['status'] = Status.objects.get(name='Open').id
+        data['status'] = status.id
 
         form = ImportDirtForm(data=data)
-        self.assertEquals(form.is_valid(), True)
+        self.assertEqual(form.is_valid(), True)
         tzdate = form.cleaned_data['date_created']
         defect = form.save(commit=False)
-        self.assertEquals(defect.date_created, tzdate)
+        
+        self.assertEqual(defect.submitter, self.test_user)
+        self.assertEqual(defect.release_id, data['release_id'])
+        self.assertEqual(defect.status, status)
+        self.assertEqual(defect.date_created, tzdate)
 
 class CreateDefectPage:
     """Helper class abstracting away web call details
