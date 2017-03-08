@@ -1,11 +1,13 @@
 from common.models import DomainEvent, Manufacturer, Project
-from .forms import CreateDirtForm, ImportDirtForm
-from .models import Defect, Priority, Status
-from .serializers import ImportDefectSerializer
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
+
+from .forms import CreateDirtForm
+from .models import Defect, Priority, Status
+from .serializers import ImportDefectSerializer
+
 
 class DefectAcceptanceTests(TestCase):
     
@@ -169,24 +171,6 @@ class DefectAcceptanceTests(TestCase):
         self.assertEqual(event['sequence_nr'], 0)
         self.assertEqual(event['event_type'], 'DIRT.OPENED')
         self.assertIsNotNone(event['payload'])
-    
-    def test_should_import_dirt_date_provided(self):
-        data = self._test_form_data_with_comments()
-        
-        status = Status.objects.get(name='Open')
-        data['date_created'] = timezone.datetime(2017, 3, 7)
-        data['submitter'] = self.test_user.id
-        data['status'] = status.id
-
-        form = ImportDirtForm(data=data)
-        self.assertEqual(form.is_valid(), True)
-        tzdate = form.cleaned_data['date_created']
-        defect = form.save(commit=False)
-        
-        self.assertEqual(defect.submitter, self.test_user)
-        self.assertEqual(defect.release_id, data['release_id'])
-        self.assertEqual(defect.status, status)
-        self.assertEqual(defect.date_created, tzdate)
     
     def test_should_deserialize_json_defect(self):
         data = {

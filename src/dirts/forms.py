@@ -7,21 +7,6 @@ class ImportDirtsForm(forms.Form):
     project_code = forms.CharField(label='Enter project code to save under')
     import_file = forms.FileField(allow_empty_file=False)
 
-class ImportDirtForm(ModelForm):
-    class Meta:
-        model = Defect
-        fields = [
-            'date_created',
-            'project_code',
-            'release_id',
-            'priority',
-            'reference',
-            'description',
-            'comments',
-            'status',
-            'submitter',
-        ]
-
 class ViewDirtReportForm(ModelForm, forms.Form):
     prior_to_date = forms.DateField(initial=timezone.now)
     show_active_only = forms.BooleanField(required=False, initial=True)
