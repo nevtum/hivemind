@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
-from django.utils.dateparse import parse_datetime
 
 from .forms import CreateDirtForm
 from .models import Defect, Priority, Status
@@ -206,8 +205,8 @@ class DefectAcceptanceTests(TestCase):
         self.assertEqual(serializer.is_valid(), True, serializer.errors)
         defect = serializer.save()
         self.assertEqual(defect.status.name, data['status'])
-        self.assertEqual(defect.date_created, parse_datetime(data['date_created']))
-        self.assertEqual(defect.date_changed, parse_datetime(data['date_changed']))
+        self.assertEqual(defect.date_created.isoformat(), data['date_created'])
+        self.assertEqual(defect.date_changed.isoformat(), data['date_changed'])
 
 class CreateDefectPage:
     """Helper class abstracting away web call details
