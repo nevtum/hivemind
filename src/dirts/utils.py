@@ -46,9 +46,10 @@ def json_from(request) -> list:
     reader = csv.DictReader(data, delimiter=',')
     for row in reader:
         date_created = parse_datetime(row['Date Created'])
-        date_closed = row['Date Closed']
-        if date_closed != '':
+        if row['Date Closed'] != '':
             date_closed = parse_datetime(date_closed)
+        else:
+            date_closed = None
         data = {
             'date_created': date_created,
             'description': row['Description'],
