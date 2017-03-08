@@ -16,8 +16,9 @@
         <p>This utility helps in uploading and importing into our Echelon database a list of DIRTs from files. In order to succeed with the import, the file must meet the following criteria:</p>
         <ul>
             <li>The file must be a comma separated values file (CSV)</li>
-            <li>The first row must have the following columns in this order:
-                <ol>
+            <li>The file must be saved in utf-8 character set</li>
+            <li>The first row must have the following columns:
+                <ul><b>
                     <li>Date Created</li>
                     <li>Status</li>
                     <li>Priority</li>
@@ -26,20 +27,20 @@
                     <li>Description</li>
                     <li>Comments</li>
                     <li>Date Closed</li>
-                </ol>
+                </b></ul>
             </li>
             <li>Data rows columns must match with first row columns</li>
         </ul>
         <p>Formatting criteria applies to each column, described below:</p>
         <ul>
-            <li>Date Created - (dd/mm/yyyy). Must not be empty.</li>
-            <li>Status - ('Open', 'Closed'). Must not be empty.</li>
-            <li>Priority - ('High', 'Medium', 'Low', 'Observation'). Must not be empty.</li>
-            <li>Version - Software or hardware version number. Must not be empty.</li>
-            <li>Reference - One line summary of DIRT. Must not be empty.</li>
-            <li>Description - Body of DIRT. Must not be empty.</li>
-            <li>Comments - Additional information of DIRT. Optional.</li>
-            <li>Date Closed - (dd/mm/yy). Optional.</li>
+            <li><b>Date Created</b> - (dd/mm/yyyy). Must not be empty.</li>
+            <li><b>Status</b> - ('Open', 'Closed'). Must not be empty.</li>
+            <li><b>Priority</b> - ('High', 'Medium', 'Low', 'Observation'). Must not be empty.</li>
+            <li><b>Version</b> - Software or hardware version number. Must not be empty.</li>
+            <li><b>Reference</b> - One line summary of DIRT. Must not be empty.</li>
+            <li><b>Description</b> - Body of DIRT. Must not be empty.</li>
+            <li><b>Comments</b> - Additional information of DIRT. Optional.</li>
+            <li><b>Date Closed</b> - (dd/mm/yy). Optional.</li>
         </ul>
     </span>
 </div>
