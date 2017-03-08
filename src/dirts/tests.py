@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 
 from .forms import CreateDirtForm
 from .models import Defect, Priority, Status
@@ -57,6 +58,20 @@ class DefectAcceptanceTests(TestCase):
             'priority': Priority.objects.get(name='High').id,
             'reference': 'a title',
             'description': 'some defect description',
+        }
+    
+    @staticmethod
+    def _test_serializer_data_without_comments():
+        return {
+            'project_code': 'ABC.321',
+            'date_created': '2017-03-06T00:00:00+11:00',
+            'priority': 'High',
+            'status': 'Open',
+            'submitter': 'test_user',
+            'release_id': 'v1.23.456',
+            'reference': 'Failed to get into particular state',
+            'description': 'Simple description',
+            'comments': ''
         }
 
     def setUp(self):
@@ -173,17 +188,7 @@ class DefectAcceptanceTests(TestCase):
         self.assertIsNotNone(event['payload'])
     
     def test_should_deserialize_json_defect(self):
-        data = {
-            'project_code': 'ABC.321',
-            'date_created': '2017-03-06T00:00:00+11:00',
-            'priority': 'High',
-            'status': 'Open',
-            'submitter': self.test_user.username,
-            'release_id': 'v1.23.456',
-            'reference': 'Failed to get into particular state',
-            'description': 'Simple description',
-            'comments': ''
-        }
+        data = self._test_serializer_data_without_comments()
         serializer = ImportDefectSerializer(data=data)
         self.assertEqual(serializer.is_valid(), True, serializer.errors)
         defect = serializer.save()
@@ -192,7 +197,17 @@ class DefectAcceptanceTests(TestCase):
         self.assertEqual(defect.submitter, self.test_user)
         self.assertEqual(defect.priority, Priority.objects.get(name='High'))
         self.assertEqual(defect.status, Status.objects.get(name='Open'))
-
+    
+    def test_should_deserialize_json_defect_close_date_provided(self):
+        data = self._test_serializer_data_without_comments()
+        data['date_changed'] = '2017-03-06T00:00:00+11:00'
+        data['status'] = 'Closed'
+        serializer = ImportDefectSerializer(data=data)
+        self.assertEqual(serializer.is_valid(), True, serializer.errors)
+        defect = serializer.save()
+        self.assertEqual(defect.status.name, data['status'])
+        self.assertEqual(defect.date_created, parse_datetime(data['date_created']))
+        self.assertEqual(defect.date_changed, parse_datetime(data['date_changed']))
 
 class CreateDefectPage:
     """Helper class abstracting away web call details
