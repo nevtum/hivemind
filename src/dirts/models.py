@@ -135,8 +135,10 @@ class Defect(models.Model):
         
     def save(self, *args, **kwargs):
         if not self.id:
-            self.date_created = timezone.now()
-            self.date_changed = self.date_created
+            if not self.date_created:
+                self.date_created = timezone.now()
+            if not self.date_changed:
+                self.date_changed = self.date_created
         else:
             aggregate = self.as_domainmodel()
             self.date_created = aggregate.date_created

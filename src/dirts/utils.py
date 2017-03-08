@@ -46,6 +46,9 @@ def json_from(request) -> list:
     reader = csv.DictReader(data, delimiter=',')
     for row in reader:
         date_created = parse_datetime(row['Date Created'])
+        date_closed = row['Date Closed']
+        if date_closed != '':
+            date_closed = parse_datetime(date_closed)
         data = {
             'date_created': date_created,
             'description': row['Description'],
@@ -55,7 +58,7 @@ def json_from(request) -> list:
             'priority': _format_priority(row['Priority']),
             'reference': row['Reference'],
             'release_id': row['Version'],
-            'date_closed': row['Date Closed'],
+            'date_changed': date_closed,
             'project_code': code
         }
         serializer = ImportDefectSerializer(data=data)

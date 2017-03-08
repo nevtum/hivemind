@@ -28,6 +28,7 @@ class ImportDefectSerializer(serializers.ModelSerializer):
             'id',
             'description',
             'date_created',
+            'date_changed',
             'status',
             'project_code',
             'release_id',

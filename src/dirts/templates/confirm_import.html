@@ -37,7 +37,8 @@
                 </p>
             </td>
             <td>{{ dirt.submitter }}</td>
-            <td>{{ dirt.date_closed | date:"d/m/Y" }}</td>
+            <!--<td>{{ dirt.date_changed | date:"d/m/Y" }}</td>-->
+            <td>{{ dirt.date_changed }}</td>
         </tr>
         {% endfor %}
     </tbody>
