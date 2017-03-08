@@ -16,7 +16,7 @@
             <th>Priority</th>
             <th>Description</th>
             <th>Owner</th>
-            <th>Date Closed</th>
+            <!--<th>Date Closed</th>-->
         </tr>
         {% for dirt in defects %}
         <tr>
@@ -38,7 +38,7 @@
             </td>
             <td>{{ dirt.submitter }}</td>
             <!--<td>{{ dirt.date_changed | date:"d/m/Y" }}</td>-->
-            <td>{{ dirt.date_changed }}</td>
+            <!--<td>{{ dirt.date_changed }}</td>-->
         </tr>
         {% endfor %}
     </tbody>

@@ -207,6 +207,13 @@ class DefectAcceptanceTests(TestCase):
         self.assertEqual(defect.status.name, data['status'])
         self.assertEqual(defect.date_created.isoformat(), data['date_created'])
         self.assertEqual(defect.date_changed.isoformat(), data['date_changed'])
+    
+    def test_should_fail_validation_deserialize_defect_date_changed_lt_date_created(self):
+        data = self._test_serializer_data_without_comments()
+        data['date_created'] = '2017-03-06T00:00:00+11:00'
+        data['date_changed'] = '2017-03-05T00:00:00+11:00'
+        serializer = ImportDefectSerializer(data=data)
+        self.assertEqual(serializer.is_valid(), False)
 
 class CreateDefectPage:
     """Helper class abstracting away web call details

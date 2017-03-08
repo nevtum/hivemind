@@ -19,6 +19,7 @@ class UserSerializer(serializers.Serializer):
         return "{0} {1}".format(user.first_name, user.last_name)
 
 class ImportDefectSerializer(serializers.ModelSerializer):
+    date_changed = serializers.DateTimeField(required=False)
     status = serializers.SlugRelatedField(slug_field='name', queryset=Status.objects.all())
     priority = serializers.SlugRelatedField(slug_field='name', queryset=Priority.objects.all())
     submitter = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())
@@ -36,6 +37,12 @@ class ImportDefectSerializer(serializers.ModelSerializer):
             'reference',
             'submitter'
         )
+    
+    def validate(self, data):
+        if 'date_changed' in data:
+            if data['date_changed'] < data['date_created']:
+                raise serializers.ValidationError("date_changed < date_created")
+        return super().validate(data)
     
     def create(self, validated_data):
         return Defect.objects.create(**validated_data)
