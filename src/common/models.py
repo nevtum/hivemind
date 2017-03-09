@@ -2,6 +2,7 @@ import json
 
 from django.db import models
 from django.template.defaultfilters import slugify
+from django.utils import timezone
 
 from .managers import ProjectsManager
 
@@ -30,16 +31,22 @@ class Project(models.Model):
         return self.code
 
 class DomainEvent(models.Model):
-	sequence_nr = models.IntegerField()
-	aggregate_id = models.IntegerField()
-	aggregate_type = models.CharField(max_length=30)
-	event_type = models.CharField(max_length=100)
-	blob = models.TextField()
-	date_occurred = models.DateTimeField(auto_now_add=True)
-	username = models.CharField(max_length=50)
-	
-	def deserialized(self):
-		return json.loads(self.blob)
-	
-	class Meta:
-		unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),)
+    sequence_nr = models.IntegerField()
+    aggregate_id = models.IntegerField()
+    aggregate_type = models.CharField(max_length=30)
+    event_type = models.CharField(max_length=100)
+    blob = models.TextField()
+    date_occurred = models.DateTimeField()
+    username = models.CharField(max_length=50)
+    
+    def deserialized(self):
+        return json.loads(self.blob)
+    
+    def save(self, *args, **kwargs):
+        if not self.id:
+            if not self.date_occurred:
+                self.date_occurred = timezone.now()
+        return super(DomainEvent, self).save(*args, **kwargs)
+    
+    class Meta:
+        unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),)
