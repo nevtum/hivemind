@@ -41,16 +41,15 @@ class DefectViewModel(object):
         
         return self._create_event(DIRT_AMENDED, kwargs, user)
     
-    def close(self, user, release_id, reason):
+    def close(self, user, release_id, reason, date_closed):
         if self.status == "Closed":
             raise Exception("DIRT is already closed.")
-        
         data = {
             'release_id': release_id,
             'reason': reason
         }
         
-        return self._create_event(DIRT_CLOSED, data, user)
+        return self._create_event(DIRT_CLOSED, data, user, date_closed)
     
     def reopen(self, user, release_id, reason):
         if self.status != "Closed":
@@ -69,12 +68,12 @@ class DefectViewModel(object):
         
         return self._create_event(DIRT_DELETED, {}, user)
     
-    def _create_event(self, event_type, dictionary, username):
+    def _create_event(self, event_type, dictionary, username, created=timezone.now()):
         return {
             'sequence_nr': self.last_sequence_nr + 1,
             'aggregate_id': self.id,
             'aggregate_type': 'DEFECT',
-            'created': timezone.now(),
+            'created': created,
             'created_by': username,
             'event_type': event_type,
             'payload': dictionary,

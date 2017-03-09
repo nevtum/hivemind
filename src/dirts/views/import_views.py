@@ -22,6 +22,48 @@ def begin_import(request):
     form = ImportDirtsForm()
     return render(request, 'begin_import.html', {'form': form})
 
+def import_event(defect):
+    return {
+        'sequence_nr': 0,
+        'aggregate_id': defect.id,
+        'aggregate_type': 'DEFECT',
+        'event_type': DIRT_IMPORTED,
+        'created': defect.date_created,
+        'created_by': defect.submitter,
+        'payload': {
+            'project_code': defect.project_code,
+            'release_id': defect.release_id,
+            'status': defect.status.name,
+            'priority': defect.priority.name,
+            'reference': defect.reference,
+            'description': defect.description,
+            'comments': defect.comments
+        }
+    }
+
+def persist_closed_defect(json_data):
+    updated_data = json_data.copy()
+    updated_data['status'] = 'Open'
+    closed_date = json_data['date_changed']
+    defect = persist_open_defect(updated_data)
+    import pdb; pdb.set_trace()
+    defect.close_at(closed_date)
+
+def persist_open_defect(json_data):
+    serializer = ImportDefectSerializer(data=json_data)
+    if not serializer.is_valid():
+        raise Exception("Something went wrong with import!")
+    defect = serializer.save()
+    imported_event = import_event(defect)
+    EventStore.append_next(imported_event)
+    return defect
+
+def persist_to_database(json_data):
+    if json_data['status'] == 'Closed':
+        persist_closed_defect(json_data)
+    else:
+        persist_open_defect(json_data)
+
 @login_required(login_url='/login/')
 def complete_import(request):
     defects = request.session.get('defects', None)
@@ -29,27 +71,7 @@ def complete_import(request):
     project = get_object_or_404(Project, code=code)
     if request.method == 'POST':
         for json in defects:
-            serializer = ImportDefectSerializer(data=json)
-            if serializer.is_valid():
-                defect = serializer.save()
-                event = {
-                    'sequence_nr': 0,
-                    'aggregate_id': defect.id,
-                    'aggregate_type': 'DEFECT',
-                    'event_type': DIRT_IMPORTED,
-                    'created': defect.date_created,
-                    'created_by': defect.submitter,
-                    'payload': {
-                        'project_code': defect.project_code,
-                        'release_id': defect.release_id,
-                        'status': defect.status.name,
-                        'priority': defect.priority.name,
-                        'reference': defect.reference,
-                        'description': defect.description,
-                        'comments': defect.comments
-                    }
-                }
-                EventStore.append_next(event)
+            persist_to_database(json)
         return redirect('dirts-list')
     res = {
         'defects': defects,

@@ -124,14 +124,22 @@ class Defect(models.Model):
         self.release_id = release_id
         self.save()
 
-    def close(self, user, release_id, reason):
+    def close(self, user, release_id, reason, date_closed=timezone.now()):
+        if user is None:
+            user = self.submitter.name
+        if release_id is None:
+            release_id = self.release_id
         defect = self.as_domainmodel()
-        event = defect.close(user, release_id, reason)
+        event = defect.close(user, release_id, reason, date_closed)
         EventStore.append_next(event)
     
         self.status = Status.objects.get(name='Closed')
         self.release_id = release_id
         self.save()
+    
+    def close_at(self, date_closed):
+        user = self.submitter.username
+        self.close(user, self.release_id, '', date_closed)
         
     def save(self, *args, **kwargs):
         if not self.id:
