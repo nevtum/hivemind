@@ -1,7 +1,7 @@
 import json
 
 from dirts.constants import (DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED,
-                             DIRT_OPENED, DIRT_REOPENED)
+                             DIRT_OPENED, DIRT_REOPENED, DIRT_IMPORTED)
 from django.utils import timezone
 
 
@@ -22,6 +22,8 @@ class DefectViewModel(object):
     
     def apply(self, event):
         self.date_changed = event['created']
+        if event['event_type'] == DIRT_IMPORTED:
+            return self._on_imported(event)
         if event['event_type'] == DIRT_OPENED:
             return self._on_opened(event)
         if event['event_type'] == DIRT_AMENDED:
@@ -103,6 +105,9 @@ class DefectViewModel(object):
     def _create_changeset_dirt_opened(self, event):
         ch = self._add_changeset(event, "New DIRT created.")
     
+    def _create_changeset_dirt_imported(self, event):
+        ch = self._add_changeset(event, "New DIRT imported.")
+    
     def _add_changeset(self, event, description):
         ch = ChangeHistory()
         ch.date_created = event['created']
@@ -115,6 +120,14 @@ class DefectViewModel(object):
             self.last_sequence_nr += 1
             assert(event['sequence_nr'] == self.last_sequence_nr)
             self.apply(event)
+    
+    def _on_imported(self, event):
+        self._create_changeset_dirt_imported(event)
+        self.id = event['aggregate_id']
+        self.submitter = event['created_by']
+        self.date_created = event['created']
+        self.status = event['payload']['status']
+        self._set_properties(event)
 
     def _on_opened(self, event):
         self._create_changeset_dirt_opened(event)

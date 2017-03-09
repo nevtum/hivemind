@@ -42,6 +42,7 @@ def complete_import(request):
                     'payload': {
                         'project_code': defect.project_code,
                         'release_id': defect.release_id,
+                        'status': defect.status.name,
                         'priority': defect.priority.name,
                         'reference': defect.reference,
                         'description': defect.description,
