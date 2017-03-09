@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from ..forms import ImportDirtsForm
 from ..utils import import_data
+from ..serializers import ImportDefectSerializer
 
 
 @login_required(login_url='/login/')
@@ -24,6 +25,10 @@ def complete_import(request):
     defects = request.session.get('defects', None)
     code = request.session.get('project', None)
     project = get_object_or_404(Project, code=code)
+    if request.method == 'POST':
+        for json in defects:
+            serializer = ImportDefectSerializer(data=json)
+            # import pdb; pdb.set_trace()
     res = {
         'defects': defects,
         'project': project

@@ -18,9 +18,20 @@ class UserSerializer(serializers.Serializer):
         user = request.user
         return "{0} {1}".format(user.first_name, user.last_name)
 
+DT_INPUT_FORMATS = [
+    'iso-8601',
+    '%d/%m/%Y',
+    '%d/%m/%y'
+]
+
 class ImportDefectSerializer(serializers.ModelSerializer):
-    date_created = serializers.DateTimeField(format='%d/%m/%Y')
-    date_changed = serializers.DateTimeField(required=False, allow_null=True, format='%d/%m/%Y')
+    date_created = serializers.DateTimeField(
+        format='%d/%m/%Y',
+        input_formats=DT_INPUT_FORMATS)
+    date_changed = serializers.DateTimeField(
+        required=False, allow_null=True,
+        format='%d/%m/%Y',
+        input_formats=DT_INPUT_FORMATS)
     status = serializers.SlugRelatedField(slug_field='name', queryset=Status.objects.all())
     priority = serializers.SlugRelatedField(slug_field='name', queryset=Priority.objects.all())
     submitter = serializers.SlugRelatedField(slug_field='username', queryset=User.objects.all())

@@ -9,18 +9,6 @@ from rest_framework.serializers import ValidationError
 from .models import Priority, Status
 from .serializers import ImportDefectSerializer
 
-
-def parse_datetime(datestring) -> datetime:
-    expr = re.compile('^(?P<day>\d{1,2})\/(?P<month>\d{1,2})\/(?P<year>\d{4})$')
-    match = expr.match(datestring)
-    if not match:
-        raise ValidationError('Incorrect date format. Should be dd/mm/yyyy.')
-    kw = match.groupdict()
-    day = int(kw['day'])
-    month = int(kw['month'])
-    year = int(kw['year'])
-    return datetime(year, month, day)
-
 def _format_priority(priority):
     if priority.lower() == 'high':
         return 'High'
@@ -45,13 +33,12 @@ def json_from(request) -> list:
     data = StringIO(contents.read().decode('utf-8'))
     reader = csv.DictReader(data, delimiter=',')
     for row in reader:
-        date_created = parse_datetime(row['Date Created'])
         if row['Date Closed'] != '':
-            date_closed = parse_datetime(date_closed)
+            date_closed = row['Date Closed']
         else:
             date_closed = None
         data = {
-            'date_created': date_created,
+            'date_created': row['Date Created'],
             'description': row['Description'],
             'comments': row['Comments'],
             'submitter': request.user.username,

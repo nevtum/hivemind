@@ -208,6 +208,13 @@ class DefectAcceptanceTests(TestCase):
         self.assertEqual(defect.date_created.isoformat(), data['date_created'])
         self.assertEqual(defect.date_changed.isoformat(), data['date_changed'])
     
+    def test_should_accept_different_date_format(self):
+        data = self._test_serializer_data_without_comments()
+        data['date_created'] = '06/03/2017'
+        data['date_changed'] = '06/03/17'
+        serializer = ImportDefectSerializer(data=data)
+        self.assertEqual(serializer.is_valid(), True, serializer.errors)
+    
     def test_should_fail_validation_deserialize_defect_date_changed_lt_date_created(self):
         data = self._test_serializer_data_without_comments()
         data['date_created'] = '2017-03-06T00:00:00+11:00'

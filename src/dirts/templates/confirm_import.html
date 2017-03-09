@@ -2,7 +2,6 @@
 {% load staticfiles %}
 
 {% block content %}
-{% load crispy_forms_tags %}
 
 <h4>Please review list of DIRTs before proceeding with import:</h4>
 
@@ -12,16 +11,17 @@
     <tbody>
         <tr>
             <th>Date Created</th>
+            <th>Submitter</th>
             <th>Status</th>
             <th>Priority</th>
             <th>Description</th>
-            <th>Owner</th>
             <!--<th>Date Closed</th>-->
         </tr>
         {% for dirt in defects %}
         <tr>
             <!--<td>{{ dirt.date_created | date:"d/m/Y" }}</td>-->
             <td>{{ dirt.date_created }}</td>
+            <td>{{ dirt.submitter }}</td>
             <td>{{ dirt.status }}</td>
             <td>{{ dirt.priority }}</td>
             <td>
@@ -36,7 +36,6 @@
                 {% endif %}
                 </p>
             </td>
-            <td>{{ dirt.submitter }}</td>
             <!--<td>{{ dirt.date_changed | date:"d/m/Y" }}</td>-->
             <!--<td>{{ dirt.date_changed }}</td>-->
         </tr>
@@ -47,7 +46,6 @@
 
 <form class="myform" action="{% url 'complete-import' %}" method="post">
     {% csrf_token %}
-    {{ form|crispy }}
     <input type="submit" value="Submit" />
 </form>
 
