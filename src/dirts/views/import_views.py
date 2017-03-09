@@ -1,10 +1,12 @@
+from common import store as EventStore
 from common.models import Project
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
+from ..constants import DIRT_IMPORTED
 from ..forms import ImportDirtsForm
-from ..utils import import_data
 from ..serializers import ImportDefectSerializer
+from ..utils import import_data
 
 
 @login_required(login_url='/login/')
@@ -28,7 +30,26 @@ def complete_import(request):
     if request.method == 'POST':
         for json in defects:
             serializer = ImportDefectSerializer(data=json)
-            # import pdb; pdb.set_trace()
+            if serializer.is_valid():
+                defect = serializer.save()
+                event = {
+                    'sequence_nr': 0,
+                    'aggregate_id': defect.id,
+                    'aggregate_type': 'DEFECT',
+                    'event_type': DIRT_IMPORTED,
+                    'created': defect.date_created,
+                    'created_by': defect.submitter,
+                    'payload': {
+                        'project_code': defect.project_code,
+                        'release_id': defect.release_id,
+                        'priority': defect.priority.name,
+                        'reference': defect.reference,
+                        'description': defect.description,
+                        'comments': defect.comments
+                    }
+                }
+                EventStore.append_next(event)
+        return redirect('dirts-list')
     res = {
         'defects': defects,
         'project': project
