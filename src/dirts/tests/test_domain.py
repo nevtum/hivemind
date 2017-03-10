@@ -24,4 +24,21 @@ def create_new_defect():
 class DefectAggregateTests(SimpleTestCase):
     def test_open(self):
         model = DefectModel([create_new_defect()])
-        self.assertEqual(model.id, 2)
+        self.assertEqual(model.id, 1)
+        self.assertEqual(model.release_id, 'v1.23.45')
+        self.assertEqual(model.priority, 'Low')
+        self.assertEqual(model.reference, 'My Title')
+        self.assertEqual(model.description, 'My Description')
+        self.assertEqual(model.submitter, 'test_user')
+        self.assertEqual(model.status, 'Open')
+        self.assertEqual(model.date_created, datetime(2017, 3, 10))
+        self.assertEqual(model.date_changed, datetime(2017, 3, 10))
+
+    def test_close(self):
+        model = DefectModel([create_new_defect()])
+        model.close('user2', 'release_id', '', datetime(2017, 3, 11))
+        self.assertEqual(model.submitter, 'test_user')
+        self.assertEqual(model.status, 'Open')
+        self.assertEqual(model.date_created, datetime(2017, 3, 10))
+        self.assertEqual(model.date_changed, datetime(2017, 3, 11))
+        
