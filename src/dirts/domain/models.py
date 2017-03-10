@@ -4,6 +4,9 @@ from dirts.constants import (DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED,
                              DIRT_OPENED, DIRT_REOPENED, DIRT_IMPORTED)
 from django.utils import timezone
 
+def assert_datetime(datetime):
+    if not isinstance(datetime, timezone.datetime):
+        raise AssertionError("input value must be a datetime instance.")
 
 class ChangeHistory(object):
     def __init__(self):
@@ -21,6 +24,7 @@ class DefectViewModel(object):
         self._replay_from(defect_events)
     
     def apply(self, event):
+        assert_datetime(event['created'])
         self.date_changed = event['created']
         if event['event_type'] == DIRT_IMPORTED:
             return self._on_imported(event)
@@ -42,6 +46,7 @@ class DefectViewModel(object):
         return self._create_event(DIRT_AMENDED, kwargs, user)
     
     def close(self, user, release_id, reason, date_closed):
+        assert_datetime(date_closed)
         if self.status == "Closed":
             raise Exception("DIRT is already closed.")
         data = {
@@ -51,7 +56,7 @@ class DefectViewModel(object):
         
         return self._create_event(DIRT_CLOSED, data, user, date_closed)
     
-    def reopen(self, user, release_id, reason):
+    def reopen(self, user, release_id, reason, date_reopened=timezone.now()):
         if self.status != "Closed":
             raise Exception("DIRT must be in closed state to reopen.")
 
@@ -60,7 +65,7 @@ class DefectViewModel(object):
             'reason': reason
         }
         
-        return self._create_event(DIRT_REOPENED, data, user)
+        return self._create_event(DIRT_REOPENED, data, user, date_reopened)
     
     def soft_delete(self, user):
         if self.status != "Closed":

@@ -52,7 +52,6 @@ def persist_closed_defect(json_data):
     updated_data['status'] = 'Open'
     closed_date = get_closed_date(updated_data)
     defect = persist_open_defect(updated_data)
-    import pdb; pdb.set_trace()
     defect.close_at(closed_date)
 
 def persist_open_defect(json_data):
