@@ -4,12 +4,21 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
-from .forms import CreateDirtForm
-from .models import Defect, Priority, Status
-from .serializers import ImportDefectSerializer
+from ..forms import CreateDirtForm
+from ..models import Defect, Priority, Status
 
 
 class DefectAcceptanceTests(TestCase):
+    @staticmethod
+    def _test_form_data_with_comments():
+        return {
+            'project_code': 'ABC.123',
+            'release_id': 'v1.2.3.4',
+            'priority': Priority.objects.get(name='High').id,
+            'reference': 'a title',
+            'description': 'some defect description',
+            'comments': 'some comments',
+        }
     
     @staticmethod
     def _load_fixtures():
@@ -38,41 +47,6 @@ class DefectAcceptanceTests(TestCase):
         login = self.client.login(username='test_user', password='test_password')
         self.assertEqual(login, True)
 
-    @staticmethod
-    def _test_form_data_with_comments():
-        return {
-            'project_code': 'ABC.123',
-            'release_id': 'v1.2.3.4',
-            'priority': Priority.objects.get(name='High').id,
-            'reference': 'a title',
-            'description': 'some defect description',
-            'comments': 'some comments',
-        }
-    
-    @staticmethod
-    def _test_form_data_without_comments():
-        return {
-            'project_code': 'ABC.123',
-            'release_id': 'v1.2.3.4',
-            'priority': Priority.objects.get(name='High').id,
-            'reference': 'a title',
-            'description': 'some defect description',
-        }
-    
-    @staticmethod
-    def _test_serializer_data_without_comments():
-        return {
-            'project_code': 'ABC.321',
-            'date_created': '2017-03-06T00:00:00+11:00',
-            'priority': 'High',
-            'status': 'Open',
-            'submitter': 'test_user',
-            'release_id': 'v1.23.456',
-            'reference': 'Failed to get into particular state',
-            'description': 'Simple description',
-            'comments': ''
-        }
-
     def setUp(self):
         self._load_fixtures()
         self._login_fake_user()
@@ -80,36 +54,7 @@ class DefectAcceptanceTests(TestCase):
     def test_should_open_correct_form_when_create_defect_url_accessed(self):
         response = self.client.get(reverse('create-dirt-url'))
         self.assertIsInstance(response.context['form'], CreateDirtForm)
-    
-    def _assert_empty_field_fail_form(self, field_name, value):
-        kwargs = self._test_form_data_with_comments()
-        kwargs[field_name] = value
-        form = CreateDirtForm(data=kwargs)
-        self.assertEqual(form.is_valid(), False)
-        
-    def test_should_fail_valid_create_defect_form_with_empty_project_code(self):
-        self._assert_empty_field_fail_form('project_code', '')
-        
-    def test_should_fail_valid_create_defect_form_with_empty_release_id(self):
-        self._assert_empty_field_fail_form('release_id', '')
-        
-    def test_should_fail_valid_create_defect_form_with_empty_priority(self):
-        self._assert_empty_field_fail_form('priority', None)
-    
-    def test_should_fail_valid_create_defect_form_with_empty_reference(self):
-        self._assert_empty_field_fail_form('reference', '')
-    
-    def test_should_fail_valid_create_defect_form_with_empty_description(self):
-        self._assert_empty_field_fail_form('description', '')
-    
-    def test_should_pass_valid_create_defect_form_with_comments(self):
-        form = CreateDirtForm(data=self._test_form_data_with_comments())
-        self.assertEqual(form.is_valid(), True)
-    
-    def test_should_pass_valid_create_defect_form_without_comments(self):
-        form = CreateDirtForm(data=self._test_form_data_without_comments())
-        self.assertEqual(form.is_valid(), True)
-    
+
     def test_should_create_new_defect(self):
         data = self._test_form_data_with_comments()
         create_defect_page = CreateDefectPage(self.client)
@@ -185,48 +130,6 @@ class DefectAcceptanceTests(TestCase):
         self.assertEqual(event['sequence_nr'], 0)
         self.assertEqual(event['event_type'], 'DIRT.OPENED')
         self.assertIsNotNone(event['payload'])
-    
-    def test_should_deserialize_json_defect(self):
-        data = self._test_serializer_data_without_comments()
-        serializer = ImportDefectSerializer(data=data)
-        self.assertEqual(serializer.is_valid(), True, serializer.errors)
-        defect = serializer.save()
-        self.assertEqual(isinstance(defect, Defect), True)
-        self.assertEqual(defect.project, Project.objects.get(code='ABC.321'))
-        self.assertEqual(defect.submitter, self.test_user)
-        self.assertEqual(defect.priority, Priority.objects.get(name='High'))
-        self.assertEqual(defect.status, Status.objects.get(name='Open'))
-    
-    def test_should_deserialize_json_defect_close_date_provided(self):
-        data = self._test_serializer_data_without_comments()
-        data['date_changed'] = '2017-03-06T00:00:00+11:00'
-        data['status'] = 'Closed'
-        serializer = ImportDefectSerializer(data=data)
-        self.assertEqual(serializer.is_valid(), True, serializer.errors)
-        defect = serializer.save()
-        self.assertEqual(defect.status.name, data['status'])
-        self.assertEqual(defect.date_created.isoformat(), data['date_created'])
-        self.assertEqual(defect.date_changed.isoformat(), data['date_changed'])
-    
-    def test_should_accept_different_date_format(self):
-        data = self._test_serializer_data_without_comments()
-        data['date_created'] = '06/03/2017'
-        data['date_changed'] = '06/03/17'
-        serializer = ImportDefectSerializer(data=data)
-        self.assertEqual(serializer.is_valid(), True, serializer.errors)
-    
-    def test_should_fail_validation_deserialize_defect_date_changed_lt_date_created(self):
-        data = self._test_serializer_data_without_comments()
-        data['date_created'] = '2017-03-06T00:00:00+11:00'
-        data['date_changed'] = '2017-03-05T00:00:00+11:00'
-        serializer = ImportDefectSerializer(data=data)
-        self.assertEqual(serializer.is_valid(), False)
-    
-    def test_should_fail_validation_defect_closed_no_date_changed_provided(self):
-        data = self._test_serializer_data_without_comments()
-        data['status'] = 'Closed'
-        serializer = ImportDefectSerializer(data=data)
-        self.assertEqual(serializer.is_valid(), False, serializer.errors)
 
 class CreateDefectPage:
     """Helper class abstracting away web call details
