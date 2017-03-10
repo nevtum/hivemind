@@ -58,7 +58,7 @@ class ImportDefectSerializer(serializers.ModelSerializer):
             if data['status'].name.lower() == 'closed':
                 raise serializers.ValidationError("Date must be provided when Closed!")
 
-        return super().validate(data)
+        return super(ImportDefectSerializer, self).validate(data)
     
     def create(self, validated_data):
         return Defect.objects.create(**validated_data)
