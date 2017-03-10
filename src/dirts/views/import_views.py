@@ -41,10 +41,16 @@ def import_event(defect):
         }
     }
 
+# man this is ugly!
+def get_closed_date(json_data):
+    serializer = ImportDefectSerializer(data=json_data)
+    if serializer.is_valid():
+        return serializer.validated_data['date_changed']
+
 def persist_closed_defect(json_data):
     updated_data = json_data.copy()
     updated_data['status'] = 'Open'
-    closed_date = json_data['date_changed']
+    closed_date = get_closed_date(updated_data)
     defect = persist_open_defect(updated_data)
     import pdb; pdb.set_trace()
     defect.close_at(closed_date)
