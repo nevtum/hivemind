@@ -77,6 +77,8 @@ def complete_import(request):
     if request.method == 'POST':
         for json in defects:
             persist_to_database(json)
+        del request.session['defects']
+        del request.session['project']
         return redirect('dirts-list')
     res = {
         'defects': defects,
