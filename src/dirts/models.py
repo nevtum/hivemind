@@ -124,6 +124,7 @@ class Defect(models.Model):
         self.release_id = release_id
         self.save()
 
+    # bug present when saving date_closed='dd/mm/yyyy'
     def close(self, user, release_id, reason, date_closed=timezone.now()):
         if user is None:
             user = self.submitter.name
