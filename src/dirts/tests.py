@@ -221,6 +221,12 @@ class DefectAcceptanceTests(TestCase):
         data['date_changed'] = '2017-03-05T00:00:00+11:00'
         serializer = ImportDefectSerializer(data=data)
         self.assertEqual(serializer.is_valid(), False)
+    
+    def test_should_fail_validation_defect_closed_no_date_changed_provided(self):
+        data = self._test_serializer_data_without_comments()
+        data['status'] = 'Closed'
+        serializer = ImportDefectSerializer(data=data)
+        self.assertEqual(serializer.is_valid(), False, serializer.errors)
 
 class CreateDefectPage:
     """Helper class abstracting away web call details

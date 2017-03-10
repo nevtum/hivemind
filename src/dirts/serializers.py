@@ -54,6 +54,10 @@ class ImportDefectSerializer(serializers.ModelSerializer):
         if 'date_changed' in data and data['date_changed'] != None:
             if data['date_changed'] < data['date_created']:
                 raise serializers.ValidationError("date_changed < date_created")
+        else:
+            if data['status'].name.lower() == 'closed':
+                raise serializers.ValidationError("Date must be provided when Closed!")
+
         return super().validate(data)
     
     def create(self, validated_data):
