@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from datetime import datetime
-from ..constants import DIRT_OPENED, DIRT_CLOSED, DIRT_IMPORTED
+from ..constants import DIRT_OPENED, DIRT_CLOSED, DIRT_IMPORTED, DIRT_AMENDED
 from ..domain.models import DefectViewModel as DefectModel
 
 def create_new_defect():
@@ -19,6 +19,17 @@ def create_new_defect():
             'description': 'My Description',
             'comments': ''
         }
+    }
+
+def create_example_amendment():
+    return {
+        'project_code': 'TEST.7436',
+        'release_id': 'v2.25.86',
+        'priority': 'Medium',
+        'status': 'Open',
+        'reference': 'My Amended Title',
+        'description': 'My Description',
+        'comments': 'Some added comments'
     }
 
 def import_new_defect():
@@ -67,7 +78,21 @@ class DefectAggregateTests(SimpleTestCase):
         self.assertEqual(model.date_changed, datetime(2014, 3, 10))
     
     def test_amend(self):
-        self.fail(msg="Need to add test")
+        model = DefectModel([import_new_defect()])
+        amendment_kwargs = create_example_amendment()
+        event = model.amend('user2', datetime(2017, 5, 11), **amendment_kwargs)
+        self.assertEqual(event['created'], datetime(2017, 5, 11))
+        self.assertEqual(event['created_by'], 'user2')
+        self.assertEqual(event['event_type'], DIRT_AMENDED)
+        model.apply(event)
+        self.assertEqual(model.id, 1)
+        self.assertEqual(model.release_id, amendment_kwargs['release_id'])
+        self.assertEqual(model.priority, amendment_kwargs['priority'])
+        self.assertEqual(model.reference, amendment_kwargs['reference'])
+        self.assertEqual(model.description, amendment_kwargs['description'])
+        # self.assertEqual(model.submitter, amendment_kwargs['submitter'])
+        self.assertEqual(model.status, amendment_kwargs['status'])
+        self.assertEqual(model.comments, amendment_kwargs['comments'])
 
     def test_closed_invalid_input_event_datetime_format(self):
         model = DefectModel([create_new_defect()])
