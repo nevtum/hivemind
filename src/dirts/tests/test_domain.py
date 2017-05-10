@@ -66,6 +66,9 @@ class DefectAggregateTests(SimpleTestCase):
         self.assertEqual(model.date_created, datetime(2014, 3, 10))
         self.assertEqual(model.date_changed, datetime(2014, 3, 10))
     
+    def test_amend(self):
+        self.fail(msg="Need to add test")
+
     def test_closed_invalid_input_event_datetime_format(self):
         model = DefectModel([create_new_defect()])
         self.assertRaises(AssertionError, model.close, 'user', 'v1.2.3.4', '', '12/06/2012')
@@ -92,7 +95,6 @@ class DefectAggregateTests(SimpleTestCase):
         self.assertEqual(model.status, 'Open')
         self.assertEqual(model.date_created, datetime(2014, 3, 10))
         self.assertEqual(model.date_changed, datetime(2016, 8, 22))
-
 
     def test_model_updated_when_new_event_applied(self):
         model = DefectModel([create_new_defect()])
