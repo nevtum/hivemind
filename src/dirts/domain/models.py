@@ -39,14 +39,14 @@ class DefectViewModel(object):
         if event['event_type'] == DIRT_DELETED:
             return self._on_deleted(event)
     
-    def amend(self, user, **kwargs):
+    def amend(self, user, date_amended, **kwargs):
+        self.assert_valid(date_amended)
         if self.status != "Open":
             raise Exception("DIRT must be in open state to amend.")
-        
-        return self._create_event(DIRT_AMENDED, kwargs, user)
+        return self._create_event(DIRT_AMENDED, kwargs, user, date_amended)
     
     def close(self, user, release_id, reason, date_closed):
-        assert_datetime(date_closed)
+        self.assert_valid(date_closed)
         if self.status == "Closed":
             raise Exception("DIRT is already closed.")
         data = {
@@ -56,7 +56,8 @@ class DefectViewModel(object):
         
         return self._create_event(DIRT_CLOSED, data, user, date_closed)
     
-    def reopen(self, user, release_id, reason, date_reopened=timezone.now()):
+    def reopen(self, user, release_id, reason, date_reopened):
+        self.assert_valid(date_reopened)
         if self.status != "Closed":
             raise Exception("DIRT must be in closed state to reopen.")
 
@@ -67,13 +68,14 @@ class DefectViewModel(object):
         
         return self._create_event(DIRT_REOPENED, data, user, date_reopened)
     
-    def soft_delete(self, user):
+    def soft_delete(self, user, date_deleted):
+        self.assert_valid(date_deleted)
         if self.status != "Closed":
             raise Exception("DIRT must be in closed state to delete.")
         
-        return self._create_event(DIRT_DELETED, {}, user)
+        return self._create_event(DIRT_DELETED, {}, user, date_deleted)
     
-    def _create_event(self, event_type, dictionary, username, created=timezone.now()):
+    def _create_event(self, event_type, dictionary, username, created):
         return {
             'sequence_nr': self.last_sequence_nr + 1,
             'aggregate_id': self.id,
@@ -86,6 +88,12 @@ class DefectViewModel(object):
     
     def is_active(self):
         return self.status != "Closed"
+    
+    def assert_valid(self, datetime):
+        assert_datetime(datetime)
+        last_event = self.change_history[-1]
+        if last_event.date_created > datetime:
+            raise Exception("datetime specified is earlier than latest change")
     
     def _add_changeset_dirt_closed(self, event):
         payload = event['payload']    

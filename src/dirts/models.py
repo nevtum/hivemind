@@ -111,26 +111,26 @@ class Defect(models.Model):
 
     def amend(self, user):
         defect = self.as_domainmodel()
-        event = defect.amend(user, **self._to_kwargs())
+        event = defect.amend(user, timezone.now(), **self._to_kwargs())
         EventStore.append_next(event)
         self.save()
     
     def reopen(self, user, release_id, reason):
         defect = self.as_domainmodel()
-        event = defect.reopen(user, release_id, reason)
+        event = defect.reopen(user, release_id, reason, timezone.now())
         EventStore.append_next(event)
 
         self.status = Status.objects.get(name='Open')
         self.release_id = release_id
         self.save()
 
-    def close(self, user, release_id, reason, date_closed=timezone.now()):
+    def close(self, user, release_id, reason):
         if user is None:
             user = self.submitter.name
         if release_id is None:
             release_id = self.release_id
         defect = self.as_domainmodel()
-        event = defect.close(user, release_id, reason, date_closed)
+        event = defect.close(user, release_id, reason, timezone.now())
         EventStore.append_next(event)
     
         self.status = Status.objects.get(name='Closed')

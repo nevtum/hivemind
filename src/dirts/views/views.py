@@ -177,7 +177,7 @@ def delete(request, pk):
 
     defect = Defect.objects.get(pk=pk)
     defect_model = defect.as_domainmodel()
-    event = defect_model.soft_delete(request.user)
+    event = defect_model.soft_delete(request.user, timezone.now())
     EventStore.append_next(event)
     defect.delete()
     return redirect('dirts-list')
