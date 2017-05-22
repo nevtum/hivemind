@@ -94,6 +94,24 @@ class DefectAggregateTests(SimpleTestCase):
         self.assertEqual(model.status, amendment_kwargs['status'])
         self.assertEqual(model.comments, amendment_kwargs['comments'])
 
+    def test_amend_incorrect_chronological_order(self):
+        kwargs = create_new_defect();
+        kwargs['created'] = datetime(2017, 5, 22)
+        model = DefectModel([kwargs])
+        self.assertRaises(Exception, model.amend, 'user2', datetime(2017, 5, 21), **create_example_amendment())
+
+    def test_close_incorrect_chronological_order(self):
+        kwargs = create_new_defect();
+        kwargs['created'] = datetime(2017, 5, 22, 8, 30)
+        model = DefectModel([kwargs])
+        self.assertRaises(Exception, model.close, 'user2', 'v2.1.22', '', datetime(2017, 5, 22, 8, 29))
+
+    def test_reopen_incorrect_chronological_order(self):
+        model = DefectModel([import_new_defect()])
+        closed_event = model.close('user2', 'v2.1.22', '', datetime(2017, 5, 22, 9, 45))
+        model.apply(closed_event)
+        self.assertRaises(Exception, model.reopen, 'user2', 'v2.3.01', 'Bug regressed', datetime(2017, 5, 22, 9, 42))
+
     def test_closed_invalid_input_event_datetime_format(self):
         model = DefectModel([create_new_defect()])
         self.assertRaises(AssertionError, model.close, 'user', 'v1.2.3.4', '', '12/06/2012')
