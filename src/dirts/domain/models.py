@@ -91,7 +91,7 @@ class DefectViewModel(object):
     
     def assert_valid(self, datetime):
         assert_datetime(datetime)
-        last_event = self.change_history[-1]
+        last_event = self.change_history[0]
         if last_event.date_created > datetime:
             raise Exception("datetime specified is earlier than latest change")
     
