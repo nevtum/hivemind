@@ -155,6 +155,9 @@ class Defect(models.Model):
         self.project = Project.objects.get(code=self.project_code)
         return super(Defect, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return "%i - %s" % (self.id, self.reference)
+
     def _to_kwargs(self):
         return dict({
             'project_code': self.project_code,
