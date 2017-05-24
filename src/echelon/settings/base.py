@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 ECHELON_APPS = [
     'common',
     'dirts',
+    'comments',
     'accounts'
 ]
 
