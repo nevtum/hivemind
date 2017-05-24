@@ -31,13 +31,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'crispy_forms',
-    'taggit'
+    'taggit',
+    'comments',
 ]
 
 ECHELON_APPS = [
     'common',
     'dirts',
-    'comments',
     'accounts'
 ]
 
