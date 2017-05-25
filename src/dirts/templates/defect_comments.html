@@ -1,12 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div id="defect-comments">
-      {% for comment in comments %}
-      <p>
-          {{ comment.timestamp }} - {{ comment.content }}
-      </p>
-      {% endfor %}
+  <div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div id="defect-comments">
+            {% if comments %}
+            <div class="comment">
+                {% for comment in comments %}
+                <p>{{ comment.timestamp }} - {{ comment.content }}</p>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No comments here! Please add a comment!</p>
+            {% endif%}
+        </div>
+        <div>
+            test
+        </div>
+      </div>
+    </div>
   </div>
-
 {% endblock %}

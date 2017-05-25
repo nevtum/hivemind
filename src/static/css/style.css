@@ -11,6 +11,11 @@ body {
   color: #ADA5C6;
 }
 
+.additional-links {
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+
 #brand {
   font-size: 24;
   font-family: Verdana;
@@ -25,7 +30,7 @@ body {
   /*background-color: #1D7B74;*/
   color: #95C5C1;
   text-align: center;
-  padding-top: 10;
+  padding-top: 1em;
 }
 
 #header {
@@ -66,7 +71,7 @@ body {
 
 .pagination {
   font-size: smaller;
-  padding-left: 10px;
+  padding-left: 1em;
   margin: inherit auto;
   width: auto;
 }

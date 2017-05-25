@@ -3,8 +3,11 @@
 {% block content %}
 {% with dirt=model.as_domainmodel %}
 <!--<div class="container-fluid">-->
-  <div id="dirt-summary">
+  <div>
     <div class="row">
+      <div class="additional-links col-lg-12">
+          <a href="{% url 'comments:list' dirt.id %}">View Comments</a>
+        </div>
       <div class="col-lg-3 col-lg-push-9">
         <div class="list-group z-height-1">
           {% if dirt.is_active %}
