@@ -76,6 +76,36 @@ body {
   width: auto;
 }
 
+.comment {
+  background: beige;
+  margin: 0.2em;
+  font-family: Courier New, Courier, monospace
+}
+
+.comment .heading {
+  background: rosybrown;
+  padding-left: 1em;
+}
+
+.comment .heading .author {
+  /*display: flex;
+  flex-direction: row;*/
+  color: white
+}
+
+.comment .content {
+  padding: 1em;
+  padding-top: 0.3em;
+}
+
+.comment .heading .author {
+  font-weight: bolder;
+}
+
+.comment .heading .timestamp {
+  font-size: 0.8em;
+}
+
 /* for dirts */
 
 .desc {
