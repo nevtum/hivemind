@@ -7,6 +7,7 @@
         <div id="defect-comments">
             {% if comments %}
             {% for comment in comments %}
+            <div class="comment">
                 <p class="heading">
                     <span class="author">{{ comment.author }}</span>
                     <span class="timestamp">{{ comment.timestamp }}</span>
@@ -17,7 +18,7 @@
             </div>
             {% endfor %}
             {% else %}
-            <p>No comments here! Please add a comment!</p>d
+            <p>No comments here! Please add a comment!</p>
             {% endif%}
         </div>
         <div>
