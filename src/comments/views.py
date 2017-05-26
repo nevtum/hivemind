@@ -26,15 +26,3 @@ def delete_comment(request, pk):
     defect_id = comment.defect.id
     comment.delete()
     return redirect(reverse('comments:list', kwargs={ 'pk': defect_id }))
-
-
-
-    # if request.method == 'GET':
-    #     return render(request, 'delete_confirmation.html', {'id': pk})
-
-    # defect = Defect.objects.get(pk=pk)
-    # defect_model = defect.as_domainmodel()
-    # event = defect_model.soft_delete(request.user, timezone.now())
-    # EventStore.append_next(event)
-    # defect.delete()
-    # return redirect('dirts-list')
