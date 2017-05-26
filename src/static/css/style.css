@@ -83,8 +83,20 @@ body {
 }
 
 .comment .heading {
+  display: flex;
+  align-items: center;
   background: rosybrown;
   padding-left: 1em;
+}
+
+.comment .heading span {
+  margin: 0px 4px;
+}
+
+.comment .heading a {
+  position: relative;
+  left: 24px;
+  margin-left: 4px;
 }
 
 .comment .heading .author {
@@ -103,7 +115,7 @@ body {
 }
 
 .comment .heading .timestamp {
-  font-size: 0.8em;
+  font-size: 1em;
 }
 
 /* for dirts */

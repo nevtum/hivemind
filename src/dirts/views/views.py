@@ -10,6 +10,7 @@ from ..forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
                     ViewDirtReportForm)
 from .mixins import DefectSearchMixin
 from ..models import Defect
+from comments.models import Comment
 
 
 class TagsListView(ListView):
@@ -32,6 +33,22 @@ class DefectDetailView(DetailView):
     model = Defect
     context_object_name = 'model'
     template_name = 'detail.html'
+
+def comments_for_defect(request, pk):
+    comments = Comment.objects.filter(defect__id=pk)
+    res = {
+        'pk': pk,
+        'comments': comments
+    }
+    return render(request, 'defect_comments.html', res)
+
+def add_comment_for_defect(request, pk):
+    comment = Comment()
+    comment.content = request.POST.get('newcomment')
+    comment.author = request.user
+    comment.defect = Defect.objects.get(pk=pk)
+    comment.save()
+    return redirect('comments:list', pk)
 
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)

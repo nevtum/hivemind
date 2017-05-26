@@ -14,6 +14,8 @@
                 <p class="heading">
                     <span class="author">{{ comment.author }}</span>
                     <span class="timestamp">{{ comment.timestamp }}</span>
+                    <a href="{% url 'comment-edit' comment.id %}">Edit</a>
+                    <a href="{% url 'comment-delete' comment.id %}">Delete</a>
                 </p>
                 <p class="content">
                     <span>{{ comment.content }}</span>

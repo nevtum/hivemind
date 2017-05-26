@@ -32,11 +32,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'crispy_forms',
     'taggit',
-    'comments',
 ]
 
 ECHELON_APPS = [
     'common',
+    'comments',
     'dirts',
     'accounts'
 ]
@@ -62,7 +62,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            SRC_DIR + '/templates/',
+            os.path.join(SRC_DIR, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

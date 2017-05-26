@@ -1,7 +1,7 @@
 from django.conf.urls import include, url
-from .views import comments_for_defect, add_comment_for_defect
+from . import views
 
 urlpatterns = [
-    url(r'^$', comments_for_defect, name='list'),
-    url(r'^post_comment/$', add_comment_for_defect, name='add')
+    url(r'^(?P<pk>\d+?)/edit/$', views.edit_comment, name='comment-edit'),
+    url(r'^(?P<pk>\d+?)/delete/$', views.delete_comment, name='comment-delete')
 ]

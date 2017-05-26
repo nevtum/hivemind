@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required as auth
 from rest_framework import routers
 
 from .views import api_views, views, import_views
-from comments import urls as comments_urls
+# from comments import urls as comments_urls
 
 router = routers.DefaultRouter()
 router.register(r'all', api_views.DefectBaseViewSet, 'all')
@@ -12,9 +12,14 @@ router.register(r'recent', api_views.RecentlyChangedDefectViewSet, 'recent')
 router.register(r'suggest_defects', api_views.AutoCompleteDefectTitles, 'suggest')
 router.register(r'suggest_projects', api_views.AutoCompleteProjects, 'project-suggest')
 
+defect_comment_urls = [
+    url(r'^$', views.comments_for_defect, name='list'),
+    url(r'^post_comment/$', views.add_comment_for_defect, name='add')
+]
+
 urlpatterns = [
     url(r'^api/', include(router.urls, namespace='dirts')),
-    url(r'^(?P<pk>\d+?)/comments/', include(comments_urls, namespace='comments')),
+    url(r'^(?P<pk>\d+?)/comments/', include(defect_comment_urls, namespace='comments')),
     url(r'^api/more-like-this/(?P<pk>\d+?)/$', api_views.more_like_this_defect, name='similar-defects'),
     url(r'^import/$', import_views.begin_import, name='import-list'),
     url(r'^import-confirm/$', import_views.complete_import, name='complete-import'),
