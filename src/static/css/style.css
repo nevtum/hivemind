@@ -82,6 +82,11 @@ body {
   font-family: Courier New, Courier, monospace
 }
 
+.newcomment textarea {
+  width: 70%;
+  height: 10em;
+}
+
 .comment .heading {
   display: flex;
   align-items: center;

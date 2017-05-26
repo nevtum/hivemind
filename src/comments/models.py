@@ -8,7 +8,7 @@ class Comment(models.Model):
     defect = models.ForeignKey(Defect, on_delete=models.CASCADE)
     author = models.ForeignKey(User)
     timestamp = models.DateTimeField()
-    content = models.TextField()
+    content = models.TextField(blank=False)
 
     def save(self, *args, **kwargs):
         if not self.timestamp:

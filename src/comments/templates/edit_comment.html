@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div>
-    <div class="row">
-      <div class="col-lg-12">
-          Edit comment. To do
-      </div>
+{% load crispy_forms_tags %}
+<div>
+  <div class="row">
+    <div class="col-lg-12">
+
+      <form class="myform" action="" method="post">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <input type="submit" value="Save comment" />
+      </form>
     </div>
   </div>
+</div>
 {% endblock %}

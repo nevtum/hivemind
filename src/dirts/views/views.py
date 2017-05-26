@@ -1,16 +1,18 @@
-from common import store as EventStore
-from common.models import Project
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import dateparse, timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from taggit.models import Tag
 
-from ..forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
-                    ViewDirtReportForm)
-from .mixins import DefectSearchMixin
-from ..models import Defect
+from comments.forms import CommentEditForm
 from comments.models import Comment
+from common import store as EventStore
+from common.models import Project
+
+from ..forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
+                     ViewDirtReportForm)
+from ..models import Defect
+from .mixins import DefectSearchMixin
 
 
 class TagsListView(ListView):
@@ -38,16 +40,17 @@ def comments_for_defect(request, pk):
     comments = Comment.objects.filter(defect__id=pk)
     res = {
         'pk': pk,
-        'comments': comments
+        'comments': comments,
+        'form': CommentEditForm()
     }
     return render(request, 'defect_comments.html', res)
 
 def add_comment_for_defect(request, pk):
-    comment = Comment()
-    comment.content = request.POST.get('newcomment')
-    comment.author = request.user
-    comment.defect = Defect.objects.get(pk=pk)
-    comment.save()
+    form = CommentEditForm(request.POST or None)
+    if form.is_valid() and pk:
+        form.instance.author = request.user
+        form.instance.defect = Defect.objects.get(pk=pk)
+        form.save()
     return redirect('comments:list', pk)
 
 def dirts_by_tag(request, slug):
