@@ -6,6 +6,18 @@ body {
   background-color: #595959;
 }
 
+textarea, input, select {
+  outline: none;
+  border-color: teal;
+  border-width: 1px;
+  border-radius: 2px;
+  padding-left: 4px;
+}
+
+input, select {
+  height: 30px;
+}
+
 .jumbotron {
   font-family: monospace;
   color: #ADA5C6;
@@ -66,7 +78,7 @@ body {
 }
 
 .textinput {
-    width: 25%
+    width: 25%;
 }
 
 .pagination {
@@ -85,6 +97,7 @@ body {
 .newcomment textarea {
   width: 70%;
   height: 10em;
+  resize: none;
 }
 
 .comment .heading {
