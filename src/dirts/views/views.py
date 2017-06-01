@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth import get_user
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import dateparse, timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
@@ -48,7 +49,7 @@ def comments_for_defect(request, pk):
 def add_comment_for_defect(request, pk):
     form = CommentEditForm(request.POST or None)
     if form.is_valid() and pk:
-        form.instance.author = request.user
+        form.instance.author = get_user(request)
         form.instance.defect = Defect.objects.get(pk=pk)
         form.save()
     return redirect('comments:list', pk)

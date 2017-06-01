@@ -1,5 +1,6 @@
-from django.shortcuts import redirect, render, redirect
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseForbidden
+from django.shortcuts import redirect, render
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from .forms import CommentEditForm
@@ -11,6 +12,12 @@ class CommentEditView(UpdateView):
     template_name = 'edit_comment.html'
     context_object_name = 'comment'
     form_class = CommentEditForm
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj.author != self.request.user:
+            return HttpResponseForbidden()
+        return super(CommentEditView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         comment = form.save(commit=False)

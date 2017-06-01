@@ -14,7 +14,7 @@ router.register(r'suggest_projects', api_views.AutoCompleteProjects, 'project-su
 
 defect_comment_urls = [
     url(r'^$', views.comments_for_defect, name='list'),
-    url(r'^post_comment/$', views.add_comment_for_defect, name='add')
+    url(r'^post_comment/$', auth(views.add_comment_for_defect), name='add')
 ]
 
 urlpatterns = [
