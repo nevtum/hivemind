@@ -1,23 +1,23 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, DeleteView
 
 from .forms import CommentEditForm
 from .models import Comment
 
-
-class CommentEditView(UpdateView):
-    model = Comment
-    template_name = 'edit_comment.html'
-    context_object_name = 'comment'
-    form_class = CommentEditForm
-
+class OwnerOr403Mixin:
     def dispatch(self, request, *args, **kwargs):
         obj = self.get_object()
         if obj.author != self.request.user:
             return HttpResponseForbidden()
-        return super(CommentEditView, self).dispatch(request, *args, **kwargs)
+        return super(OwnerOr403Mixin, self).dispatch(request, *args, **kwargs)
+
+class CommentEditView(OwnerOr403Mixin, UpdateView):
+    model = Comment
+    template_name = 'edit_comment.html'
+    context_object_name = 'comment'
+    form_class = CommentEditForm
 
     def form_valid(self, form):
         comment = form.save(commit=False)
@@ -25,11 +25,14 @@ class CommentEditView(UpdateView):
         comment.save()
         return redirect(reverse('comments:list', kwargs={ 'pk': comment.defect.id }))
 
-def delete_comment(request, pk):
-    comment = Comment.objects.get(pk=pk)
-    if request.method == 'GET':
-        return render(request, 'delete_comment.html', { 'comment': comment })
-    
-    defect_id = comment.defect.id
-    comment.delete()
-    return redirect(reverse('comments:list', kwargs={ 'pk': defect_id }))
+class CommentDeleteView(OwnerOr403Mixin, DeleteView):
+    model = Comment
+    template_name = 'delete_comment.html'
+    context_object_name = 'comment'
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        pk = self.object.defect.id
+        success_url = reverse('comments:list', kwargs={ 'pk': pk })
+        self.object.delete()
+        return redirect(success_url)

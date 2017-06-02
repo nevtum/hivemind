@@ -5,5 +5,5 @@ from . import views
 
 urlpatterns = [
     url(r'^(?P<pk>\d+?)/edit/$', auth(views.CommentEditView.as_view()), name='comment-edit'),
-    url(r'^(?P<pk>\d+?)/delete/$', auth(views.delete_comment), name='comment-delete')
+    url(r'^(?P<pk>\d+?)/delete/$', auth(views.CommentDeleteView.as_view()), name='comment-delete')
 ]
