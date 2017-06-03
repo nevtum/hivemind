@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from ..models import Defect, Priority, Status
 
-from ..serializers import ImportDefectSerializer
+from ..imports.serializers import ImportDefectSerializer
 
 class DefectImportTests(TestCase):
     @staticmethod

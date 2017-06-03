@@ -1,16 +1,11 @@
 from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required as auth
-from rest_framework import routers
 
-from .views import api_views, views, import_views
-# from comments import urls as comments_urls
+from .api.urls import urlpatterns as api_urls
+from .imports import views as import_views
+from .imports.urls import urlpatterns as import_urls
+from .views import views
 
-router = routers.DefaultRouter()
-router.register(r'all', api_views.DefectBaseViewSet, 'all')
-router.register(r'active', api_views.DefectActiveViewSet, 'active')
-router.register(r'recent', api_views.RecentlyChangedDefectViewSet, 'recent')
-router.register(r'suggest_defects', api_views.AutoCompleteDefectTitles, 'suggest')
-router.register(r'suggest_projects', api_views.AutoCompleteProjects, 'project-suggest')
 
 defect_comment_urls = [
     url(r'^$', views.comments_for_defect, name='list'),
@@ -18,11 +13,10 @@ defect_comment_urls = [
 ]
 
 urlpatterns = [
-    url(r'^api/', include(router.urls, namespace='dirts')),
+    url(r'^', include(import_urls, namespace='imports')),
+    url(r'^api/', include(api_urls, namespace='dirts')),
     url(r'^(?P<pk>\d+?)/comments/', include(defect_comment_urls, namespace='comments')),
-    url(r'^api/more-like-this/(?P<pk>\d+?)/$', api_views.more_like_this_defect, name='similar-defects'),
-    url(r'^import/$', import_views.begin_import, name='import-list'),
-    url(r'^import-confirm/$', import_views.complete_import, name='complete-import'),
+    
     url(r'^report/$', views.report, name='report'),
     url(r'^$', views.DefectListView.as_view(), name='dirts-list'),
     url(r'^active/$', views.ActiveDefectListView.as_view(), name='active-dirts'),

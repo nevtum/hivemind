@@ -18,6 +18,10 @@ input, select {
   height: 30px;
 }
 
+.panel {
+  border-color: teal;
+}
+
 .jumbotron {
   font-family: monospace;
   color: #ADA5C6;

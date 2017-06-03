@@ -49,7 +49,7 @@
     <form
         class="myform"
         enctype="multipart/form-data"
-        action="{% url 'import-list' %}"
+        action="{% url 'imports:import-list' %}"
         method="post">
         {% csrf_token %}
         {{ form|crispy }}

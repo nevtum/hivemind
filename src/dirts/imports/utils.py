@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.timezone import datetime
 from rest_framework.serializers import ValidationError
 
-from .models import Priority, Status
+from ..models import Priority, Status
 from .serializers import ImportDefectSerializer
 
 def _format_priority(priority):

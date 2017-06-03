@@ -4,9 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from ..constants import DIRT_IMPORTED
-from ..forms import ImportDirtsForm
-from ..serializers import ImportDefectSerializer
-from ..utils import import_data
+from .forms import ImportDirtsForm
+from .serializers import ImportDefectSerializer
+from .utils import import_data
 
 
 @login_required(login_url='/login/')
