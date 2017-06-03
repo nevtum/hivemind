@@ -1,7 +1,8 @@
-from common import store as EventStore
-from common.models import Project
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+
+from common import store as EventStore
+from common.models import Project
 
 from ..constants import DIRT_IMPORTED
 from .forms import ImportDirtsForm
@@ -16,7 +17,7 @@ def begin_import(request):
         if form.is_valid():
             request.session['project'] = form.cleaned_data['project_code']
             request.session['defects'] = import_data(request)
-            return redirect('complete-import')
+            return redirect('imports:complete-import')
         else:
             return render(request, 'begin_import.html', {'form': form})
     form = ImportDirtsForm()
@@ -41,7 +42,6 @@ def import_event(defect):
         }
     }
 
-# man this is ugly!
 def get_closed_date(json_data):
     serializer = ImportDefectSerializer(data=json_data)
     if serializer.is_valid():

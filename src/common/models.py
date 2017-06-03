@@ -1,5 +1,3 @@
-import json
-
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import timezone
@@ -38,9 +36,6 @@ class DomainEvent(models.Model):
     blob = models.TextField()
     date_occurred = models.DateTimeField()
     username = models.CharField(max_length=50)
-    
-    def deserialized(self):
-        return json.loads(self.blob)
     
     def save(self, *args, **kwargs):
         if not self.id:

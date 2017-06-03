@@ -95,9 +95,6 @@ class Defect(models.Model):
         assert(self.project_code != "")
         assert(self.release_id != "")
         return copy
-
-    def get_events(self):
-        return EventStore.get_events_for('DEFECT', self.id)
     
     def as_domainmodel(self, before_date = None):
         events = EventStore.get_events_for('DEFECT', self.id, before_date)
@@ -124,13 +121,14 @@ class Defect(models.Model):
         self.release_id = release_id
         self.save()
 
-    def close(self, user, release_id, reason):
+    def close(self, user, release_id, reason, timestamp=None):
+        date_closed = timestamp if timestamp else timezone.now()
         if user is None:
             user = self.submitter.name
         if release_id is None:
             release_id = self.release_id
         defect = self.as_domainmodel()
-        event = defect.close(user, release_id, reason, timezone.now())
+        event = defect.close(user, release_id, reason, date_closed)
         EventStore.append_next(event)
     
         self.status = Status.objects.get(name='Closed')

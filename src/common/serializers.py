@@ -1,11 +1,14 @@
-from .models import DomainEvent
+import json
+
 from rest_framework import serializers
 
-class DomainEventSerializer(serializers.ModelSerializer):
-    data = serializers.SerializerMethodField()
+from .models import DomainEvent
 
-    def get_data(self, obj):
-        return obj['payload']
+
+class DomainEventSerializer(serializers.ModelSerializer):
+    payload = serializers.SerializerMethodField()
+    created = serializers.SerializerMethodField()
+    created_by = serializers.SerializerMethodField()
 
     class Meta:
         model = DomainEvent
@@ -14,7 +17,16 @@ class DomainEventSerializer(serializers.ModelSerializer):
             'aggregate_id',
             'aggregate_type',
             'event_type',
-            'date_occurred',
-            'data',
+            'created_by',
+            'created',
+            'payload',
         )
-            
+
+    def get_created_by(self, obj):
+        return obj.username
+    
+    def get_created(self, obj):
+        return obj.date_occurred
+
+    def get_payload(self, obj):
+        return json.loads(obj.blob)
