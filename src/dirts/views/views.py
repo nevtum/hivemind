@@ -37,6 +37,12 @@ class DefectDetailView(DetailView):
     context_object_name = 'model'
     template_name = 'detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(DefectDetailView, self).get_context_data(**kwargs)
+        comments = Comment.objects.filter(defect__id=kwargs['object'].id)
+        context['comment_count'] = comments.count()
+        return context
+
 def comments_for_defect(request, pk):
     comments = Comment.objects.filter(defect__id=pk)
     res = {
