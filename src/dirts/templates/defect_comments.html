@@ -11,15 +11,13 @@
         <div id="defect-comments">
             {% if comments %}
             {% for comment in comments %}
-            <div class="comment">
-            </div>
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <p class="panel-title">
                         <span class="author">{{ comment.author }}</span>
                         <span class="timestamp">{{ comment.timestamp }}</span>
-                        <a href="{% url 'comment-edit' comment.id %}">Edit</a>
-                        <a href="{% url 'comment-delete' comment.id %}">Delete</a>
+                        <a href="{% url 'comments:edit' comment.id %}">Edit</a>
+                        <a href="{% url 'comments:delete' comment.id %}">Delete</a>
                     </p>
                 </div>
                 <div class="panel-body">

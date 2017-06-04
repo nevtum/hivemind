@@ -7,18 +7,22 @@
         <div class="well well-sm">
           <p><span>Are you sure you wish to delete this comment? This operation cannot be undone.</span></p>
         </div>
-        <div class="comment">
-          <p class="heading">
-              <span class="author">{{ comment.author }}</span>
-              <span class="timestamp">{{ comment.timestamp }}</span>
-          </p>
-          <p class="content">
-              <span>{{ comment.content }}</span>
-          </p>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <p class="panel-title">
+                    <span class="author">{{ comment.author }}</span>
+                    <span class="timestamp">{{ comment.timestamp }}</span>
+                </p>
+            </div>
+            <div class="panel-body">
+                <p class="content">
+                    <span>{{ comment.content | linebreaksbr }}</span>
+                </p>
+            </div>
         </div>
         <form class="myform" action="" method="post">
             {% csrf_token %}
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Confirm Delete" />
         </form>
       </div>
     </div>
