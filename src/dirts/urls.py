@@ -4,18 +4,14 @@ from django.contrib.auth.decorators import login_required as auth
 from .api.urls import urlpatterns as api_urls
 from .imports import views as import_views
 from .imports.urls import urlpatterns as import_urls
+from .comments.urls import urlpatterns as defect_comment_urls
 from .views import views
-
-
-defect_comment_urls = [
-    url(r'^$', views.comments_for_defect, name='list'),
-    url(r'^post_comment/$', auth(views.add_comment_for_defect), name='add')
-]
+from .comments import views as comment_views
 
 urlpatterns = [
     url(r'^', include(import_urls, namespace='imports')),
     url(r'^api/', include(api_urls, namespace='dirts')),
-    url(r'^(?P<pk>\d+?)/comments/', include(defect_comment_urls, namespace='comments')),
+    url(r'^(?P<pk>\d+?)/comments/', include(defect_comment_urls, namespace='defect-comments')),
     
     url(r'^report/$', views.report, name='report'),
     url(r'^$', views.DefectListView.as_view(), name='dirts-list'),

@@ -1,4 +1,4 @@
-from ..models import Defect
+from .models import Defect
 
 class DefectSearchMixin:
     """

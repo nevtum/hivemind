@@ -28,7 +28,7 @@
             {% endif%}
         </div>
         <div class="newcomment">
-            <form action="{% url 'comments:add' pk %}" method="post">
+            <form action="{% url 'defect-comments:add' pk %}" method="post">
                 {% csrf_token %}
                 {{ form|crispy }}
                 <input type="submit" value="Add new comment">

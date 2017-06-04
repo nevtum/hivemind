@@ -1,11 +1,9 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth import get_user
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import dateparse, timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from taggit.models import Tag
 
-from comments.forms import CommentEditForm
 from comments.models import Comment
 from common import store as EventStore
 from common.models import Project
@@ -13,7 +11,7 @@ from common.models import Project
 from ..forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
                      ViewDirtReportForm)
 from ..models import Defect
-from .mixins import DefectSearchMixin
+from ..mixins import DefectSearchMixin
 
 
 class TagsListView(ListView):
@@ -42,23 +40,6 @@ class DefectDetailView(DetailView):
         comments = Comment.objects.filter(defect__id=kwargs['object'].id)
         context['comment_count'] = comments.count()
         return context
-
-def comments_for_defect(request, pk):
-    comments = Comment.objects.filter(defect__id=pk)
-    res = {
-        'pk': pk,
-        'comments': comments,
-        'form': CommentEditForm()
-    }
-    return render(request, 'defect_comments.html', res)
-
-def add_comment_for_defect(request, pk):
-    form = CommentEditForm(request.POST or None)
-    if form.is_valid() and pk:
-        form.instance.author = get_user(request)
-        form.instance.defect = Defect.objects.get(pk=pk)
-        form.save()
-    return redirect('comments:list', pk)
 
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)

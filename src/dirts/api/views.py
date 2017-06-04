@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from ..models import Defect
 from .serializers import (DefectSerializer, MoreLikeThisSerializer,
                            SuggestionSerializer)
-from ..views.mixins import DefectSearchMixin
+from ..mixins import DefectSearchMixin
 
 
 class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):

@@ -7,9 +7,9 @@
     <div class="row">
       <div class="additional-links col-lg-12">
         {% if comment_count %}
-        <a href="{% url 'comments:list' dirt.id %}">View comments ({{ comment_count }})</a>
+        <a href="{% url 'defect-comments:list' dirt.id %}">View comments ({{ comment_count }})</a>
         {% else %}
-        <a href="{% url 'comments:list' dirt.id %}">Add comments/notes</a>
+        <a href="{% url 'defect-comments:list' dirt.id %}">Add comments/notes</a>
         {% endif %}
       </div>
       <div class="col-lg-3 col-lg-push-9">
