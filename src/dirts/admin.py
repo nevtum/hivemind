@@ -1,5 +1,5 @@
 from django.contrib import admin
-from dirts.models import Status, Priority, Defect
+from .models import Status, Priority, Defect
 
 class DefectAdmin(admin.ModelAdmin):
 	list_display = ('date_created', 'id', 'date_changed', 'project_code', 'release_id', 'submitter', 'status',)

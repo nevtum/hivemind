@@ -1,6 +1,6 @@
 import json
 
-from dirts.constants import (DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED,
+from ..constants import (DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED,
                              DIRT_OPENED, DIRT_REOPENED, DIRT_IMPORTED)
 from django.utils import timezone
 

@@ -1,4 +1,4 @@
-from dirts.models import Defect
+from ..models import Defect
 from django import forms
 from django.forms import ModelForm, Textarea
 from django.utils import timezone

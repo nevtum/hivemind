@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm, Textarea
 from django.utils import timezone
 
-from dirts.models import Defect
+from .models import Defect
 
 
 class ViewDirtReportForm(ModelForm, forms.Form):
