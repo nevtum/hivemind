@@ -92,54 +92,6 @@ input, select {
   width: auto;
 }
 
-.comment {
-  background: beige;
-  margin: 0.2em;
-  font-family: Courier New, Courier, monospace
-}
-
-.newcomment textarea {
-  width: 70%;
-  height: 10em;
-  resize: none;
-}
-
-.comment .heading {
-  display: flex;
-  align-items: center;
-  background: rosybrown;
-  padding-left: 1em;
-}
-
-.comment .heading span {
-  margin: 0px 4px;
-}
-
-.comment .heading a {
-  position: relative;
-  left: 24px;
-  margin-left: 4px;
-}
-
-.comment .heading .author {
-  /*display: flex;
-  flex-direction: row;*/
-  color: white
-}
-
-.comment .content {
-  padding: 1em;
-  padding-top: 0.3em;
-}
-
-.comment .heading .author {
-  font-weight: bolder;
-}
-
-.comment .heading .timestamp {
-  font-size: 1em;
-}
-
 /* for dirts */
 
 .desc {
