@@ -8,18 +8,7 @@ from ..forms import CreateDirtForm
 from ..models import Defect, Priority, Status
 
 
-class DefectAcceptanceTests(TestCase):
-    @staticmethod
-    def _test_form_data_with_comments():
-        return {
-            'project_code': 'ABC.123',
-            'release_id': 'v1.2.3.4',
-            'priority': Priority.objects.get(name='High').id,
-            'reference': 'a title',
-            'description': 'some defect description',
-            'comments': 'some comments',
-        }
-    
+class TestFixtureMixin:  
     @staticmethod
     def _load_fixtures():
         manufacturer = Manufacturer.objects.create(
@@ -50,6 +39,57 @@ class DefectAcceptanceTests(TestCase):
     def setUp(self):
         self._load_fixtures()
         self._login_fake_user()
+
+class DefectCommentAcceptanceTests(TestFixtureMixin, TestCase):
+    def test_comment_added_to_defect(self):
+        kwargs = {
+            'project_code': Project.objects.get(code='ABC.123'),
+            'release_id': 'v1.2.3.4',
+            'priority': Priority.objects.get(name='High'),
+            'submitter': User.objects.get(username='test_user'),
+            'reference': 'a title',
+            'description': 'some defect description',
+            'comments': 'some comments',
+        }
+        defect = Defect.objects.create(**kwargs)
+        response = self.client.get(
+            reverse('defect-comments:list', kwargs={'pk': defect.id}),
+        )
+        self.assertEqual(response.status_code, 200)
+        post_data = {
+            'defect': defect.id,
+            'content': 'My content'
+        }
+        response = self.client.post(
+            reverse('defect-comments:add', kwargs={'pk': defect.id}),
+            data=post_data,
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        comments = response.context['comments']
+        comment_count = len(comments)
+        self.assertEqual(comment_count, 1)
+        self.assertEqual(comments[0].content, 'My content')
+        self.assertEqual(comments[0].defect.id, defect.id)
+
+    def test_comment_edited(self):
+        pass
+
+    def test_comment_deleted(self):
+        pass
+        
+
+class DefectAcceptanceTests(TestFixtureMixin, TestCase):
+    @staticmethod
+    def _test_form_data_with_comments():
+        return {
+            'project_code': 'ABC.123',
+            'release_id': 'v1.2.3.4',
+            'priority': Priority.objects.get(name='High').id,
+            'reference': 'a title',
+            'description': 'some defect description',
+            'comments': 'some comments',
+        }
     
     def test_should_open_correct_form_when_create_defect_url_accessed(self):
         response = self.client.get(reverse('create-dirt-url'))
