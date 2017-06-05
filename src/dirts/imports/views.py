@@ -79,7 +79,7 @@ def complete_import(request):
             persist_to_database(json)
         del request.session['defects']
         del request.session['project']
-        return redirect('dirts-list')
+        return redirect('defects:list')
     res = {
         'defects': defects,
         'project': project

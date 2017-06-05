@@ -104,7 +104,7 @@ class Defect(models.Model):
         return self.status.name != "Closed"
 
     def get_absolute_url(self):
-        return reverse('dirt-detail-url', kwargs={'pk': self.id})
+        return reverse('defects:detail', kwargs={'pk': self.id})
 
     def amend(self, user):
         defect = self.as_domainmodel()

@@ -6,7 +6,7 @@
     Are you sure you wish to delete this item? This operation cannot be undone.
 </div>
 
-<form class="myform" action="{% url 'dirt-delete-url' id %}" method="post">
+<form class="myform" action="{% url 'defects:delete' id %}" method="post">
     {% csrf_token %}
     <input type="submit" value="Submit" />
 </form>

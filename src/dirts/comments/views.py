@@ -22,4 +22,4 @@ def add_comment_for_defect(request, pk):
         form.instance.author = get_user(request)
         form.instance.defect = Defect.objects.get(pk=pk)
         form.save()
-    return redirect('defect-comments:list', pk)
+    return redirect('defects:defect-comments:list', pk)

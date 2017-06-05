@@ -23,7 +23,7 @@ class CommentEditView(OwnerOr403Mixin, UpdateView):
         comment = form.save(commit=False)
         # set toggle that comment is edited
         comment.save()
-        return redirect(reverse('defect-comments:list', kwargs={ 'pk': comment.defect.id }))
+        return redirect(reverse('defects:defect-comments:list', kwargs={ 'pk': comment.defect.id }))
 
 class CommentDeleteView(OwnerOr403Mixin, DeleteView):
     model = Comment
@@ -33,6 +33,6 @@ class CommentDeleteView(OwnerOr403Mixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         pk = self.object.defect.id
-        success_url = reverse('defect-comments:list', kwargs={ 'pk': pk })
+        success_url = reverse('defects:defect-comments:list', kwargs={ 'pk': pk })
         self.object.delete()
         return redirect(success_url)

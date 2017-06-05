@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="additional-links">
-            <a href="{% url 'dirt-detail-url' pk %}">View details</a>
+            <a href="{% url 'defects:detail' pk %}">View details</a>
         </div>
         <div id="defect-comments">
             {% if comments %}
@@ -32,7 +32,7 @@
             {% endif%}
         </div>
         <div class="newcomment">
-            <form action="{% url 'defect-comments:add' pk %}" method="post">
+            <form action="{% url 'defects:defect-comments:add' pk %}" method="post">
                 {% csrf_token %}
                 {{ form|crispy }}
                 <input type="submit" value="Add new comment">

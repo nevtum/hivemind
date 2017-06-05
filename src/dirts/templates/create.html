@@ -6,7 +6,7 @@
 
 <p><i>Note: Comments field is optional.</i></p>
 
-<form class="myform" action="{% url 'create-dirt-url' %}" method="post">
+<form class="myform" action="{% url 'defects:create' %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Submit" />
@@ -23,7 +23,7 @@
     <script type="text/javascript">
         $(function() {
             
-            var url = "{% url 'api:project-suggest-list' %}";
+            var url = "{% url 'defects:api:project-suggest-list' %}";
 
             var fetch_results = function(request, response) {
                 var term = request.term;

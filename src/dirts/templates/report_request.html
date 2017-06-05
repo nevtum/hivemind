@@ -10,7 +10,7 @@
     <script type="text/javascript">
         $(function() {
             
-            var url = "{% url 'dirts:project-suggest-list' %}";
+            var url = "{% url 'defects:api:project-suggest-list' %}";
 
             var fetch_results = function(request, response) {
                 var term = request.term;
@@ -44,7 +44,7 @@
 {% load crispy_forms_tags %}
 
 <div class="col-lg-12">
-    <form class="myform" action="{% url 'report' %}" method="get">
+    <form class="myform" action="{% url 'defects:report' %}" method="get">
         {{ form|crispy }}
         <input type="submit" value="View Report" />
     </form>
@@ -85,12 +85,12 @@
         </tbody>
       </table>
     </div>
-    <p id="save-file">
+    <!--<p id="save-file">
       Save as: (
       <a href="">pdf</a> |
       <a href="">docx</a>
       )        
-    </p>
+    </p>-->
     {% endif %}
 </div>
 

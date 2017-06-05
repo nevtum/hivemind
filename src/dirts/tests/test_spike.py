@@ -53,7 +53,7 @@ class DefectCommentAcceptanceTests(TestFixtureMixin, TestCase):
         }
         defect = Defect.objects.create(**kwargs)
         response = self.client.get(
-            reverse('defect-comments:list', kwargs={'pk': defect.id}),
+            reverse('defects:defect-comments:list', kwargs={'pk': defect.id}),
         )
         self.assertEqual(response.status_code, 200)
         post_data = {
@@ -61,7 +61,7 @@ class DefectCommentAcceptanceTests(TestFixtureMixin, TestCase):
             'content': 'My content'
         }
         response = self.client.post(
-            reverse('defect-comments:add', kwargs={'pk': defect.id}),
+            reverse('defects:defect-comments:add', kwargs={'pk': defect.id}),
             data=post_data,
             follow=True
         )
@@ -92,7 +92,7 @@ class DefectAcceptanceTests(TestFixtureMixin, TestCase):
         }
     
     def test_should_open_correct_form_when_create_defect_url_accessed(self):
-        response = self.client.get(reverse('create-dirt-url'))
+        response = self.client.get(reverse('defects:create'))
         self.assertIsInstance(response.context['form'], CreateDirtForm)
 
     def test_should_create_new_defect(self):
@@ -179,7 +179,7 @@ class CreateDefectPage:
     
     def raise_new_defect(self, **post_data):
         response = self.client.post(
-            reverse('create-dirt-url'),
+            reverse('defects:create'),
             data=post_data,
             follow=True
         )
@@ -193,7 +193,7 @@ class DefectPage:
         self.client = client
         self.id = id
         self.response = self.client.get(
-            reverse('dirt-detail-url', kwargs={'pk': self.id})
+            reverse('defects:detail', kwargs={'pk': self.id})
         )
     
     def close_defect(self, release_id, reason=None):
@@ -202,7 +202,7 @@ class DefectPage:
             'reason': reason
         }
         self.response = self.client.post(
-            reverse('dirt-close-url', kwargs={'pk': self.id}),
+            reverse('defects:close', kwargs={'pk': self.id}),
             data=post_data,
             follow=True
         )
@@ -214,7 +214,7 @@ class DefectPage:
             'reason': reason
         }
         self.response = self.client.post(
-            reverse('dirt-reopen-url', kwargs={'pk': self.id}),
+            reverse('defects:reopen', kwargs={'pk': self.id}),
             data=post_data,
             follow=True
         )
@@ -222,7 +222,7 @@ class DefectPage:
     
     def amend_defect(self, **post_data):
         self.response = self.client.post(
-            reverse('dirt-amend-url', kwargs={'pk': self.id}),
+            reverse('defects:amend', kwargs={'pk': self.id}),
             data=post_data,
             follow=True
         )

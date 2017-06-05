@@ -10,7 +10,7 @@
     <script type="text/javascript">
         $(function() {
             
-            var url = "{% url 'api:suggest-list' %}";
+            var url = "{% url 'defects:api:suggest-list' %}";
 
             var fetch_results = function(request, response) {
                 var term = request.term;
@@ -42,16 +42,16 @@
   <div class="row">
     <div class="links col-lg-12">
       <p>
-        <a href="{% url 'dirts-list' %}">View all</a> | 
-        <a href="{% url 'active-dirts' %}">View active</a> |
-        <a href="{% url 'recent-dirts' %}">View recently changed</a> |
-        <a href="{% url 'tags-list' %}">Top tags</a>
+        <a href="{% url 'defects:list' %}">View all</a> | 
+        <a href="{% url 'defects:outstanding' %}">View active</a> |
+        <a href="{% url 'defects:recent' %}">View recently changed</a> |
+        <a href="{% url 'defects:tags-list' %}">Top tags</a>
       </p>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-3 col-lg-push-9">
-      <form action="{% url 'dirts-list' %}" method="get">
+      <form action="{% url 'defects:list' %}" method="get">
         <div class="input-group">
           <input id="search-input" type="text" name="search" class="form-control" placeholder="Search DIRTs...">
           <span class="input-group-btn">
@@ -60,9 +60,9 @@
         </div>
       </form>
       <div class="list-group z-height-1">
-        <a href="{% url 'create-dirt-url' %}" class="list-group-item">Raise a DIRT</a>
-        <a href="{% url 'report' %}" class="list-group-item">View DIRT report</a>
-        <a href="{% url 'imports:import-list' %}" class="list-group-item">Import from CSV</a>
+        <a href="{% url 'defects:create' %}" class="list-group-item">Raise a DIRT</a>
+        <a href="{% url 'defects:report' %}" class="list-group-item">View DIRT report</a>
+        <a href="{% url 'defects:imports:import-list' %}" class="list-group-item">Import from CSV</a>
       </div>
       {% if is_paginated %}
       <div class="pagination">
@@ -106,7 +106,7 @@
             <td>{{ dirt.release_id }}</td>
             <td>{{ dirt.priority.name }}</td>
             <td>
-              <a href="{% url 'dirt-detail-url' dirt.id %}">{{ dirt.reference | truncatechars:50 }}</a>
+              <a href="{% url 'defects:detail' dirt.id %}">{{ dirt.reference | truncatechars:50 }}</a>
             </td>
             <td>{{ dirt.submitter }}</td>
           </tr>

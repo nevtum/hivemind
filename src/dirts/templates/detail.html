@@ -7,24 +7,24 @@
     <div class="row">
       <div class="additional-links col-lg-12">
         {% if comment_count %}
-        <a href="{% url 'defect-comments:list' dirt.id %}">View comments ({{ comment_count }})</a>
+        <a href="{% url 'defects:defect-comments:list' dirt.id %}">View comments ({{ comment_count }})</a>
         {% else %}
-        <a href="{% url 'defect-comments:list' dirt.id %}">Add comments/notes</a>
+        <a href="{% url 'defects:defect-comments:list' dirt.id %}">Add comments/notes</a>
         {% endif %}
       </div>
       <div class="col-lg-3 col-lg-push-9">
         <div class="list-group z-height-1">
           {% if dirt.is_active %}
-          <a href="{% url 'dirt-amend-url' dirt.id %}" class="list-group-item">Amend</a>
-          <a href="{% url 'dirt-close-url' dirt.id %}" class="list-group-item">Close</a>
+          <a href="{% url 'defects:amend' dirt.id %}" class="list-group-item">Amend</a>
+          <a href="{% url 'defects:close' dirt.id %}" class="list-group-item">Close</a>
           {% else %}
-          <a href="{% url 'dirt-reopen-url' dirt.id %}" class="list-group-item">Re-open</a>
+          <a href="{% url 'defects:reopen' dirt.id %}" class="list-group-item">Re-open</a>
           {% if user.is_staff %}
-          <a href="{% url 'dirt-delete-url' dirt.id %}" class="list-group-item">Delete</a>
+          <a href="{% url 'defects:delete' dirt.id %}" class="list-group-item">Delete</a>
           {% endif %}
           {% endif %}
-          <a href="{% url 'create-similar-url' dirt.id %}" class="list-group-item">Raise similar</a>              
-          <a href="{% url 'tags' dirt.id %}" class="list-group-item">Add/Edit tags</a>           
+          <a href="{% url 'defects:create-similar' dirt.id %}" class="list-group-item">Raise similar</a>              
+          <a href="{% url 'defects:tags' dirt.id %}" class="list-group-item">Add/Edit tags</a>           
         </div>
 
         <h4>Navigate {{ dirt.project_code }}:</h4>                    
@@ -42,7 +42,7 @@
         <h4>More like this:</h4>
         <div id="more-like-this" class="list-group z-height-1">
           {% for similar in more_like_this %}
-          <a href="{% url 'dirt-detail-url' similar.id %}" class="list-group-item">
+          <a href="{% url 'defects:detail' similar.id %}" class="list-group-item">
             {{similar.reference}} [{{similar.date_created | timesince}} ago]
           </a>
           {% endfor %}
@@ -85,7 +85,7 @@
         {% if tags %}
         <p>Tags:
         {% for tag in tags %}
-            <u><a href="{% url 'dirts-by-tag' tag.slug %}">#{{tag}}</a></u>
+            <u><a href="{% url 'defects:filter-by-tag' tag.slug %}">#{{tag}}</a></u>
         {% endfor %}
         </p>
         {% endif %}
