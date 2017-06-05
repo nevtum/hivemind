@@ -5,7 +5,7 @@
 
 {% load crispy_forms_tags %}
 
-<form class="myform" action="{% url 'create-project' %}" method="post">
+<form class="myform" action="{% url 'common:create-project' %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Submit" />

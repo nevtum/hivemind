@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-lg-3 col-lg-push-9">
         <div class="list-group">
-          <a href="{% url 'create-project' %}" class="list-group-item">Add a project</a>
+          <a href="{% url 'common:create-project' %}" class="list-group-item">Add a project</a>
         </div>
       </div>
       <div class="col-lg-9 col-lg-pull-3">
@@ -21,7 +21,7 @@
               <td>{{ project.code }}</td>
               <td>{{ project.date_created }}</td>
               <td>{{ project.description }}</td>
-              <td><a href="{% url 'edit-project' project.slug %}">[Edit]</a></td>
+              <td><a href="{% url 'common:edit-project' project.slug %}">[Edit]</a></td>
             </tr>
             {% endfor %}
           </tbody>

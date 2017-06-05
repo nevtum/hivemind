@@ -20,7 +20,7 @@
     </p>
 </div>
 <div class="col-md-7">
-    <form class="myform" action="{% url 'register' %}" method="post">
+    <form class="myform" action="{% url 'accounts:register' %}" method="post">
         {% csrf_token %}
         {{ form|crispy }}
         <input type="submit" value="Submit" />

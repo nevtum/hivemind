@@ -21,7 +21,7 @@ class UserSerializer(serializers.Serializer):
 class DefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.ReadOnlyField(source='priority.name')
-    detail = serializers.HyperlinkedRelatedField(source='id', view_name='dirts:all-detail', read_only=True)    
+    detail = serializers.HyperlinkedRelatedField(source='id', view_name='api:all-detail', read_only=True)    
     submitter = UserSerializer()
 
     class Meta:
@@ -41,7 +41,7 @@ class DefectSerializer(serializers.ModelSerializer):
 
 class MoreLikeThisSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
-    link = serializers.HyperlinkedRelatedField(source='id', view_name='dirts:similar-defects', read_only=True)
+    link = serializers.HyperlinkedRelatedField(source='id', view_name='api:similar-defects', read_only=True)
     reference = serializers.ReadOnlyField()
     date_created = serializers.ReadOnlyField()
     created_by = serializers.ReadOnlyField(source='submitter.username')

@@ -10,7 +10,7 @@ from .comments import views as comment_views
 
 urlpatterns = [
     url(r'^', include(import_urls, namespace='imports')),
-    url(r'^api/', include(api_urls, namespace='dirts')),
+    url(r'^api/', include(api_urls, namespace='api')),
     url(r'^(?P<pk>\d+?)/comments/', include(defect_comment_urls, namespace='defect-comments')),
     
     url(r'^report/$', views.report, name='report'),

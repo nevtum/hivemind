@@ -20,8 +20,8 @@
             <td>{{registration.last_name}}</td>
             <td>{{registration.username}}</td>
             <td>{{registration.email}}</td>   
-            <td><a href="{% url 'approve' registration.id %}">Approve</a></td>
-            <td><a href="{% url 'reject' registration.id %}">Reject</a></td>
+            <td><a href="{% url 'accounts:approve' registration.id %}">Approve</a></td>
+            <td><a href="{% url 'accounts:reject' registration.id %}">Reject</a></td>
         </tr>
     </tbody>
     {% endfor %}

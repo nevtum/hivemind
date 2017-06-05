@@ -46,7 +46,7 @@ INSTALLED_APPS.extend(ECHELON_APPS)
 from django.core.urlresolvers import reverse_lazy
 
 APP_LINKS = [
-    { 'title': 'Projects', 'url': reverse_lazy('projects') },
+    { 'title': 'Projects', 'url': reverse_lazy('common:projects') },
     { 'title': 'DIRTs', 'url': reverse_lazy('dirts-list') },
 ]
 

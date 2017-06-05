@@ -17,7 +17,7 @@ class SignupRequestView(CreateView):
         sr = form.instance
         sr.password = make_password(sr.password) # hash password
         form.save()
-        return redirect('thanks')
+        return redirect('accounts:thanks')
 
 def register_complete(request):
     return render(request, 'wait_admin.html')
@@ -27,14 +27,14 @@ def register_complete(request):
 def reject_registration(request, pk):
     registration = SignupRequest.objects.get(pk=pk)
     registration.reject()
-    return redirect('pending')
+    return redirect('accounts:pending')
 
 # not best practice to mutate data on a get request
 @user_passes_test(lambda u: u.is_staff)
 def approve_registration(request, pk):
     registration = SignupRequest.objects.get(pk=pk)
     registration.approve()
-    return redirect('pending')
+    return redirect('accounts:pending')
 
 class SignupListView(ListView):
     queryset = SignupRequest.objects.filter(pending_approval=True)

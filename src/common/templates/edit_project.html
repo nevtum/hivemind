@@ -3,7 +3,7 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
-<form class="myform" action="{% url 'edit-project' project.slug %}" method="post">
+<form class="myform" action="{% url 'common:edit-project' project.slug %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Submit" />

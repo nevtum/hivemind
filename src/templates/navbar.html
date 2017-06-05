@@ -19,7 +19,7 @@
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_staff %}
                 {% if PENDING_REGISTRATIONS %}
-                <li><a href="{% url 'pending' %}"><u>New registrations!</u></a></li>
+                <li><a href="{% url 'accounts:pending' %}"><u>New registrations!</u></a></li>
                 {% endif %}
                 {% endif %}
                 {% if user.is_authenticated %}

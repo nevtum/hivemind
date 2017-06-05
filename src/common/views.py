@@ -5,7 +5,7 @@ from django.views.generic import ListView, UpdateView, CreateView
 class CreateProjectView(CreateView):
     model = Project
     template_name = 'new_project.html'
-    success_url=reverse_lazy('projects')
+    success_url=reverse_lazy('common:projects')
     fields = [
         'manufacturer',
         'code',
@@ -16,7 +16,7 @@ class CreateProjectView(CreateView):
 class EditProjectView(UpdateView):
     model = Project
     template_name = 'edit_project.html'
-    success_url=reverse_lazy('projects')
+    success_url=reverse_lazy('common:projects')
     fields = [
         'manufacturer',
         'code',

@@ -13,14 +13,14 @@ class CommandHandlerTests(APITestCase):
 
     def test_missing_header(self):
         data = { 'id': 123 }
-        response = self.client.post(reverse('commands'), data, format='json')
+        response = self.client.post(reverse('common:commands'), data, format='json')
         self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
         error_msg = 'Please provide a COMMAND type in request header'
         self.assertEquals(response.data.get('detail'), error_msg)
 
     def test_invalid_header(self):
         data = { 'id': 123 }
-        response = self.client.post(reverse('commands'), data, format='json', HTTP_COMMAND='unknown-command')
+        response = self.client.post(reverse('common:commands'), data, format='json', HTTP_COMMAND='unknown-command')
         self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
         error_msg = 'Could not find a handler for the given COMMAND type'
         self.assertEquals(response.data.get('detail'), error_msg)
