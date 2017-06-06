@@ -11,6 +11,7 @@ from common.models import Project
 from ..forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
                      ViewDirtReportForm)
 from ..models import Defect
+from ..domain.report import defect_summary
 from ..mixins import DefectSearchMixin
 
 
@@ -55,59 +56,25 @@ def time_travel(request, pk, day, month, year):
     defect = get_object_or_404(Defect, pk=pk)
     return render(request, 'detail.html', { 'model': defect })
 
-def _to_dto(defect, index, report_date):
-    defect_model = defect.as_domainmodel(report_date)
-    if defect_model.status == 'Open':
-        status = 'Active'
-    else:
-        status = 'Closed'
-    return {
-        'id': index,
-        'version': defect_model.release_id,
-        'reference': defect_model.reference,
-        'date_logged': defect_model.date_created,
-        'level': defect_model.priority,
-        'owner': "%s %s" % (defect.submitter.first_name, defect.submitter.last_name),
-        'description': defect_model.description,
-        'comments': defect_model.comments,
-        'status': status
-    }
-
 def report(request):
-    items = None
-    project = None
     if request.GET.get('project_code'):
         form = ViewDirtReportForm(request.GET)
         if form.is_valid():
-            items = []
-            index = 1001
-            
-            # not sure if this implementation is right. Needs more testing
-            before_date = dateparse.parse_date(form.data['prior_to_date'])
-            before_date += timezone.timedelta(days=1)
-            
-            kwargs = {
-                'project_code': form.data['project_code'],
-                'date_created__lte': before_date,
+            project_code = form.data['project_code']
+            # need a better timezone aware datetime implementation
+            freeze_date = dateparse.parse_date(form.data['prior_to_date'])
+            freeze_date += timezone.timedelta(days=1)
+            show_active = form.data.get('show_active_only') is not None
+            project, items = defect_summary(project_code, freeze_date, show_active)
+            res = {
+                'form': form,
+                'defects': items,
+                'project': project
             }
-            for defect in Defect.objects.filter(**kwargs).order_by('date_created'):
-                items.append(_to_dto(defect, index, before_date))
-                index = index + 1
-            
-            if form.data.get('show_active_only') is not None:
-                items = filter(lambda x: x['status'] == 'Active', items)
-            
-            project = get_object_or_404(Project, code=form.data['project_code'])
+            return render(request, 'report_request.html', res)
     else:
         form = ViewDirtReportForm()
-    
-    
-    res = {
-        'form': form,
-        'defects': items,
-        'project': project
-    }
-    return render(request, 'report_request.html', res)
+        return render(request, 'report_request.html', { 'form': form })
 
 @user_passes_test(lambda u: u.is_superuser)
 def debug(request, pk):
