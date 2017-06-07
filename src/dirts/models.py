@@ -64,7 +64,7 @@ class Defect(models.Model):
             sqs = SearchQuerySet().more_like_this(self)[:count]
             return map(lambda x: x.object, sqs)
         except:
-            return None
+            return []
 
     def raise_new(self):
         self.save()

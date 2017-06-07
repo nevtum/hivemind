@@ -17,7 +17,7 @@ def begin_import(request):
         if form.is_valid():
             request.session['project'] = form.cleaned_data['project_code']
             request.session['defects'] = import_data(request)
-            return redirect('imports:complete-import')
+            return redirect('defects:imports:complete-import')
         else:
             return render(request, 'begin_import.html', {'form': form})
     form = ImportDirtsForm()

@@ -44,7 +44,7 @@
     </table>
 </div>
 
-<form class="myform" action="{% url 'imports:complete-import' %}" method="post">
+<form class="myform" action="{% url 'defects:imports:complete-import' %}" method="post">
     {% csrf_token %}
     <input type="submit" value="Submit" />
 </form>
