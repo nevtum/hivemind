@@ -4,16 +4,16 @@
 {% csrf_token %}
 <div>
     <div class="jumbotron">
-        <h1>Welcome to BMM Echelon</h1>
+        <h1>Welcome to Echelon</h1>
         <p>Harness the wealth of knowledge and experience from the pack.</p>
     </div>
     <div class="row">
         <div class="col-sm-4">
             <p>
                 A feature rich bug tracking system which allows for adding attachments and 
-                displaying historic information of DIRTs. A powerful search engine to look for 
-                previously raised DIRTs based on their content, tags or comments. And an 
-                intelligent recommendation system to discover DIRTs similar to those raised. 
+                displaying historic information of issues. A powerful search engine to look for 
+                previously raised issues based on their content, tags or comments. And an 
+                intelligent recommendation system to discover issues similar to those raised. 
             </p>
             <p>
                 <a href="{% url 'defects:list' %}" class="btn btn-primary">Try it out</a>
@@ -23,8 +23,8 @@
             <p>
                 A RESTful API to support extensions to other apps outside of the browser. 
                 Build out mobile or desktop connected applications which can navigate and search 
-                through active, recently changed DIRTs. Or make use of autosuggestions by calling 
-                the "suggest DIRTs" or "suggest projects" API.
+                through active, recently changed issues. Or make use of autosuggestions by calling 
+                the "suggest issues" or "suggest projects" API.
             </p>
             <p>
                 <a href="{% url 'defects:api:api-root' %}" class="btn btn-primary">Try it out</a>

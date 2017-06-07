@@ -47,7 +47,7 @@ from django.core.urlresolvers import reverse_lazy
 
 APP_LINKS = [
     { 'title': 'Projects', 'url': reverse_lazy('common:projects') },
-    { 'title': 'DIRTs', 'url': reverse_lazy('defects:list') },
+    { 'title': 'Issues', 'url': reverse_lazy('defects:list') },
 ]
 
 # Import third party libraries
