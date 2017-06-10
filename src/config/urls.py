@@ -15,7 +15,7 @@ urlpatterns = [
 
     url(r'^common/', include('common.urls', namespace='common')),
     url(r'^comments/', include('comments.urls', namespace='comments')),
-    url(r'^dirts/', include('dirts.urls', namespace='defects')),
+    url(r'^issues/', include('dirts.urls', namespace='defects')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
 ]
 
