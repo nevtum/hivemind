@@ -3,7 +3,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.views import login, logout
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from echelon.views import index
+from .views import index
 from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [

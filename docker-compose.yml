@@ -18,7 +18,7 @@ web:
   links:
     - postgresdb:pgdb
   environment:
-    DJANGO_SETTINGS_MODULE: echelon.settings.prod
+    DJANGO_SETTINGS_MODULE: config.settings.prod
     PASSWORD: mypassword
     USER: echelon_user
 reverse_proxy:

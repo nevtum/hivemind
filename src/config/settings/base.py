@@ -56,7 +56,7 @@ from .haystack import *
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-ROOT_URLCONF = 'echelon.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -71,15 +71,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'echelon.context_processors.app_version',
-                'echelon.context_processors.app_links',
-                'echelon.context_processors.pending_registrations',                
+                'config.context_processors.app_version',
+                'config.context_processors.app_links',
+                'config.context_processors.pending_registrations',                
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'echelon.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
 
