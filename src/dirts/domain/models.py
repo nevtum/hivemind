@@ -1,7 +1,7 @@
 import json
 
-from ..constants import (DIRT_AMENDED, DIRT_CLOSED, DIRT_DELETED,
-                             DIRT_OPENED, DIRT_REOPENED, DIRT_IMPORTED)
+from ..constants import (DEFECT_AMENDED, DEFECT_CLOSED, DEFECT_DELETED,
+                             DEFECT_OPENED, DEFECT_REOPENED, DEFECT_IMPORTED)
 from django.utils import timezone
 
 def assert_datetime(datetime):
@@ -26,24 +26,24 @@ class DefectViewModel(object):
     def apply(self, event):
         assert_datetime(event['created'])
         self.date_changed = event['created']
-        if event['event_type'] == DIRT_IMPORTED:
+        if event['event_type'] == DEFECT_IMPORTED:
             return self._on_imported(event)
-        if event['event_type'] == DIRT_OPENED:
+        if event['event_type'] == DEFECT_OPENED:
             return self._on_opened(event)
-        if event['event_type'] == DIRT_AMENDED:
+        if event['event_type'] == DEFECT_AMENDED:
             return self._on_amended(event)
-        if event['event_type'] == DIRT_REOPENED:
+        if event['event_type'] == DEFECT_REOPENED:
             return self._on_reopened(event)
-        if event['event_type'] == DIRT_CLOSED:
+        if event['event_type'] == DEFECT_CLOSED:
             return self._on_closed(event)
-        if event['event_type'] == DIRT_DELETED:
+        if event['event_type'] == DEFECT_DELETED:
             return self._on_deleted(event)
     
     def amend(self, user, date_amended, **kwargs):
         self.assert_valid(date_amended)
         if self.status != "Open":
             raise Exception("DIRT must be in open state to amend.")
-        return self._create_event(DIRT_AMENDED, kwargs, user, date_amended)
+        return self._create_event(DEFECT_AMENDED, kwargs, user, date_amended)
     
     def close(self, user, release_id, reason, date_closed):
         self.assert_valid(date_closed)
@@ -54,7 +54,7 @@ class DefectViewModel(object):
             'reason': reason
         }
         
-        return self._create_event(DIRT_CLOSED, data, user, date_closed)
+        return self._create_event(DEFECT_CLOSED, data, user, date_closed)
     
     def reopen(self, user, release_id, reason, date_reopened):
         self.assert_valid(date_reopened)
@@ -66,7 +66,7 @@ class DefectViewModel(object):
             'reason': reason
         }
         
-        return self._create_event(DIRT_REOPENED, data, user, date_reopened)
+        return self._create_event(DEFECT_REOPENED, data, user, date_reopened)
     
     def soft_delete(self, user, date_deleted):
         self.assert_valid(date_deleted)

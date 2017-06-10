@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from common import store as EventStore
 from common.models import Project
 
-from ..constants import DIRT_IMPORTED
+from ..constants import DEFECT_IMPORTED
 from .forms import ImportDirtsForm
 from .serializers import ImportDefectSerializer
 from .utils import import_data
@@ -28,7 +28,7 @@ def import_event(defect):
         'sequence_nr': 0,
         'aggregate_id': defect.id,
         'aggregate_type': 'DEFECT',
-        'event_type': DIRT_IMPORTED,
+        'event_type': DEFECT_IMPORTED,
         'created': defect.date_created,
         'created_by': defect.submitter,
         'payload': {

@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from datetime import datetime
-from ..constants import DIRT_OPENED, DIRT_CLOSED, DIRT_IMPORTED, DIRT_AMENDED
+from ..constants import DEFECT_OPENED, DEFECT_CLOSED, DEFECT_IMPORTED, DEFECT_AMENDED
 from ..domain.models import DefectViewModel as DefectModel
 
 def create_new_defect():
@@ -8,7 +8,7 @@ def create_new_defect():
         'sequence_nr': 0,
         'aggregate_id': 1,
         'aggregate_type': 'DEFECT',
-        'event_type': DIRT_OPENED,
+        'event_type': DEFECT_OPENED,
         'created': datetime(2014, 3, 10),
         'created_by': 'test_user',
         'payload': {
@@ -43,7 +43,7 @@ def import_new_defect():
         'description': 'My Description2',
         'comments': 'With comments'
     }
-    data['event_type'] = DIRT_IMPORTED
+    data['event_type'] = DEFECT_IMPORTED
     return data
 
 class DefectAggregateTests(SimpleTestCase):
@@ -83,7 +83,7 @@ class DefectAggregateTests(SimpleTestCase):
         event = model.amend('user2', datetime(2017, 5, 11), **amendment_kwargs)
         self.assertEqual(event['created'], datetime(2017, 5, 11))
         self.assertEqual(event['created_by'], 'user2')
-        self.assertEqual(event['event_type'], DIRT_AMENDED)
+        self.assertEqual(event['event_type'], DEFECT_AMENDED)
         model.apply(event)
         self.assertEqual(model.id, 1)
         self.assertEqual(model.release_id, amendment_kwargs['release_id'])
@@ -121,7 +121,7 @@ class DefectAggregateTests(SimpleTestCase):
         event = model.close('user2', 'v2.1.22', 'With comment', datetime(2017, 3, 11))
         self.assertEqual(event['created'], datetime(2017, 3, 11))
         self.assertEqual(event['created_by'], 'user2')
-        self.assertEqual(event['event_type'], DIRT_CLOSED)
+        self.assertEqual(event['event_type'], DEFECT_CLOSED)
     
     def test_reopen_fail_not_yet_closed(self):
         model = DefectModel([create_new_defect()])

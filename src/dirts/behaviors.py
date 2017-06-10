@@ -5,7 +5,7 @@ from haystack.query import SearchQuerySet
 
 from common import store as EventStore
 
-from .constants import DIRT_OPENED
+from .constants import DEFECT_OPENED
 from .domain.models import DefectViewModel
 
 
@@ -30,7 +30,7 @@ class EventSourceAware:
             'sequence_nr': 0,
             'aggregate_id': self.id,
             'aggregate_type': 'DEFECT',
-            'event_type': DIRT_OPENED,
+            'event_type': DEFECT_OPENED,
             'created': self.date_created,
             'created_by': self.submitter,
             'payload': {

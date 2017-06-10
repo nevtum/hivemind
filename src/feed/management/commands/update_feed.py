@@ -17,11 +17,11 @@ class Command(BaseCommand):
         latest_datetime = self._get_datetime_last_activity()
         for event in DomainEvent.objects.filter(date_occurred__gt=latest_datetime):
             try:
-                if event.event_type == constants.DIRT_OPENED:
+                if event.event_type == constants.DEFECT_OPENED:
                     self._handle_DIRT_OPENED(event)
-                if event.event_type == constants.DIRT_CLOSED:
+                if event.event_type == constants.DEFECT_CLOSED:
                     self._handle_DIRT_CLOSED(event)
-                if event.event_type == constants.DIRT_REOPENED:
+                if event.event_type == constants.DEFECT_REOPENED:
                     self._handle_DIRT_REOPENED(event)
             except Exception as e:
                 print(e)
