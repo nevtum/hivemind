@@ -73,7 +73,7 @@ class DefectViewModel(object):
         if self.status != "Closed":
             raise Exception("DIRT must be in closed state to delete.")
         
-        return self._create_event(DIRT_DELETED, {}, user, date_deleted)
+        return self._create_event(DEFECT_DELETED, {}, user, date_deleted)
     
     def _create_event(self, event_type, dictionary, username, created):
         return {
