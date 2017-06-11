@@ -1,7 +1,8 @@
 import json
 
 from ..constants import (DEFECT_AMENDED, DEFECT_CLOSED, DEFECT_DELETED,
-                             DEFECT_OPENED, DEFECT_REOPENED, DEFECT_IMPORTED)
+                             DEFECT_OPENED, DEFECT_REOPENED, DEFECT_IMPORTED,
+                             DEFECT_LOCKED)
 from django.utils import timezone
 
 def assert_datetime(datetime):
@@ -39,14 +40,14 @@ class DefectViewModel(object):
         if event['event_type'] == DEFECT_DELETED:
             return self._on_deleted(event)
     
-    def amend(self, user, date_amended, **kwargs):
-        self.assert_valid(date_amended)
+    def amend(self, user, timestamp, **kwargs):
+        self.assert_valid(timestamp)
         if self.status != "Open":
             raise Exception("DIRT must be in open state to amend.")
-        return self._create_event(DEFECT_AMENDED, kwargs, user, date_amended)
+        return self._create_event(DEFECT_AMENDED, kwargs, user, timestamp)
     
-    def close(self, user, release_id, reason, date_closed):
-        self.assert_valid(date_closed)
+    def close(self, user, release_id, reason, timestamp):
+        self.assert_valid(timestamp)
         if self.status == "Closed":
             raise Exception("DIRT is already closed.")
         data = {
@@ -54,10 +55,10 @@ class DefectViewModel(object):
             'reason': reason
         }
         
-        return self._create_event(DEFECT_CLOSED, data, user, date_closed)
+        return self._create_event(DEFECT_CLOSED, data, user, timestamp)
     
-    def reopen(self, user, release_id, reason, date_reopened):
-        self.assert_valid(date_reopened)
+    def reopen(self, user, release_id, reason, timestamp):
+        self.assert_valid(timestamp)
         if self.status != "Closed":
             raise Exception("DIRT must be in closed state to reopen.")
 
@@ -66,14 +67,25 @@ class DefectViewModel(object):
             'reason': reason
         }
         
-        return self._create_event(DEFECT_REOPENED, data, user, date_reopened)
+        return self._create_event(DEFECT_REOPENED, data, user, timestamp)
     
-    def soft_delete(self, user, date_deleted):
-        self.assert_valid(date_deleted)
+    def soft_delete(self, user, timestamp):
+        self.assert_valid(timestamp)
         if self.status != "Closed":
             raise Exception("DIRT must be in closed state to delete.")
         
+<<<<<<< HEAD
         return self._create_event(DEFECT_DELETED, {}, user, date_deleted)
+=======
+        return self._create_event(DEFECT_DELETED, {}, user, timestamp)
+    
+    def make_obsolete(self, user, reason, timestamp):
+        assert(reason != '')
+        self.assert_valid(timestamp)
+        if self.status != "Closed":
+            raise Exception("DIRT must first be closed to make obsolete.")
+        return self._create_event(DEFECT_LOCKED, { 'reason': reason }, user, timestamp)
+>>>>>>> added unit tests for locking a defect
     
     def _create_event(self, event_type, dictionary, username, created):
         return {

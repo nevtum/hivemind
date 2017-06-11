@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 from datetime import datetime
-from ..constants import DEFECT_OPENED, DEFECT_CLOSED, DEFECT_IMPORTED, DEFECT_AMENDED
+from ..constants import DEFECT_OPENED, DEFECT_CLOSED, DEFECT_IMPORTED, DEFECT_AMENDED, DEFECT_LOCKED
 from ..domain.models import DefectViewModel as DefectModel
 
 def create_new_defect():
@@ -45,6 +45,29 @@ def import_new_defect():
     }
     data['event_type'] = DEFECT_IMPORTED
     return data
+
+class DefectObsoleteTests(SimpleTestCase):
+    def test_make_obsolete_after_closed(self):
+        model = DefectModel([import_new_defect()])
+        closed_event = model.close('user2', 'v2.1.22', '', datetime(2017, 5, 22, 9, 45))
+        model.apply(closed_event)
+        event = model.make_obsolete('user2', 'No longer applicable', datetime(2017, 5, 22, 9, 45))
+        self.assertEqual(event['event_type'], DEFECT_LOCKED)
+        self.assertEqual(event['payload']['reason'], 'No longer applicable')
+    
+    def test_lock_other_operations_when_made_obsolete(self):
+        model = DefectModel([import_new_defect()])
+        event = model.close('user2', 'v2.1.22', '', datetime(2017, 5, 22, 9, 45))
+        model.apply(event)
+        event = model.make_obsolete('user2', 'No longer applicable', datetime(2017, 5, 22, 9, 46))
+        model.apply(event)
+        self.assertRaises(Exception, model.reopen, 'user2', 'v2.3.01', 'Bug regressed')
+        self.assertRaises(Exception, model.amend, 'user2', datetime(2017, 5, 22, 9, 46), **create_example_amendment())
+        self.assertRaises(Exception, model.close, 'user2', 'v2.1.22', '', datetime(2017, 5, 22, 9, 46))        
+
+    def test_make_obsolete_fail_if_not_closed(self):
+        model = DefectModel([create_new_defect()])
+        self.assertRaises(Exception, model.make_obsolete, 'user2', 'No longer applicable', datetime(2017, 5, 22, 9, 46))
 
 class DefectAggregateTests(SimpleTestCase):
     def test_open(self):
