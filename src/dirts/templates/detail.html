@@ -19,9 +19,9 @@
           <a href="{% url 'defects:close' dirt.id %}" class="list-group-item">Close</a>
           {% elif dirt.is_locked %}
           {% else %}
-          <a href="{% url 'defects:lock' dirt.id %}" class="list-group-item">Make obsolete</a>
           <a href="{% url 'defects:reopen' dirt.id %}" class="list-group-item">Re-open</a>
           {% if user.is_staff %}
+          <a href="{% url 'defects:lock' dirt.id %}" class="list-group-item">Make obsolete</a>
           <a href="{% url 'defects:delete' dirt.id %}" class="list-group-item">Delete</a>
           {% endif %}
           {% endif %}

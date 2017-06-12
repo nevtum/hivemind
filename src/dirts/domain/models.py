@@ -22,8 +22,8 @@ class DefectViewModel(object):
         
         self.last_sequence_nr = -1
         self.change_history = []
-        self._replay_from(defect_events)
         self.locked = False
+        self._replay_from(defect_events)
     
     def apply(self, event):
         assert_datetime(event['created'])
@@ -44,12 +44,14 @@ class DefectViewModel(object):
             return self._on_locked(event)
     
     def amend(self, user, timestamp, **kwargs):
+        self.assert_not_locked()
         self.assert_valid(timestamp)
         if self.status != "Open":
             raise Exception("DIRT must be in open state to amend.")
         return self._create_event(DEFECT_AMENDED, kwargs, user, timestamp)
     
     def close(self, user, release_id, reason, timestamp):
+        self.assert_not_locked()
         self.assert_valid(timestamp)
         if self.status == "Closed":
             raise Exception("DIRT is already closed.")
@@ -61,6 +63,7 @@ class DefectViewModel(object):
         return self._create_event(DEFECT_CLOSED, data, user, timestamp)
     
     def reopen(self, user, release_id, reason, timestamp):
+        self.assert_not_locked()
         self.assert_valid(timestamp)
         if self.status != "Closed":
             raise Exception("DIRT must be in closed state to reopen.")
@@ -73,22 +76,20 @@ class DefectViewModel(object):
         return self._create_event(DEFECT_REOPENED, data, user, timestamp)
     
     def soft_delete(self, user, timestamp):
+        self.assert_not_locked()
         self.assert_valid(timestamp)
         if self.status != "Closed":
             raise Exception("DIRT must be in closed state to delete.")
         
-<<<<<<< HEAD
-        return self._create_event(DEFECT_DELETED, {}, user, date_deleted)
-=======
         return self._create_event(DEFECT_DELETED, {}, user, timestamp)
     
     def make_obsolete(self, user, reason, timestamp):
+        self.assert_not_locked()
         assert(reason != '')
         self.assert_valid(timestamp)
         if self.status != "Closed":
             raise Exception("DIRT must first be closed to make obsolete.")
         return self._create_event(DEFECT_LOCKED, { 'reason': reason }, user, timestamp)
->>>>>>> added unit tests for locking a defect
     
     def _create_event(self, event_type, dictionary, username, created):
         return {
@@ -103,11 +104,15 @@ class DefectViewModel(object):
     
     @property
     def is_active(self):
-        return self.status != "Closed"
+        return self.status == "Open"
     
     @property
     def is_locked(self):
         return self.locked
+    
+    def assert_not_locked(self):
+        if self.locked:
+            raise Exception("DIRT is obsolete and can no longer be modified.")
     
     def assert_valid(self, datetime):
         assert_datetime(datetime)
@@ -195,6 +200,7 @@ class DefectViewModel(object):
     def _on_locked(self, event):
         self._add_changeset_dirt_locked(event)
         self.locked = True
+        self.status = 'Obsolete'
     
     def _set_properties(self, event):
         payload = event['payload']
