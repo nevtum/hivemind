@@ -206,6 +206,7 @@ class DefectPage:
             data=post_data,
             follow=True
         )
+        assert(self.response.redirect_chain != [])
         assert(self.response.status_code == 200)
         
     def reopen_defect(self, release_id, reason):
@@ -218,6 +219,7 @@ class DefectPage:
             data=post_data,
             follow=True
         )
+        assert(self.response.redirect_chain != [])
         assert(self.response.status_code == 200)
     
     def amend_defect(self, **post_data):
@@ -226,6 +228,8 @@ class DefectPage:
             data=post_data,
             follow=True
         )
+        assert(self.response.redirect_chain != [])
+        assert(self.response.status_code == 200)
     
     @property
     def context(self):
