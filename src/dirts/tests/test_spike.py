@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from ..forms import CreateDirtForm
 from ..models import Defect, Priority, Status
+from ..constants import RESOLVED
 
 
 class TestFixtureMixin:  
@@ -196,7 +197,7 @@ class DefectPage:
             reverse('defects:detail', kwargs={'pk': self.id})
         )
     
-    def close_defect(self, release_id, reason=None):
+    def close_defect(self, release_id, reason=RESOLVED):
         post_data = {
             'release_id': release_id,
             'reason': reason

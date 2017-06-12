@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm, Textarea
 from django.utils import timezone
 
+from .constants import CANNOT_REPRODUCE, DO_NOT_FIX, RAISED_IN_ERROR, RESOLVED
 from .models import Defect
 
 
@@ -49,10 +50,10 @@ class ReopenDirtForm(ModelForm, forms.Form):
 
 CLOSE_REASONS = (
     ('', '<select reason>'),
-    ('Could not reproduce.', 'Could not reproduce'),
-    ('Raised in error.', 'Raised in error'),
-    ('Do not fix.', 'Do not fix'),
-    ('Resolved.', 'Resolved'),
+    (CANNOT_REPRODUCE, 'Could not reproduce'),
+    (RAISED_IN_ERROR, 'Raised in error'),
+    (DO_NOT_FIX, 'Do not fix'),
+    (RESOLVED, 'Resolved'),
 )
 
 class CloseDirtForm(ModelForm, forms.Form):
