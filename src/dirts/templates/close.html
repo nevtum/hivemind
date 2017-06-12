@@ -4,12 +4,12 @@
 {% load crispy_forms_tags %}
 
 <h4>Enter release info for this defect to be closed.</h4>
-<p><i>Note: Reason field is optional. For future reference it is recommended to be filled in.</i></p>
+<p><i>Note: Details field is optional.</i></p>
 
 <form class="myform" action="{% url 'defects:close' dirt.id %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Close" />
 </form>
 
 {% endblock %}

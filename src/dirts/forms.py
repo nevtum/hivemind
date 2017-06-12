@@ -47,25 +47,40 @@ class ReopenDirtForm(ModelForm, forms.Form):
             'release_id',
         ]
 
+CLOSE_REASONS = (
+    ('', '<select reason>'),
+    ('Could not reproduce.', 'Could not reproduce'),
+    ('Raised in error.', 'Raised in error'),
+    ('Do not fix.', 'Do not fix'),
+    ('Resolved.', 'Resolved'),
+)
+
 class CloseDirtForm(ModelForm, forms.Form):
-    reason = forms.CharField(widget=forms.Textarea, required=False)
+    reason = forms.ChoiceField(choices = CLOSE_REASONS)
+    details = forms.CharField(widget=forms.Textarea, required=False)
         
     class Meta:
         model = Defect
         fields = [
             'release_id',
         ]
+    
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        if cleaned_data['details'] != '':
+            cleaned_data['reason'] += "\n\n{}".format(cleaned_data['details'])
+        return cleaned_data
 
 LOCK_REASONS = (
-    ('Invalid issue raised', 'Invalid issue raised'),
-    ('Backlogged for future releases', 'Backlogged for future releases'),
-    ('No longer valid: Requirements changed', 'No longer valid: Requirements changed'),
-    ('No longer valid: Functionality removed', 'No longer valid: Functionality removed'),
+    ('', '<select reason>'),
+    ('Invalid issue raised.', 'Invalid issue raised'),
+    ('Backlogged for future releases.', 'Backlogged for future releases'),
+    ('No longer valid: Requirements changed.', 'No longer valid: Requirements changed'),
+    ('No longer valid: Functionality removed.', 'No longer valid: Functionality removed'),
 )
 
 class LockDefectForm(ModelForm, forms.Form):
     reason = forms.ChoiceField(choices = LOCK_REASONS)
-    # details = forms.CharField(widget=forms.Textarea, required=False)
         
     class Meta:
         model = Defect

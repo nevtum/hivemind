@@ -120,8 +120,8 @@ class DefectCloseView(UpdateView):
     
     def form_valid(self, form):
         defect = form.save(commit=False)
-        release_id = form.data['release_id']
-        reason = form.data['reason']
+        release_id = form.cleaned_data['release_id']
+        reason = form.cleaned_data['reason']
         defect.close(self.request.user, release_id, reason)
         return redirect(defect)
 
@@ -138,7 +138,6 @@ class DefectLockView(UpdateView):
         kwargs['timestamp'] = timezone.now()
         defect_model = defect.as_domainmodel()
         event = defect_model.make_obsolete(**kwargs)
-        import pdb; pdb.set_trace()
         EventStore.append_next(event)
         return redirect(defect)
 
