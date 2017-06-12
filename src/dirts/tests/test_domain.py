@@ -61,13 +61,16 @@ class DefectObsoleteTests(SimpleTestCase):
         model.apply(event)
         event = model.make_obsolete('user2', 'No longer applicable', datetime(2017, 5, 22, 9, 46))
         model.apply(event)
-        self.assertRaises(Exception, model.reopen, 'user2', 'v2.3.01', 'Bug regressed')
-        self.assertRaises(Exception, model.amend, 'user2', datetime(2017, 5, 22, 9, 46), **create_example_amendment())
-        self.assertRaises(Exception, model.close, 'user2', 'v2.1.22', '', datetime(2017, 5, 22, 9, 46))        
+        self.assertEqual(model.is_locked, True)
+        # import pdb; pdb.set_trace()
+        self.assertRaises(Exception, model.reopen, 'user2', 'v2.3.01', 'Bug regressed', datetime(2017, 5, 22, 9, 47))
+        self.assertRaises(Exception, model.amend, 'user2', datetime(2017, 5, 22, 9, 47), **create_example_amendment())
+        self.assertRaises(Exception, model.close, 'user2', 'v2.1.22', '', datetime(2017, 5, 22, 9, 47))        
 
     def test_make_obsolete_fail_if_not_closed(self):
         model = DefectModel([create_new_defect()])
         self.assertRaises(Exception, model.make_obsolete, 'user2', 'No longer applicable', datetime(2017, 5, 22, 9, 46))
+        self.assertEqual(model.is_locked, False)
 
 class DefectAggregateTests(SimpleTestCase):
     def test_open(self):

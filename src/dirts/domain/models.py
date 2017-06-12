@@ -23,6 +23,7 @@ class DefectViewModel(object):
         self.last_sequence_nr = -1
         self.change_history = []
         self._replay_from(defect_events)
+        self.locked = False
     
     def apply(self, event):
         assert_datetime(event['created'])
@@ -39,6 +40,8 @@ class DefectViewModel(object):
             return self._on_closed(event)
         if event['event_type'] == DEFECT_DELETED:
             return self._on_deleted(event)
+        if event['event_type'] == DEFECT_LOCKED:
+            return self._on_locked(event)
     
     def amend(self, user, timestamp, **kwargs):
         self.assert_valid(timestamp)
@@ -98,8 +101,13 @@ class DefectViewModel(object):
             'payload': dictionary,
         }
     
+    @property
     def is_active(self):
         return self.status != "Closed"
+    
+    @property
+    def is_locked(self):
+        return self.locked
     
     def assert_valid(self, datetime):
         assert_datetime(datetime)
@@ -121,6 +129,12 @@ class DefectViewModel(object):
         description += "\nVersion: %s" % payload['release_id']
         if payload['reason'] != "":
             description += "\nReason: \"%s\"" % payload['reason']
+        ch = self._add_changeset(event, description)
+    
+    def _add_changeset_dirt_locked(self, event):
+        payload = event['payload']
+        description = "DIRT has been made obsolete."
+        description += "\nReason: \"%s\"" % payload['reason']
         ch = self._add_changeset(event, description)
 
     def _add_changeset_dirt_amended(self, event):
@@ -177,6 +191,10 @@ class DefectViewModel(object):
     
     def _on_deleted(self, event):
         self.status = 'Deleted'
+    
+    def _on_locked(self, event):
+        self._add_changeset_dirt_locked(event)
+        self.locked = True
     
     def _set_properties(self, event):
         payload = event['payload']

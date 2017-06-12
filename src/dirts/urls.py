@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^(?P<pk>\d+?)/amend/$', auth(views.DefectUpdateView.as_view()), name='amend'),
     url(r'^(?P<pk>\d+?)/close/$', auth(views.DefectCloseView.as_view()), name='close'),
     url(r'^(?P<pk>\d+?)/reopen/$', auth(views.DefectReopenView.as_view()), name='reopen'),
+    url(r'^(?P<pk>\d+?)/lock/$', auth(views.DefectLockView.as_view()), name='lock'),
     url(r'^(?P<pk>\d+?)/delete/$', views.delete, name='delete'),
     url(r'^(?P<pk>\d+?)/tags/$', auth(views.EditTagsView.as_view()), name='tags'),
 ]

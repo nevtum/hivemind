@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<h4>Choose reason for this defect to be made obsolete.</h4>
+
+<form class="myform" action="{% url 'defects:lock' defect.id %}" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Submit" />
+</form>
+
+{% endblock %}

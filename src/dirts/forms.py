@@ -48,10 +48,25 @@ class ReopenDirtForm(ModelForm, forms.Form):
         ]
 
 class CloseDirtForm(ModelForm, forms.Form):
+    reason = forms.CharField(widget=forms.Textarea, required=False)
+        
     class Meta:
         model = Defect
         fields = [
             'release_id',
         ]
+
+LOCK_REASONS = (
+    ('Invalid issue raised', 'Invalid issue raised'),
+    ('Backlogged for future releases', 'Backlogged for future releases'),
+    ('No longer valid: Requirements changed', 'No longer valid: Requirements changed'),
+    ('No longer valid: Functionality removed', 'No longer valid: Functionality removed'),
+)
+
+class LockDefectForm(ModelForm, forms.Form):
+    reason = forms.ChoiceField(choices = LOCK_REASONS)
+    # details = forms.CharField(widget=forms.Textarea, required=False)
         
-    reason = forms.CharField(widget=forms.Textarea, required=False)
+    class Meta:
+        model = Defect
+        fields = []

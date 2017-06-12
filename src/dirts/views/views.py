@@ -9,7 +9,7 @@ from common import store as EventStore
 from common.models import Project
 
 from ..forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
-                     ViewDirtReportForm)
+                     ViewDirtReportForm, LockDefectForm)
 from ..models import Defect
 from ..domain.report import defect_summary
 from ..mixins import DefectSearchMixin
@@ -123,6 +123,23 @@ class DefectCloseView(UpdateView):
         release_id = form.data['release_id']
         reason = form.data['reason']
         defect.close(self.request.user, release_id, reason)
+        return redirect(defect)
+
+class DefectLockView(UpdateView):
+    model = Defect
+    template_name = 'lock.html'
+    context_object_name = 'defect'
+    form_class = LockDefectForm
+
+    def form_valid(self, form):
+        defect = form.instance
+        kwargs = form.cleaned_data
+        kwargs['user'] = self.request.user
+        kwargs['timestamp'] = timezone.now()
+        defect_model = defect.as_domainmodel()
+        event = defect_model.make_obsolete(**kwargs)
+        import pdb; pdb.set_trace()
+        EventStore.append_next(event)
         return redirect(defect)
 
 class DefectReopenView(UpdateView):
