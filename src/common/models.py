@@ -43,5 +43,12 @@ class DomainEvent(models.Model):
                 self.date_occurred = timezone.now()
         return super(DomainEvent, self).save(*args, **kwargs)
     
+    def __str__(self):
+        return "{} {} {}".format(
+            self.id,
+            self.aggregate_type,
+            self.blob
+        )
+    
     class Meta:
         unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),)
