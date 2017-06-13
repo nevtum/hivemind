@@ -1,6 +1,5 @@
 from common.models import Project
 from common import store as EventStore
-from common.serializers import DomainEventSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.decorators import (api_view, detail_route,

@@ -5,7 +5,7 @@ from rest_framework import serializers
 from .models import DomainEvent
 
 
-class DomainEventSerializer(serializers.ModelSerializer):
+class DomainEventReadSerializer(serializers.ModelSerializer):
     payload = serializers.SerializerMethodField()
     created = serializers.SerializerMethodField()
     created_by = serializers.SerializerMethodField()
