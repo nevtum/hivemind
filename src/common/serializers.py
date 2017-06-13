@@ -4,11 +4,31 @@ from rest_framework import serializers
 
 from .models import DomainEvent
 
+class DomainEventWriteSerializer(serializers.ModelSerializer):
+    payload = serializers.JSONField(source='blob')
+    created = serializers.DateTimeField(source='date_occurred')
+    created_by = serializers.CharField(source='username')
+
+    class Meta:
+        model = DomainEvent
+        fields = (
+            'sequence_nr',
+            'aggregate_id',
+            'aggregate_type',
+            'event_type',
+            'payload',
+            'created',
+            'created_by',
+        )
+    
+    def create(self, validated_data):
+        validated_data['blob'] = json.dumps(validated_data['blob'], indent=2)
+        return DomainEvent.objects.create(**validated_data)
 
 class DomainEventReadSerializer(serializers.ModelSerializer):
     payload = serializers.SerializerMethodField()
     created = serializers.SerializerMethodField()
-    created_by = serializers.SerializerMethodField()
+    created_by = serializers.CharField(source='username')
 
     class Meta:
         model = DomainEvent
@@ -21,9 +41,6 @@ class DomainEventReadSerializer(serializers.ModelSerializer):
             'created',
             'payload',
         )
-
-    def get_created_by(self, obj):
-        return obj.username
     
     def get_created(self, obj):
         return obj.date_occurred

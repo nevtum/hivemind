@@ -1,7 +1,7 @@
 import json
 
 from .models import DomainEvent
-from .serializers import DomainEventReadSerializer
+from .serializers import DomainEventReadSerializer, DomainEventWriteSerializer
 
 def get_event_count(agg_type, agg_id):
 	queryset = DomainEvent.objects.filter(aggregate_type=agg_type, aggregate_id=agg_id)
@@ -24,12 +24,9 @@ def append_next(event_dto):
 	if event_dto['sequence_nr'] != expected_sequence_nr:
 		raise Exception("Optimistic concurrency error!")
 	
-	event = DomainEvent()
-	event.sequence_nr = expected_sequence_nr
-	event.aggregate_id = event_dto['aggregate_id']
-	event.aggregate_type = event_dto['aggregate_type']
-	event.event_type = event_dto['event_type']
-	event.date_occurred = event_dto['created']
-	event.username = event_dto['created_by']
-	event.blob = json.dumps(event_dto['payload'], indent=2)
-	event.save()
+	serializer = DomainEventWriteSerializer(data=event_dto)
+
+	if not serializer.is_valid():
+		raise Exception(serializer.errors)
+	
+	serializer.save()
