@@ -7,12 +7,12 @@ def get_event_count(agg_type, agg_id):
 	queryset = DomainEvent.objects.filter(aggregate_type=agg_type, aggregate_id=agg_id)
 	return queryset.count()
 
-def get_events_for(agg_type, agg_id, before_date = None):
+def get_events_for(agg_type, agg_id, end_date = None):
 	queryset = DomainEvent.objects.filter(aggregate_type=agg_type, aggregate_id=agg_id)
 	queryset = queryset.order_by('sequence_nr')
 
-	if before_date:
-		queryset = queryset.filter(date_occurred__lte=before_date)		
+	if end_date:
+		queryset = queryset.filter(date_occurred__lte=end_date)		
 	
 	return DomainEventReadSerializer(queryset, many=True).data
 	
