@@ -1,8 +1,10 @@
 import json
 
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import DomainEvent
+
 
 class DomainEventWriteSerializer(serializers.ModelSerializer):
     payload = serializers.JSONField(source='blob')
@@ -24,6 +26,11 @@ class DomainEventWriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['blob'] = json.dumps(validated_data['blob'], indent=2)
         return DomainEvent.objects.create(**validated_data)
+    
+    def validate_created_by(self, value):
+        if not User.objects.filter(username=value).exists():
+            raise User.DoesNotExist("Cannot find username matching '{}'".format(value))
+        return value
 
 class DomainEventReadSerializer(serializers.ModelSerializer):
     payload = serializers.SerializerMethodField()
