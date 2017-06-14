@@ -18,6 +18,19 @@ class UserSerializer(serializers.Serializer):
         user = request.user
         return "{0} {1}".format(user.first_name, user.last_name)
 
+class CreateDefectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Defect
+        fields = (
+            'project_code',
+            'release_id',
+            'status',
+            'priority',
+            'reference',
+            'description',
+            'comments',
+        )
+
 class DefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.ReadOnlyField(source='priority.name')

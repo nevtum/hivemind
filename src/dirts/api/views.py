@@ -1,18 +1,24 @@
-from common.models import Project
 from common import store as EventStore
+from common.models import Project
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import generics, viewsets
 from rest_framework.decorators import (api_view, detail_route,
                                        permission_classes)
 from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from ..models import Defect
-from .serializers import (DefectSerializer, MoreLikeThisSerializer,
-                           SuggestionSerializer)
 from ..mixins import DefectSearchMixin
+from ..models import Defect
+from .serializers import (CreateDefectSerializer, DefectSerializer,
+                          MoreLikeThisSerializer, SuggestionSerializer)
 
+
+class CreateDefectView(generics.CreateAPIView):
+    serializer_class = CreateDefectSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(submitter=self.request.user)
 
 class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
     """
