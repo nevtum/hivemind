@@ -24,27 +24,6 @@ class EventSourceAware:
         events = EventStore.get_events_for('DEFECT', self.id, before_date)
         return DefectViewModel(events)
     
-    def raise_new(self):
-        self.save()
-        event = {
-            'sequence_nr': 0,
-            'aggregate_id': self.id,
-            'aggregate_type': 'DEFECT',
-            'event_type': DEFECT_OPENED,
-            'created': self.date_created,
-            'created_by': self.submitter,
-            'payload': {
-                'project_code': self.project_code,
-                'release_id': self.release_id,
-                'priority': self.priority.name,
-                'reference': self.reference,
-                'description': self.description,
-                'comments': self.comments
-            }
-        }
-        EventStore.append_next(event)
-        return event
-    
     def amend(self, user):
         defect = self.as_domainmodel()
         event = defect.amend(user, timezone.now(), **self._to_kwargs())

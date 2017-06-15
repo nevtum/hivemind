@@ -44,7 +44,7 @@ class TestFixtureMixin:
 class DefectCommentAcceptanceTests(TestFixtureMixin, TestCase):
     def test_comment_added_to_defect(self):
         kwargs = {
-            'project_code': Project.objects.get(code='ABC.123'),
+            'project_code': 'ABC.123',
             'release_id': 'v1.2.3.4',
             'priority': Priority.objects.get(name='High'),
             'submitter': User.objects.get(username='test_user'),
@@ -161,16 +161,17 @@ class DefectAcceptanceTests(TestFixtureMixin, TestCase):
         # test put here to prevent a bug from the past from regressing
         expected_priority = Priority.objects.get(pk=data['priority']).name
         self.assertEqual(result.priority, expected_priority)
+
+    # # obsolete test     
+    # def test_should_create_dirt_opened_event(self):
+    #     form = CreateDirtForm(data=self._test_form_data_with_comments())
+    #     defect = form.save(commit=False)
+    #     defect.submitter = self.test_user
+    #     event = defect.raise_new()
         
-    def test_should_create_dirt_opened_event(self):
-        form = CreateDirtForm(data=self._test_form_data_with_comments())
-        defect = form.save(commit=False)
-        defect.submitter = self.test_user
-        event = defect.raise_new()
-        
-        self.assertEqual(event['sequence_nr'], 0)
-        self.assertEqual(event['event_type'], 'DIRT.OPENED')
-        self.assertIsNotNone(event['payload'])
+    #     self.assertEqual(event['sequence_nr'], 0)
+    #     self.assertEqual(event['event_type'], 'DIRT.OPENED')
+    #     self.assertIsNotNone(event['payload'])
 
 class CreateDefectPage:
     """Helper class abstracting away web call details

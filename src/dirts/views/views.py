@@ -92,7 +92,7 @@ class DefectCreateView(CreateView):
     def form_valid(self, form):
         defect = form.save(commit=False)
         defect.submitter = self.request.user
-        defect.raise_new()
+        defect.save()
         return redirect(defect)
 
 class DefectCopyView(DefectCreateView, UpdateView):
