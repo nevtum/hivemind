@@ -7,7 +7,7 @@ from rest_framework.test import APITestCase
 from common.models import DomainEvent, Manufacturer, Project
 
 
-class CommandHandlerTests(APITestCase):
+class DefectAPITests(APITestCase):
     def _load_fixtures(self):
         manufacturer = Manufacturer.objects.create(
             name='Example Manufacturer',
