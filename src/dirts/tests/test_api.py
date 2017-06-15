@@ -41,6 +41,6 @@ class DefectAPITests(APITestCase):
             'reference': 'A Title',
             'description': 'A description.',
             'comments': 'A few comments.',
-         }
+        }
         response = self.client.post(reverse('defects:api:create'), data, format='json')
         self.assertEquals(response.status_code, status.HTTP_201_CREATED)
