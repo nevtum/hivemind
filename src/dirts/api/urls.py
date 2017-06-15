@@ -15,5 +15,5 @@ router.register(r'suggest_projects', views.AutoCompleteProjects, 'project-sugges
 urlpatterns = [
     url(r'^', include(router.urls)),
     url(r'^new_defect/$', views.CreateDefectView.as_view(), name='create'),
-    url(r'^api/more-like-this/(?P<pk>\d+?)/$', views.more_like_this_defect, name='similar-defects'),
+    url(r'^more_like_this/(?P<pk>\d+?)/$', views.more_like_this_defect, name='similar-defects'),
 ]
