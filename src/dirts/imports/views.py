@@ -5,7 +5,7 @@ from common import store as EventStore
 from common.models import Project
 
 from ..constants import DEFECT_IMPORTED
-from .forms import ImportDirtsForm
+from .forms import ImportDefectsForm
 from .serializers import ImportDefectSerializer
 from .utils import import_data
 
@@ -13,14 +13,14 @@ from .utils import import_data
 @login_required(login_url='/login/')
 def begin_import(request):
     if request.method == 'POST':
-        form = ImportDirtsForm(request.POST, request.FILES)
+        form = ImportDefectsForm(request.POST, request.FILES)
         if form.is_valid():
             request.session['project'] = form.cleaned_data['project_code']
             request.session['defects'] = import_data(request)
             return redirect('defects:imports:complete-import')
         else:
             return render(request, 'begin_import.html', {'form': form})
-    form = ImportDirtsForm()
+    form = ImportDefectsForm()
     return render(request, 'begin_import.html', {'form': form})
 
 def import_event(defect):

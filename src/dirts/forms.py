@@ -6,7 +6,7 @@ from .constants import CANNOT_REPRODUCE, DO_NOT_FIX, RAISED_IN_ERROR, RESOLVED
 from .models import Defect
 
 
-class ViewDirtReportForm(ModelForm, forms.Form):
+class DefectSummaryForm(ModelForm, forms.Form):
     prior_to_date = forms.DateField(initial=timezone.now)
     show_active_only = forms.BooleanField(required=False, initial=True)
     
@@ -23,7 +23,7 @@ class TagsForm(ModelForm):
             'tags'
         ]
 
-class CreateDirtForm(ModelForm):
+class CreateDefectForm(ModelForm):
     class Meta:
         model = Defect
         fields = [
@@ -39,7 +39,7 @@ class CreateDirtForm(ModelForm):
             'comments': Textarea(attrs={'cols': 80}),
         }
 
-class ReopenDirtForm(ModelForm, forms.Form):
+class ReopenDefectForm(ModelForm, forms.Form):
     reason = forms.CharField(widget=forms.Textarea)
 
     class Meta:
@@ -56,7 +56,7 @@ CLOSE_REASONS = (
     (RESOLVED, 'Resolved'),
 )
 
-class CloseDirtForm(ModelForm, forms.Form):
+class CloseDefectForm(ModelForm, forms.Form):
     reason = forms.ChoiceField(choices = CLOSE_REASONS)
     details = forms.CharField(widget=forms.Textarea, required=False)
         

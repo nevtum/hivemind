@@ -1,7 +1,7 @@
 
 from django.test import SimpleTestCase
 
-from ..forms import CreateDirtForm
+from ..forms import CreateDefectForm
 from ..models import Defect, Priority, Status
 
 
@@ -30,7 +30,7 @@ class DefectFormTests(SimpleTestCase):
     def _assert_empty_field_fail_form(self, field_name, value):
         kwargs = self._test_form_data_with_comments()
         kwargs[field_name] = value
-        form = CreateDirtForm(data=kwargs)
+        form = CreateDefectForm(data=kwargs)
         self.assertEqual(form.is_valid(), False)
         
     def test_should_fail_valid_create_defect_form_with_empty_project_code(self):
@@ -49,9 +49,9 @@ class DefectFormTests(SimpleTestCase):
         self._assert_empty_field_fail_form('description', '')
     
     def test_should_pass_valid_create_defect_form_with_comments(self):
-        form = CreateDirtForm(data=self._test_form_data_with_comments())
+        form = CreateDefectForm(data=self._test_form_data_with_comments())
         self.assertEqual(form.is_valid(), True)
     
     def test_should_pass_valid_create_defect_form_without_comments(self):
-        form = CreateDirtForm(data=self._test_form_data_without_comments())
+        form = CreateDefectForm(data=self._test_form_data_without_comments())
         self.assertEqual(form.is_valid(), True)

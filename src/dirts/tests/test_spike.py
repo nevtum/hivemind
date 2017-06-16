@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
-from ..forms import CreateDirtForm
+from ..forms import CreateDefectForm
 from ..models import Defect, Priority, Status
 from ..constants import RESOLVED
 
@@ -94,7 +94,7 @@ class DefectAcceptanceTests(TestFixtureMixin, TestCase):
     
     def test_should_open_correct_form_when_create_defect_url_accessed(self):
         response = self.client.get(reverse('defects:create'))
-        self.assertIsInstance(response.context['form'], CreateDirtForm)
+        self.assertIsInstance(response.context['form'], CreateDefectForm)
 
     def test_should_create_new_defect(self):
         data = self._test_form_data_with_comments()
@@ -164,7 +164,7 @@ class DefectAcceptanceTests(TestFixtureMixin, TestCase):
 
     # # obsolete test     
     # def test_should_create_dirt_opened_event(self):
-    #     form = CreateDirtForm(data=self._test_form_data_with_comments())
+    #     form = CreateDefectForm(data=self._test_form_data_with_comments())
     #     defect = form.save(commit=False)
     #     defect.submitter = self.test_user
     #     event = defect.raise_new()

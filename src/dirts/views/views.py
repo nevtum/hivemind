@@ -8,8 +8,8 @@ from comments.models import Comment
 from common import store as EventStore
 from common.models import Project
 
-from ..forms import (CloseDirtForm, CreateDirtForm, ReopenDirtForm, TagsForm,
-                     ViewDirtReportForm, LockDefectForm)
+from ..forms import (CloseDefectForm, CreateDefectForm, ReopenDefectForm, TagsForm,
+                     DefectSummaryForm, LockDefectForm)
 from ..models import Defect
 from ..domain.report import defect_summary
 from ..mixins import DefectSearchMixin
@@ -58,7 +58,7 @@ def time_travel(request, pk, day, month, year):
 
 def report(request):
     if request.GET.get('project_code'):
-        form = ViewDirtReportForm(request.GET)
+        form = DefectSummaryForm(request.GET)
         if form.is_valid():
             project_code = form.data['project_code']
             # need a better timezone aware datetime implementation
@@ -73,7 +73,7 @@ def report(request):
             }
             return render(request, 'defects/summary.html', res)
     else:
-        form = ViewDirtReportForm()
+        form = DefectSummaryForm()
         return render(request, 'defects/summary.html', { 'form': form })
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -87,7 +87,7 @@ def debug(request, pk):
 class DefectCreateView(CreateView):
     template_name = 'defects/create.html'
     context_object_name = 'dirt'
-    form_class = CreateDirtForm
+    form_class = CreateDefectForm
 
     def form_valid(self, form):
         defect = form.save(commit=False)
@@ -105,7 +105,7 @@ class DefectUpdateView(UpdateView):
     model = Defect
     template_name = 'defects/amend.html'
     context_object_name = 'dirt'
-    form_class = CreateDirtForm
+    form_class = CreateDefectForm
     
     def form_valid(self, form):
         defect = form.save(commit=False)
@@ -116,7 +116,7 @@ class DefectCloseView(UpdateView):
     model = Defect
     template_name = 'defects/close.html'
     context_object_name = 'dirt'
-    form_class = CloseDirtForm
+    form_class = CloseDefectForm
     
     def form_valid(self, form):
         defect = form.save(commit=False)
@@ -145,7 +145,7 @@ class DefectReopenView(UpdateView):
     model = Defect
     template_name = 'defects/reopen.html'
     context_object_name = 'dirt'
-    form_class = ReopenDirtForm
+    form_class = ReopenDefectForm
     
     def form_valid(self, form):
         defect = form.save(commit=False)
