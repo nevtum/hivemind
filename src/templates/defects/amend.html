@@ -4,7 +4,7 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
-<form class="myform" action="{% url 'defects:amend' dirt.id %}" method="post">
+<form class="myform" action="{% url 'defects:amend' defect.id %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Submit" />

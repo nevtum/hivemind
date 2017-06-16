@@ -3,44 +3,40 @@
 
 {% block content %}
 
-<h4>Please review list of DIRTs before proceeding with import:</h4>
+<h4>Please review list of issues first before proceeding with import:</h4>
 
 <div>
     <p><b>Defect summary for: <i>{{ project.code }} - {{ project.description }}</i></b></p>
-    <table id="dirt-report" class="table table-striped">
-    <tbody>
-        <tr>
-            <th>Date Created</th>
-            <th>Submitter</th>
-            <th>Status</th>
-            <th>Priority</th>
-            <th>Description</th>
-            <!--<th>Date Closed</th>-->
-        </tr>
-        {% for dirt in defects %}
-        <tr>
-            <!--<td>{{ dirt.date_created | date:"d/m/Y" }}</td>-->
-            <td>{{ dirt.date_created }}</td>
-            <td>{{ dirt.submitter }}</td>
-            <td>{{ dirt.status }}</td>
-            <td>{{ dirt.priority }}</td>
-            <td>
-                <p>Version: {{ dirt.release_id }}</p>
-                <p>Summary: {{ dirt.reference }}</p>
-                <p>Description:</p>
-                <p>{{ dirt.description | linebreaksbr }}</p>
-                {% if dirt.comments %}
-                <br>
-                <p>Comments:</p>
-                <p>{{ dirt.comments | linebreaksbr }}</p>
-                {% endif %}
-                </p>
-            </td>
-            <!--<td>{{ dirt.date_changed | date:"d/m/Y" }}</td>-->
-            <!--<td>{{ dirt.date_changed }}</td>-->
-        </tr>
-        {% endfor %}
-    </tbody>
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <th>Date Created</th>
+                <th>Submitter</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Description</th>
+            </tr>
+            {% for defect in defects %}
+            <tr>
+                <td>{{ defect.date_created }}</td>
+                <td>{{ defect.submitter }}</td>
+                <td>{{ defect.status }}</td>
+                <td>{{ defect.priority }}</td>
+                <td>
+                    <p>Version: {{ defect.release_id }}</p>
+                    <p>Summary: {{ defect.reference }}</p>
+                    <p>Description:</p>
+                    <p>{{ defect.description | linebreaksbr }}</p>
+                    {% if defect.comments %}
+                    <br>
+                    <p>Comments:</p>
+                    <p>{{ defect.comments | linebreaksbr }}</p>
+                    {% endif %}
+                    </p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 

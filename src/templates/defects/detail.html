@@ -1,35 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% with dirt=model.as_domainmodel %}
+{% with defect=model.as_domainmodel %}
 <!--<div class="container-fluid">-->
   <div>
     <div class="row">
       <div class="additional-links col-lg-12">
         {% if comment_count %}
-        <a href="{% url 'defects:defect-comments:list' dirt.id %}">View comments ({{ comment_count }})</a>
+        <a href="{% url 'defects:defect-comments:list' defect.id %}">View comments ({{ comment_count }})</a>
         {% else %}
-        <a href="{% url 'defects:defect-comments:list' dirt.id %}">Add comments/notes</a>
+        <a href="{% url 'defects:defect-comments:list' defect.id %}">Add comments/notes</a>
         {% endif %}
       </div>
       <div class="col-lg-3 col-lg-push-9">
         <div class="list-group z-height-1">
-          {% if dirt.is_active %}
-          <a href="{% url 'defects:amend' dirt.id %}" class="list-group-item">Amend</a>
-          <a href="{% url 'defects:close' dirt.id %}" class="list-group-item">Close</a>
-          {% elif dirt.is_locked %}
+          {% if defect.is_active %}
+          <a href="{% url 'defects:amend' defect.id %}" class="list-group-item">Amend</a>
+          <a href="{% url 'defects:close' defect.id %}" class="list-group-item">Close</a>
+          {% elif defect.is_locked %}
           {% else %}
-          <a href="{% url 'defects:reopen' dirt.id %}" class="list-group-item">Re-open</a>
+          <a href="{% url 'defects:reopen' defect.id %}" class="list-group-item">Re-open</a>
           {% if user.is_staff %}
-          <a href="{% url 'defects:lock' dirt.id %}" class="list-group-item">Make obsolete</a>
-          <a href="{% url 'defects:delete' dirt.id %}" class="list-group-item">Delete</a>
+          <a href="{% url 'defects:lock' defect.id %}" class="list-group-item">Make obsolete</a>
+          <a href="{% url 'defects:delete' defect.id %}" class="list-group-item">Delete</a>
           {% endif %}
           {% endif %}
-          <a href="{% url 'defects:create-similar' dirt.id %}" class="list-group-item">Raise similar</a>              
-          <a href="{% url 'defects:tags' dirt.id %}" class="list-group-item">Add/Edit tags</a>           
+          <a href="{% url 'defects:create-similar' defect.id %}" class="list-group-item">Raise similar</a>              
+          <a href="{% url 'defects:tags' defect.id %}" class="list-group-item">Add/Edit tags</a>           
         </div>
 
-        <h4>Navigate {{ dirt.project_code }}:</h4>                    
+        <h4>Navigate {{ defect.project_code }}:</h4>                    
         <div class="list-group z-height-1">
           {% if model.prev_in_project %}
           <a href="{{ model.prev_in_project.get_absolute_url }}" class="list-group-item">Previous</a>
@@ -53,33 +53,33 @@
         {% endwith %}
       </div>
       <div class="col-lg-9 col-lg-pull-3">
-        {% if dirt.is_active %}
+        {% if defect.is_active %}
         <div class="panel panel-info">
         {% else %}
         <div class="panel panel-default">
         {% endif %}
           <div class="panel-heading">
             <h1 class="panel-title">
-                {{ dirt.reference }} ({{ dirt.status }})
-                [Last updated {{ dirt.date_changed | timesince }} ago]
+                {{ defect.reference }} ({{ defect.status }})
+                [Last updated {{ defect.date_changed | timesince }} ago]
             </h1>
           </div>
           <div class="panel-body">
-            <h4>Release ID: {{ dirt.release_id }}</h4>
-            <h4>Raised by {{ dirt.submitter }}, {{ dirt.date_created }}</h4>
-            <h4>Priority: {{ dirt.priority }}</h4>
+            <h4>Release ID: {{ defect.release_id }}</h4>
+            <h4>Raised by {{ defect.submitter }}, {{ defect.date_created }}</h4>
+            <h4>Priority: {{ defect.priority }}</h4>
           </div>
         </div>
         <div class="panel panel-default">
           <div class="panel-body">
-            <p>{{ dirt.description | linebreaksbr }}</p>
+            <p>{{ defect.description | linebreaksbr }}</p>
           </div>
         </div>
-        {% if dirt.comments %}
+        {% if defect.comments %}
         <div class="panel panel-default">
           <div class="panel-heading">Comments:</div>
           <div class="panel-body">
-            <p>{{ dirt.comments | linebreaksbr }}</p>
+            <p>{{ defect.comments | linebreaksbr }}</p>
           </div>
         </div>
         {% endif %}
@@ -94,7 +94,7 @@
         {% endwith %}
       </div>
     </div>
-    {% if dirt.change_history %}
+    {% if defect.change_history %}
     <div class="row">
       <div class="col-lg-12">
         <hr>
@@ -106,7 +106,7 @@
               <th>Description</th>
               <th>Modified by</th>
             </tr>
-            {% for change in dirt.change_history %}
+            {% for change in defect.change_history %}
             <tr>
               <td>
                   {{ change.date_created | date:"d-m-Y f a" }}

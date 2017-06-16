@@ -5,7 +5,7 @@
 
 <h4>Enter release info and reason for this defect to be reopened.</h4>
 
-<form class="myform" action="{% url 'defects:reopen' dirt.id %}" method="post">
+<form class="myform" action="{% url 'defects:reopen' defect.id %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Submit" />

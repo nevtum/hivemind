@@ -19,9 +19,9 @@ def begin_import(request):
             request.session['defects'] = import_data(request)
             return redirect('defects:imports:complete-import')
         else:
-            return render(request, 'begin_import.html', {'form': form})
+            return render(request, 'defects/begin_import.html', {'form': form})
     form = ImportDefectsForm()
-    return render(request, 'begin_import.html', {'form': form})
+    return render(request, 'defects/begin_import.html', {'form': form})
 
 def import_event(defect):
     return {
@@ -84,4 +84,4 @@ def complete_import(request):
         'defects': defects,
         'project': project
     }
-    return render(request, 'confirm_import.html', res)
+    return render(request, 'defects/confirm_import.html', res)

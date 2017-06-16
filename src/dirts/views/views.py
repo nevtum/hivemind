@@ -86,7 +86,6 @@ def debug(request, pk):
 
 class DefectCreateView(CreateView):
     template_name = 'defects/create.html'
-    context_object_name = 'dirt'
     form_class = CreateDefectForm
 
     def form_valid(self, form):
@@ -104,7 +103,6 @@ class DefectCopyView(DefectCreateView, UpdateView):
 class DefectUpdateView(UpdateView):
     model = Defect
     template_name = 'defects/amend.html'
-    context_object_name = 'dirt'
     form_class = CreateDefectForm
     
     def form_valid(self, form):
@@ -115,7 +113,6 @@ class DefectUpdateView(UpdateView):
 class DefectCloseView(UpdateView):
     model = Defect
     template_name = 'defects/close.html'
-    context_object_name = 'dirt'
     form_class = CloseDefectForm
     
     def form_valid(self, form):
@@ -128,7 +125,6 @@ class DefectCloseView(UpdateView):
 class DefectLockView(UpdateView):
     model = Defect
     template_name = 'defects/lock.html'
-    context_object_name = 'defect'
     form_class = LockDefectForm
 
     def form_valid(self, form):
@@ -144,7 +140,6 @@ class DefectLockView(UpdateView):
 class DefectReopenView(UpdateView):
     model = Defect
     template_name = 'defects/reopen.html'
-    context_object_name = 'dirt'
     form_class = ReopenDefectForm
     
     def form_valid(self, form):
@@ -157,7 +152,7 @@ class DefectReopenView(UpdateView):
 class EditTagsView(UpdateView):
     model = Defect
     form_class = TagsForm
-    context_object_name = 'dirt'
+    context_object_name = 'defect'
     template_name = 'defects/edit_tags.html'
 
 @user_passes_test(lambda u: u.is_staff)

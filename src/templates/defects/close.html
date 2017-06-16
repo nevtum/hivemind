@@ -6,7 +6,7 @@
 <h4>Enter release info for this defect to be closed.</h4>
 <p><i>Note: Details field is optional.</i></p>
 
-<form class="myform" action="{% url 'defects:close' dirt.id %}" method="post">
+<form class="myform" action="{% url 'defects:close' defect.id %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Close" />

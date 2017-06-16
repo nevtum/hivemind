@@ -10,7 +10,7 @@
 </h4>
 <p><i>Note: Tags containing multiple words must be enclosed in quotations (eg. "Audit Mode"). Otherwise words get split into multiple tags.</i></p>
 
-<form class="myform" action="{% url 'defects:tags' dirt.id %}" method="post">
+<form class="myform" action="{% url 'defects:tags' defect.id %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Save" />
