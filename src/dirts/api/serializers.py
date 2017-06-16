@@ -19,7 +19,7 @@ class UserSerializer(serializers.Serializer):
         return "{0} {1}".format(user.first_name, user.last_name)
 
 class CreateDefectSerializer(serializers.ModelSerializer):
-    priority = serializers.CharField(max_length=100)
+    priority = serializers.CharField(max_length=20)
 
     def create(self, validated_data):
         priority = Priority.objects.get(name=validated_data.pop('priority'))
