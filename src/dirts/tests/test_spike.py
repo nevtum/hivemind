@@ -1,47 +1,17 @@
-from common.models import DomainEvent, Manufacturer, Project
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
 
+from common.models import DomainEvent, Manufacturer, Project
+
+from ..constants import RESOLVED
 from ..forms import CreateDefectForm
 from ..models import Defect, Priority, Status
-from ..constants import RESOLVED
+from .fixtures import DjangoFakeUserLoginMixin, TestFixtureMixin
 
 
-class TestFixtureMixin:  
-    @staticmethod
-    def _load_fixtures():
-        manufacturer = Manufacturer.objects.create(
-            name='Example Manufacturer',
-            is_operational=True
-        )
-        Project.objects.create(
-            code='ABC.123',
-            manufacturer=manufacturer,
-            description='Project 1',
-            date_created=timezone.now()
-        )
-        Project.objects.create(
-            code='ABC.321',
-            manufacturer=manufacturer,
-            description='Project 2',
-            date_created=timezone.now()
-        )
-    
-    def _login_fake_user(self):
-        username = 'test_user'
-        email = 'test@test.com'
-        password = 'test_password'
-        self.test_user = User.objects.create_user(username, email, password)
-        login = self.client.login(username='test_user', password='test_password')
-        self.assertEqual(login, True)
-
-    def setUp(self):
-        self._load_fixtures()
-        self._login_fake_user()
-
-class DefectCommentAcceptanceTests(TestFixtureMixin, TestCase):
+class DefectCommentAcceptanceTests(TestFixtureMixin, DjangoFakeUserLoginMixin, TestCase):
     def test_comment_added_to_defect(self):
         kwargs = {
             'project_code': 'ABC.123',
@@ -79,8 +49,7 @@ class DefectCommentAcceptanceTests(TestFixtureMixin, TestCase):
     def test_comment_deleted(self):
         pass
         
-
-class DefectAcceptanceTests(TestFixtureMixin, TestCase):
+class DefectAcceptanceTests(TestFixtureMixin, DjangoFakeUserLoginMixin, TestCase):
     @staticmethod
     def _test_form_data_with_comments():
         return {

@@ -5,34 +5,9 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from common.models import DomainEvent, Manufacturer, Project
+from .fixtures import TestFixtureMixin, RestFrameworkFakeUserLoginMixin
 
-
-class DefectAPITests(APITestCase):
-    def _load_fixtures(self):
-        manufacturer = Manufacturer.objects.create(
-            name='Example Manufacturer',
-            is_operational=True
-        )
-        Project.objects.create(
-            code='ABC.123',
-            manufacturer=manufacturer,
-            description='Project 1',
-            date_created=timezone.now()
-        )
-        Project.objects.create(
-            code='ABC.321',
-            manufacturer=manufacturer,
-            description='Project 2',
-            date_created=timezone.now()
-        )
-    def setUp(self):
-        self._load_fixtures()
-        username = 'test_user'
-        email = 'test@test.com'
-        password = 'test_password'
-        user = User.objects.create_user(username, email, password)
-        self.client.force_authenticate(user)
-    
+class DefectAPITests(TestFixtureMixin, RestFrameworkFakeUserLoginMixin, APITestCase):
     def test_create_new_defect(self):
         data = { 
             'project_code': 'ABC.321',
