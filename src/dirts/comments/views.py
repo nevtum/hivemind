@@ -14,7 +14,7 @@ def comments_for_defect(request, pk):
         'comments': comments,
         'form': CommentEditForm()
     }
-    return render(request, 'defect_comments.html', res)
+    return render(request, 'defects/defect_comments.html', res)
 
 def add_comment_for_defect(request, pk):
     form = CommentEditForm(request.POST or None)

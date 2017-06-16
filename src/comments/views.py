@@ -15,7 +15,7 @@ class OwnerOr403Mixin:
 
 class CommentEditView(OwnerOr403Mixin, UpdateView):
     model = Comment
-    template_name = 'edit_comment.html'
+    template_name = 'comments/edit_comment.html'
     context_object_name = 'comment'
     form_class = CommentEditForm
 
@@ -27,7 +27,7 @@ class CommentEditView(OwnerOr403Mixin, UpdateView):
 
 class CommentDeleteView(OwnerOr403Mixin, DeleteView):
     model = Comment
-    template_name = 'delete_comment.html'
+    template_name = 'comments/delete_comment.html'
     context_object_name = 'comment'
 
     def delete(self, request, *args, **kwargs):

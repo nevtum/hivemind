@@ -11,7 +11,7 @@ from .models import SignupRequest
 class SignupRequestView(CreateView):
     model = SignupRequest
     form_class = SignupForm
-    template_name = 'register.html'
+    template_name = 'accounts/register.html'
 
     def form_valid(self, form):
         sr = form.instance
@@ -20,7 +20,7 @@ class SignupRequestView(CreateView):
         return redirect('accounts:thanks')
 
 def register_complete(request):
-    return render(request, 'wait_admin.html')
+    return render(request, 'accounts/wait_admin.html')
 
 # not best practice to mutate data on a get request
 @user_passes_test(lambda u: u.is_staff)
@@ -39,7 +39,7 @@ def approve_registration(request, pk):
 class SignupListView(ListView):
     queryset = SignupRequest.objects.filter(pending_approval=True)
     context_object_name = 'registrations'
-    template_name = 'registrations.html'
+    template_name = 'accounts/registrations.html'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):        

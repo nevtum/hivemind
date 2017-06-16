@@ -16,12 +16,12 @@ from ..mixins import DefectSearchMixin
 
 
 class TagsListView(ListView):
-    template_name = 'tag_list.html'
+    template_name = 'defects/tag_list.html'
     queryset = Defect.objects.top_tags()
 
 class DefectListView(DefectSearchMixin, ListView):
     queryset = Defect.objects.all()
-    template_name = 'dirt_list.html'
+    template_name = 'defects/dirt_list.html'
     context_object_name = 'defects'
     paginate_by = 25
 
@@ -34,7 +34,7 @@ class RecentlyChangedDefectListView(DefectListView):
 class DefectDetailView(DetailView):
     model = Defect
     context_object_name = 'model'
-    template_name = 'detail.html'
+    template_name = 'defects/detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(DefectDetailView, self).get_context_data(**kwargs)
@@ -45,7 +45,7 @@ class DefectDetailView(DetailView):
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     queryset = Defect.objects.filter(tags__name__in=[tag.name]).distinct()
-    return render(request, 'dirt_list.html', {'defects': queryset})
+    return render(request, 'defects/dirt_list.html', {'defects': queryset})
 
 def time_travel(request, pk, day, month, year):
     day = int(day)
@@ -54,7 +54,7 @@ def time_travel(request, pk, day, month, year):
     before_date = timezone.datetime(year, month, day)
     before_date += timezone.timedelta(days=1)
     defect = get_object_or_404(Defect, pk=pk)
-    return render(request, 'detail.html', { 'model': defect })
+    return render(request, 'defects/detail.html', { 'model': defect })
 
 def report(request):
     if request.GET.get('project_code'):
@@ -71,10 +71,10 @@ def report(request):
                 'defects': items,
                 'project': project
             }
-            return render(request, 'report_request.html', res)
+            return render(request, 'defects/report_request.html', res)
     else:
         form = ViewDirtReportForm()
-        return render(request, 'report_request.html', { 'form': form })
+        return render(request, 'defects/report_request.html', { 'form': form })
 
 @user_passes_test(lambda u: u.is_superuser)
 def debug(request, pk):
@@ -82,10 +82,10 @@ def debug(request, pk):
     data = {
         'stream': EventStore.get_events_for('DEFECT', pk)
     }
-    return render(request, 'debug.html', data)
+    return render(request, 'defects/debug.html', data)
 
 class DefectCreateView(CreateView):
-    template_name = 'create.html'
+    template_name = 'defects/create.html'
     context_object_name = 'dirt'
     form_class = CreateDirtForm
 
@@ -103,7 +103,7 @@ class DefectCopyView(DefectCreateView, UpdateView):
 
 class DefectUpdateView(UpdateView):
     model = Defect
-    template_name = 'amend.html'
+    template_name = 'defects/amend.html'
     context_object_name = 'dirt'
     form_class = CreateDirtForm
     
@@ -114,7 +114,7 @@ class DefectUpdateView(UpdateView):
 
 class DefectCloseView(UpdateView):
     model = Defect
-    template_name = 'close.html'
+    template_name = 'defects/close.html'
     context_object_name = 'dirt'
     form_class = CloseDirtForm
     
@@ -127,7 +127,7 @@ class DefectCloseView(UpdateView):
 
 class DefectLockView(UpdateView):
     model = Defect
-    template_name = 'lock.html'
+    template_name = 'defects/lock.html'
     context_object_name = 'defect'
     form_class = LockDefectForm
 
@@ -143,7 +143,7 @@ class DefectLockView(UpdateView):
 
 class DefectReopenView(UpdateView):
     model = Defect
-    template_name = 'reopen.html'
+    template_name = 'defects/reopen.html'
     context_object_name = 'dirt'
     form_class = ReopenDirtForm
     
@@ -158,13 +158,13 @@ class EditTagsView(UpdateView):
     model = Defect
     form_class = TagsForm
     context_object_name = 'dirt'
-    template_name = 'edit_tags.html'
+    template_name = 'defects/edit_tags.html'
 
 @user_passes_test(lambda u: u.is_staff)
 @login_required(login_url='/login/')
 def delete(request, pk):
     if request.method == 'GET':
-        return render(request, 'delete_confirmation.html', {'id': pk})
+        return render(request, 'defects/delete_confirmation.html', {'id': pk})
 
     defect = Defect.objects.get(pk=pk)
     defect_model = defect.as_domainmodel()
