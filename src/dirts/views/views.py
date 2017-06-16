@@ -16,12 +16,12 @@ from ..mixins import DefectSearchMixin
 
 
 class TagsListView(ListView):
-    template_name = 'defects/tag_list.html'
+    template_name = 'defects/tags.html'
     queryset = Defect.objects.top_tags()
 
 class DefectListView(DefectSearchMixin, ListView):
     queryset = Defect.objects.all()
-    template_name = 'defects/dirt_list.html'
+    template_name = 'defects/list.html'
     context_object_name = 'defects'
     paginate_by = 25
 
@@ -45,7 +45,7 @@ class DefectDetailView(DetailView):
 def dirts_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     queryset = Defect.objects.filter(tags__name__in=[tag.name]).distinct()
-    return render(request, 'defects/dirt_list.html', {'defects': queryset})
+    return render(request, 'defects/list.html', {'defects': queryset})
 
 def time_travel(request, pk, day, month, year):
     day = int(day)
@@ -71,10 +71,10 @@ def report(request):
                 'defects': items,
                 'project': project
             }
-            return render(request, 'defects/report_request.html', res)
+            return render(request, 'defects/summary.html', res)
     else:
         form = ViewDirtReportForm()
-        return render(request, 'defects/report_request.html', { 'form': form })
+        return render(request, 'defects/summary.html', { 'form': form })
 
 @user_passes_test(lambda u: u.is_superuser)
 def debug(request, pk):
@@ -164,7 +164,7 @@ class EditTagsView(UpdateView):
 @login_required(login_url='/login/')
 def delete(request, pk):
     if request.method == 'GET':
-        return render(request, 'defects/delete_confirmation.html', {'id': pk})
+        return render(request, 'defects/confirm_delete.html', {'id': pk})
 
     defect = Defect.objects.get(pk=pk)
     defect_model = defect.as_domainmodel()
