@@ -43,8 +43,8 @@ class DomainEventWriteSerializer(serializers.ModelSerializer):
         )
     
     def create(self, validated_data):
-        validated_data['blob'] = json.dumps(validated_data['blob'], indent=2)
-        return DomainEvent.objects.create(**validated_data)
+        blob = json.dumps(validated_data.pop('blob'), indent=2)
+        return DomainEvent.objects.create(blob=blob, **validated_data)
     
     def validate_created_by(self, value):
         if not User.objects.filter(username=value).exists():
