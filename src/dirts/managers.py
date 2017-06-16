@@ -4,7 +4,11 @@ from django.db.models import Q
 
 class DefectsManager(models.Manager):
     def get_queryset(self):
-        return super(DefectsManager, self).get_queryset().order_by('-date_created')
+        qs = super(DefectsManager, self).get_queryset().order_by('-date_created')
+        qs = qs.select_related('status')
+        qs = qs.select_related('priority')
+        qs = qs.select_related('submitter')
+        return qs
         
     def active(self):
         return self.filter(status__name='Open')
