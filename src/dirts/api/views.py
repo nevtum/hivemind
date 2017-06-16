@@ -139,11 +139,8 @@ class AutoCompleteDefectTitles(viewsets.ReadOnlyModelViewSet):
     paginator = None
 
     def get_queryset(self):
-        keyword = self.request.GET.get('q', '')
-        if len(keyword) <= 2:
+        q = self.request.GET.get('q', '')
+        if len(q) <= 2:
             return []
-
-        result_set = Defect.objects.filter(reference__icontains=keyword)
-        result_set = result_set.distinct()
-        result_set = map(lambda x: {'label' : x.reference, 'value': x.reference}, result_set[:10])
-        return list(result_set)
+        else:
+            return Defect.objects.filter(reference__icontains=q)[:10]

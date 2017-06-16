@@ -18,8 +18,17 @@ class StatusSerializer(serializers.ModelSerializer):
         model = Status
 
 class SuggestionSerializer(serializers.Serializer):
-    label = serializers.CharField()
-    value = serializers.CharField()
+    label = serializers.SerializerMethodField()
+    value = serializers.SerializerMethodField()
+
+    def get_label(self, obj):
+        return obj.reference
+    
+    def get_value(self, obj):
+        return obj.reference
+
+    class Meta:
+        model = Defect
 
 class UserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=100)
