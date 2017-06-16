@@ -19,6 +19,12 @@ class UserSerializer(serializers.Serializer):
         return "{0} {1}".format(user.first_name, user.last_name)
 
 class CreateDefectSerializer(serializers.ModelSerializer):
+    priority = serializers.CharField(max_length=100)
+
+    def create(self, validated_data):
+        priority = Priority.objects.get(name=validated_data.pop('priority'))
+        return Defect(priority=priority, **validated_data)
+
     class Meta:
         model = Defect
         fields = (
