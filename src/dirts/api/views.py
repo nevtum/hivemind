@@ -13,8 +13,9 @@ from common.models import Project
 from ..mixins import DefectSearchMixin
 from ..models import Defect, Priority, Status
 from .serializers import (CreateDefectSerializer, DefectSerializer,
-                          MoreLikeThisSerializer, PrioritySerializer,
-                          StatusSerializer, SuggestionSerializer)
+                          DefectSuggestionSerializer, MoreLikeThisSerializer,
+                          PrioritySerializer, ProjectSuggestionSerializer,
+                          StatusSerializer)
 
 
 class PriorityViewSet(viewsets.ReadOnlyModelViewSet):
@@ -112,7 +113,7 @@ class AutoCompleteProjects(viewsets.ReadOnlyModelViewSet):
     Returns a list of max 10 projects that match the [keyword]
     specified in ?q=[keyword] query string.
     """
-    serializer_class = SuggestionSerializer
+    serializer_class = ProjectSuggestionSerializer
     permission_classes = (AllowAny,)
     paginator = None
 
@@ -120,27 +121,23 @@ class AutoCompleteProjects(viewsets.ReadOnlyModelViewSet):
         keyword = self.request.GET.get('q', '')
         if len(keyword) <= 2:
             return []
-
-        results = []
-        for obj in Project.objects.search(keyword)[:10]:
-            results.append({
-                'label': "{} - {}".format(obj.code, obj.description),
-                'value': obj.code
-            })
-        return results
+        else:
+            qs = Project.objects.search(keyword)
+            return qs[:10]
 
 class AutoCompleteDefectTitles(viewsets.ReadOnlyModelViewSet):
     """
     Returns a list of max 10 defects where their title
     matches the [keyword] specified in ?q=[keyword] query string.
     """
-    serializer_class = SuggestionSerializer
+    serializer_class = DefectSuggestionSerializer
     permission_classes = (AllowAny,)
     paginator = None
 
     def get_queryset(self):
-        q = self.request.GET.get('q', '')
-        if len(q) <= 2:
+        keyword = self.request.GET.get('q', '')
+        if len(keyword) <= 2:
             return []
         else:
-            return Defect.objects.filter(reference__icontains=q)[:10]
+            qs = Defect.objects.filter(reference__icontains=keyword)
+            return qs[:10]

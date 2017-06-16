@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+from common.models import Project
 from ..models import Defect, Priority, Status
 
 class PrioritySerializer(serializers.ModelSerializer):
@@ -17,7 +18,20 @@ class StatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = Status
 
-class SuggestionSerializer(serializers.Serializer):
+class ProjectSuggestionSerializer(serializers.Serializer):
+    label = serializers.SerializerMethodField()
+    value = serializers.SerializerMethodField()
+
+    def get_label(self, obj):
+        return "{} - {}".format(obj.code, obj.description)
+    
+    def get_value(self, obj):
+        return obj.code
+
+    class Meta:
+        model = Project
+
+class DefectSuggestionSerializer(serializers.Serializer):
     label = serializers.SerializerMethodField()
     value = serializers.SerializerMethodField()
 
