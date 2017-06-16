@@ -1,19 +1,14 @@
 import json
 
 from .models import DomainEvent
-from .serializers import DomainEventReadSerializer, DomainEventWriteSerializer
+from .api.serializers import DomainEventReadSerializer, DomainEventWriteSerializer
 
 def get_event_count(agg_type, agg_id):
-	queryset = DomainEvent.objects.filter(aggregate_type=agg_type, aggregate_id=agg_id)
+	queryset = DomainEvent.objects.belong_to(agg_type, agg_id)
 	return queryset.count()
 
 def get_events_for(agg_type, agg_id, end_date = None):
-	queryset = DomainEvent.objects.filter(aggregate_type=agg_type, aggregate_id=agg_id)
-	queryset = queryset.order_by('sequence_nr')
-
-	if end_date:
-		queryset = queryset.filter(date_occurred__lte=end_date)		
-	
+	queryset = DomainEvent.objects.belong_to(agg_type, agg_id, end_date)
 	return DomainEventReadSerializer(queryset, many=True).data
 	
 def append_next(event_dto):

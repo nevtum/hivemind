@@ -3,7 +3,7 @@ import json
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import DomainEvent, Project, Manufacturer
+from ..models import DomainEvent, Project, Manufacturer
 
 class ManufacturerSerializer(serializers.ModelSerializer):
     class Meta:

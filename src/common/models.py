@@ -2,7 +2,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 
-from .managers import ProjectsManager
+from .managers import ProjectsManager, DomainEventManager
 
 
 class Manufacturer(models.Model):
@@ -36,6 +36,7 @@ class DomainEvent(models.Model):
     blob = models.TextField()
     date_occurred = models.DateTimeField()
     username = models.CharField(max_length=50)
+    objects = DomainEventManager()
     
     def save(self, *args, **kwargs):
         if not self.id:

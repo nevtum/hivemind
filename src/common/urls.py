@@ -2,7 +2,8 @@ from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required as auth
 
 from .handler_views import accept
-from .views import CreateProjectView, EditProjectView, ProjectListView, ProjectsViewSet, CustomerViewSet
+from .views import CreateProjectView, EditProjectView, ProjectListView
+from .api.views import ProjectsViewSet, CustomerViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
