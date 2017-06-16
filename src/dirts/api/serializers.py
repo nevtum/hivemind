@@ -3,6 +3,19 @@ from django.contrib.auth.models import User
 
 from ..models import Defect, Priority, Status
 
+class PrioritySerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        return obj.name
+        
+    class Meta:
+        model = Priority
+
+class StatusSerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        return obj.name
+
+    class Meta:
+        model = Status
 
 class SuggestionSerializer(serializers.Serializer):
     label = serializers.CharField()

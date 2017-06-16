@@ -11,10 +11,23 @@ from common import store as EventStore
 from common.models import Project
 
 from ..mixins import DefectSearchMixin
-from ..models import Defect
+from ..models import Defect, Priority, Status
 from .serializers import (CreateDefectSerializer, DefectSerializer,
-                          MoreLikeThisSerializer, SuggestionSerializer)
+                          MoreLikeThisSerializer, PrioritySerializer,
+                          StatusSerializer, SuggestionSerializer)
 
+
+class PriorityViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Priority.objects.all()
+    paginator = None
+    permission_classes = (AllowAny,)
+    serializer_class = PrioritySerializer
+
+class StatusViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Status.objects.all()
+    paginator = None
+    permission_classes = (AllowAny,)
+    serializer_class = StatusSerializer
 
 class CreateDefectView(generics.CreateAPIView):
     serializer_class = CreateDefectSerializer
@@ -33,7 +46,6 @@ class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
     pagination_class = LimitOffsetPagination
-    max_limit = 50
     permission_classes = (AllowAny,)
 
     def retrieve(self, request, *args, **kwargs):
