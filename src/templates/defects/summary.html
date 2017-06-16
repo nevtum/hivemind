@@ -61,25 +61,25 @@
             <th>Level</th>
             <th>Date Logged</th>
           </tr>
-          {% for dirt in defects %}
+          {% for defect in defects %}
           <tr>
-            <td>{{ dirt.id }}</td>
-            <td>{{ dirt.owner }}</td>
+            <td>{{ defect.id }}</td>
+            <td>{{ defect.owner }}</td>
             <td>
-              <p>Version: {{ dirt.version }}</p>
-              <p>Summary: {{ dirt.reference }}</p>
+              <p>Version: {{ defect.version }}</p>
+              <p>Summary: {{ defect.reference }}</p>
               <p>Description:</p>
-              <p>{{ dirt.description | linebreaksbr }}</p>
-              {% if dirt.comments %}
+              <p>{{ defect.description | linebreaksbr }}</p>
+              {% if defect.comments %}
                 <br>
                 <p>Comments:</p>
-                <p>{{ dirt.comments | linebreaksbr }}</p>
+                <p>{{ defect.comments | linebreaksbr }}</p>
               {% endif %}
               </p>
             </td>
-            <td>{{ dirt.status }}</td>
-            <td>{{ dirt.level }}</td>
-            <td>{{ dirt.date_logged | date:"d/m/Y" }}</td>
+            <td>{{ defect.status }}</td>
+            <td>{{ defect.level }}</td>
+            <td>{{ defect.date_logged | date:"d/m/Y" }}</td>
           </tr>
           {% endfor %}
         </tbody>

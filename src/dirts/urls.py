@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^most-recent/$', views.RecentlyChangedDefectListView.as_view(), name='recent'),
     url(r'^create/', auth(views.DefectCreateView.as_view()), name='create'),
     url(r'^tags/$', views.TagsListView.as_view(), name='tags-list'),
-    url(r'^tags/(?P<slug>[-\w\d]+)/$', views.dirts_by_tag, name='filter-by-tag'),
+    url(r'^tags/(?P<slug>[-\w\d]+)/$', views.defects_by_tag, name='filter-by-tag'),
     url(r'^(?P<pk>\d+?)/create-similar/$', auth(views.DefectCopyView.as_view()), name='create-similar'),
     url(r'^(?P<pk>\d+?)/$', views.DefectDetailView.as_view(), name='detail'),
     url(r'^(?P<pk>\d+?)/debug/$', views.debug),

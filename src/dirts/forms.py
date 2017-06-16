@@ -7,7 +7,7 @@ from .models import Defect
 
 
 class DefectSummaryForm(ModelForm, forms.Form):
-    prior_to_date = forms.DateField(initial=timezone.now)
+    end_date = forms.DateField(initial=timezone.now)
     show_active_only = forms.BooleanField(required=False, initial=True)
     
     class Meta:

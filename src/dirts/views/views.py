@@ -42,7 +42,7 @@ class DefectDetailView(DetailView):
         context['comment_count'] = comments.count()
         return context
 
-def dirts_by_tag(request, slug):
+def defects_by_tag(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     queryset = Defect.objects.filter(tags__name__in=[tag.name]).distinct()
     return render(request, 'defects/list.html', {'defects': queryset})
@@ -51,8 +51,9 @@ def time_travel(request, pk, day, month, year):
     day = int(day)
     month = int(month)
     year = int(year)
-    before_date = timezone.datetime(year, month, day)
-    before_date += timezone.timedelta(days=1)
+    # view appears to be broken
+    end_date = timezone.datetime(year, month, day)
+    end_date += timezone.timedelta(days=1)
     defect = get_object_or_404(Defect, pk=pk)
     return render(request, 'defects/detail.html', { 'model': defect })
 
@@ -62,16 +63,19 @@ def report(request):
         if form.is_valid():
             project_code = form.data['project_code']
             # need a better timezone aware datetime implementation
-            freeze_date = dateparse.parse_date(form.data['prior_to_date'])
-            freeze_date += timezone.timedelta(days=1)
+            end_date = dateparse.parse_date(form.data['end_date'])
+            end_date += timezone.timedelta(days=1)
             show_active = form.data.get('show_active_only') is not None
-            project, items = defect_summary(project_code, freeze_date, show_active)
+            project, items = defect_summary(project_code, end_date, show_active)
             res = {
                 'form': form,
                 'defects': items,
                 'project': project
             }
             return render(request, 'defects/summary.html', res)
+        else:
+            # to refactor later
+            raise Exception("Must specify end_date")
     else:
         form = DefectSummaryForm()
         return render(request, 'defects/summary.html', { 'form': form })
