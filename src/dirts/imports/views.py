@@ -27,7 +27,7 @@ def import_event(defect):
     return {
         'sequence_nr': 0,
         'aggregate_id': defect.id,
-        'aggregate_type': 'DEFECT',
+        'aggregate_type': 'defect',
         'event_type': DEFECT_IMPORTED,
         'created': defect.date_created,
         'created_by': defect.submitter,
