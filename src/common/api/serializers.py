@@ -54,19 +54,26 @@ class DomainEventWriteSerializer(serializers.ModelSerializer):
 class DomainEventReadSerializer(serializers.ModelSerializer):
     payload = serializers.SerializerMethodField()
     created = serializers.SerializerMethodField()
+    aggregate_id = serializers.CharField(source='object_id')
+    aggregate_type = serializers.SerializerMethodField()
     created_by = serializers.CharField(source='owner.username')
 
     class Meta:
         model = DomainEvent
         fields = (
             'sequence_nr',
-            'object_id',
-            'content_type',
+            'aggregate_id',
+            'aggregate_type',
             'event_type',
             'created_by',
             'created',
             'payload',
         )
+    
+    def get_aggregate_type(self, obj):
+        # makes mulitple hits to the db
+        # get prefetch working to solve this
+        return obj.content_type.name
     
     def get_created(self, obj):
         return obj.date_occurred

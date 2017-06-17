@@ -21,7 +21,7 @@ class SimilarContentAware:
 
 class EventSourceAware:
     def as_domainmodel(self, before_date = None):
-        events = EventStore.get_events_for('DEFECT', self.id, before_date)
+        events = EventStore.get_events_for(self, before_date)
         return DefectViewModel(events)
     
     def amend(self, user):

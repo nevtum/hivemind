@@ -83,8 +83,9 @@ def report(request):
 @user_passes_test(lambda u: u.is_superuser)
 def debug(request, pk):
     """admin specific view to inspect event sources"""
+    instance = Defect.objects.get(pk=pk)
     data = {
-        'stream': EventStore.get_events_for('DEFECT', pk)
+        'stream': EventStore.get_events_for(instance)
     }
     return render(request, 'defects/debug.html', data)
 

@@ -8,6 +8,6 @@ def defect_activities(code):
         content_type=ContentType.objects.get_for_model(Defect),
         object_id__in=defect_ids
     )
-    events = events.select_related('owner')
+    events = events.select_related('owner', 'content_type')
     events = events.order_by('object_id', 'sequence_nr')
     return events
