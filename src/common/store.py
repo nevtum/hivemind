@@ -11,8 +11,7 @@ def get_event_count(agg_type, agg_id):
 def get_events_for(instance, end_date = None):
 	content_type = ContentType.objects.get_for_model(instance.__class__)
 	queryset = DomainEvent.objects.belong_to(content_type, instance.id)
-	queryset = queryset.select_related('owner')
-	queryset = queryset.prefetch_related('content_object')
+	queryset = queryset.select_related('owner', 'content_type')
 	if end_date:
 		queryset = queryset.filter(date_occurred__lte=end_date)
 	return DomainEventReadSerializer(queryset, many=True).data
