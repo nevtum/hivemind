@@ -28,14 +28,14 @@ class ProjectSerializer(serializers.ModelSerializer):
 class DomainEventWriteSerializer(serializers.ModelSerializer):
     payload = serializers.JSONField(source='blob')
     created = serializers.DateTimeField(source='date_occurred')
-    created_by = serializers.CharField(source='username')
+    created_by = serializers.CharField(source='owner.username')
 
     class Meta:
         model = DomainEvent
         fields = (
             'sequence_nr',
-            'aggregate_id',
-            'aggregate_type',
+            'object_id',
+            'content_type',
             'event_type',
             'payload',
             'created',
@@ -54,14 +54,14 @@ class DomainEventWriteSerializer(serializers.ModelSerializer):
 class DomainEventReadSerializer(serializers.ModelSerializer):
     payload = serializers.SerializerMethodField()
     created = serializers.SerializerMethodField()
-    created_by = serializers.CharField(source='username')
+    created_by = serializers.CharField(source='owner.username')
 
     class Meta:
         model = DomainEvent
         fields = (
             'sequence_nr',
-            'aggregate_id',
-            'aggregate_type',
+            'object_id',
+            'content_type',
             'event_type',
             'created_by',
             'created',
