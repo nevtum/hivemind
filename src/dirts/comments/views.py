@@ -9,6 +9,7 @@ from ..models import Defect
 
 def comments_for_defect(request, pk):
     comments = Comment.objects.filter(defect__id=pk)
+    comments = comments.select_related('author')
     res = {
         'pk': pk,
         'comments': comments,
