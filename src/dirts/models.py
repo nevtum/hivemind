@@ -76,6 +76,14 @@ class Defect(SimilarContentAware, EventSourceAware, models.Model):
         self.status = Status.objects.get(name='Closed')
         self.release_id = release_id
         self.save()
+    
+    def import_close(self, timestamp=None):
+        self.close(
+            self.submitter,
+            self.release_id,
+            '',
+            timestamp
+        )
         
     def save(self, *args, **kwargs):
         if not self.id:

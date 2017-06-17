@@ -52,15 +52,21 @@ def persist_closed_defect(json_data):
     updated_data['status'] = 'Open'
     closed_date = get_closed_date(updated_data)
     defect = persist_open_defect(updated_data)
-    defect.close_at(closed_date)
+    defect.import_close(closed_date)
 
 def persist_open_defect(json_data):
     serializer = ImportDefectSerializer(data=json_data)
     if not serializer.is_valid():
         raise Exception("Something went wrong with import!")
     defect = serializer.save()
-    imported_event = import_event(defect)
-    EventStore.append_next(imported_event)
+
+    ## Broke this functionality for now
+    ## since a handler is listinging on the
+    ## Defect created signal and automatically
+    ## creates a defect opened event. Therefore
+    ## a optimistic concurrency error occurs.
+    # imported_event = import_event(defect)
+    # EventStore.append_next(imported_event)
     return defect
 
 def persist_to_database(json_data):
