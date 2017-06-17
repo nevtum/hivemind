@@ -116,7 +116,6 @@ class AutoCompleteProjects(viewsets.ReadOnlyModelViewSet):
     """
     serializer_class = ProjectSuggestionSerializer
     permission_classes = (AllowAny,)
-    paginator = None
 
     def get_queryset(self):
         keyword = self.request.GET.get('q', '')
@@ -133,7 +132,6 @@ class AutoCompleteDefectTitles(viewsets.ReadOnlyModelViewSet):
     """
     serializer_class = DefectSuggestionSerializer
     permission_classes = (AllowAny,)
-    paginator = None
 
     def get_queryset(self):
         keyword = self.request.GET.get('q', '')
@@ -142,3 +140,18 @@ class AutoCompleteDefectTitles(viewsets.ReadOnlyModelViewSet):
         else:
             qs = Defect.objects.filter(reference__icontains=keyword)
             return qs[:10]
+
+
+from ..utils import defect_activities
+from common.api.serializers import DomainEventReadSerializer
+class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
+    """
+    Returns a list of defect activities which belongs to a project.
+    Matches the [keyword] specified in ?code=[keyword] query string.
+    """
+    serializer_class = DomainEventReadSerializer
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        code = self.request.GET.get('code', '')
+        return defect_activities(code)

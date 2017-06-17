@@ -12,6 +12,7 @@ router.register(r'status_list', views.StatusViewSet)
 router.register(r'priority_list', views.PriorityViewSet)
 router.register(r'suggest_defects', views.AutoCompleteDefectTitles, 'suggest')
 router.register(r'suggest_projects', views.AutoCompleteProjects, 'project-suggest')
+router.register(r'defect_activities', views.DefectActivitiesForProject, 'activities')
 
 
 urlpatterns = [
