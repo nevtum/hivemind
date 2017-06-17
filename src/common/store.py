@@ -8,7 +8,9 @@ def get_event_count(agg_type, agg_id):
 	return queryset.count()
 
 def get_events_for(agg_type, agg_id, end_date = None):
-	queryset = DomainEvent.objects.belong_to(agg_type, agg_id, end_date)
+	queryset = DomainEvent.objects.belong_to(agg_type, agg_id)
+	if end_date:
+		queryset = queryset.filter(date_occurred__lte=end_date)
 	return DomainEventReadSerializer(queryset, many=True).data
 	
 def append_next(event_dto):
