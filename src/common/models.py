@@ -1,8 +1,11 @@
+from django.contrib.auth.models import User
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 
-from .managers import ProjectsManager, DomainEventManager
+from .managers import DomainEventManager, ProjectsManager
 
 
 class Manufacturer(models.Model):
@@ -28,7 +31,16 @@ class Project(models.Model):
     def __str__(self):
         return self.code
 
-class DomainEvent(models.Model):
+class GenericRelationModel(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        abstract = True
+
+
+class DomainEvent(GenericRelationModel):
     sequence_nr = models.IntegerField()
     aggregate_id = models.IntegerField()
     aggregate_type = models.CharField(max_length=30)
@@ -36,6 +48,7 @@ class DomainEvent(models.Model):
     blob = models.TextField()
     date_occurred = models.DateTimeField()
     username = models.CharField(max_length=50)
+    owner = models.ForeignKey(User, on_delete=models.PROTECT)
     objects = DomainEventManager()
     
     def save(self, *args, **kwargs):
