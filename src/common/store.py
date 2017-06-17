@@ -4,8 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from .models import DomainEvent
 from .api.serializers import DomainEventReadSerializer, DomainEventWriteSerializer
 
-def get_event_count(agg_type, agg_id):
-	queryset = DomainEvent.objects.belong_to(agg_type, agg_id)
+def get_event_count(content_type, object_id):
+	queryset = DomainEvent.objects.belong_to(content_type, object_id)
 	return queryset.count()
 
 def get_events_for(instance, end_date = None):
@@ -18,8 +18,10 @@ def get_events_for(instance, end_date = None):
 
 def append_next(event_dto):
 	"""Throws an exception if expected_seq_nr does
-	not match with last event for aggregate_id in the database"""	
-	expected_sequence_nr = get_event_count(event_dto['aggregate_type'], event_dto['aggregate_id'])
+	not match with last event for aggregate_id in the database"""
+	content_type = ContentType.objects.get(model=event_dto['aggregate_type'])
+	object_id = event_dto['aggregate_id']
+	expected_sequence_nr = get_event_count(content_type, object_id)
 	
 	if event_dto['sequence_nr'] != expected_sequence_nr:
 		raise Exception("Optimistic concurrency error!")

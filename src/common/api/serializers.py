@@ -1,9 +1,11 @@
 import json
 
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from ..models import DomainEvent, Project, Manufacturer
+from ..models import DomainEvent, Manufacturer, Project
+
 
 class ManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,14 +30,16 @@ class ProjectSerializer(serializers.ModelSerializer):
 class DomainEventWriteSerializer(serializers.ModelSerializer):
     payload = serializers.JSONField(source='blob')
     created = serializers.DateTimeField(source='date_occurred')
-    created_by = serializers.CharField(source='owner.username')
+    created_by = serializers.CharField()
+    aggregate_type = serializers.CharField()
+    aggregate_id = serializers.CharField()
 
     class Meta:
         model = DomainEvent
         fields = (
             'sequence_nr',
-            'object_id',
-            'content_type',
+            'aggregate_id',
+            'aggregate_type',
             'event_type',
             'payload',
             'created',
@@ -43,8 +47,18 @@ class DomainEventWriteSerializer(serializers.ModelSerializer):
         )
     
     def create(self, validated_data):
+        ct_name = validated_data.pop('aggregate_type')
+        content_type = ContentType.objects.get(model=ct_name)
+        object_id = validated_data.pop('aggregate_id')
         blob = json.dumps(validated_data.pop('blob'), indent=2)
-        return DomainEvent.objects.create(blob=blob, **validated_data)
+        owner = User.objects.get(username=validated_data.pop('created_by'))
+        return DomainEvent.objects.create(
+            owner=owner,
+            content_type=content_type,
+            object_id=object_id,
+            blob=blob,
+            **validated_data
+        )
     
     def validate_created_by(self, value):
         if not User.objects.filter(username=value).exists():
@@ -71,8 +85,6 @@ class DomainEventReadSerializer(serializers.ModelSerializer):
         )
     
     def get_aggregate_type(self, obj):
-        # makes mulitple hits to the db
-        # get prefetch working to solve this
         return obj.content_type.name
     
     def get_created(self, obj):

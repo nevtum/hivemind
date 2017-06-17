@@ -95,7 +95,7 @@ class DefectViewModel(object):
         return {
             'sequence_nr': self.last_sequence_nr + 1,
             'aggregate_id': self.id,
-            'aggregate_type': 'DEFECT',
+            'aggregate_type': 'defect',
             'created': created,
             'created_by': username,
             'event_type': event_type,
