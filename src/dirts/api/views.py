@@ -3,11 +3,11 @@ from rest_framework import generics, viewsets
 from rest_framework.decorators import (api_view, detail_route,
                                        permission_classes)
 from rest_framework.exceptions import ParseError
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from common import store as EventStore
+from common.api.pagination import CustomLimitOffsetPagination
 from common.models import Project
 
 from ..mixins import DefectSearchMixin
@@ -46,8 +46,9 @@ class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
     query_string_key = 'q'
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
-    pagination_class = LimitOffsetPagination
     permission_classes = (AllowAny,)
+    pagination_class = CustomLimitOffsetPagination
+
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
