@@ -42,12 +42,9 @@ class GenericRelationModel(models.Model):
 
 class DomainEvent(GenericRelationModel):
     sequence_nr = models.IntegerField()
-    aggregate_id = models.IntegerField()
-    aggregate_type = models.CharField(max_length=30)
     event_type = models.CharField(max_length=100)
     blob = models.TextField()
     date_occurred = models.DateTimeField()
-    username = models.CharField(max_length=50)
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
     objects = DomainEventManager()
     
@@ -60,9 +57,9 @@ class DomainEvent(GenericRelationModel):
     def __str__(self):
         return "{} {} {}".format(
             self.id,
-            self.aggregate_type,
+            self.content_object,
             self.blob
         )
     
     class Meta:
-        unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),)
+        unique_together = (("content_type", "object_id", "sequence_nr"),)

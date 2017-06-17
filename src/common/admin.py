@@ -5,13 +5,13 @@ class EventAdmin(admin.ModelAdmin):
 	list_display = (
         'id',
         'date_occurred',
-        'aggregate_id',
-        'aggregate_type',
+        'object_id',
+        'content_type',
         'event_type',
         'sequence_nr',
-        'username',
+        'owner',
     )
-	list_filter = ('username', 'aggregate_type', 'event_type')
+	list_filter = ('owner', 'content_type', 'event_type')
 	search_fields = ['blob']
 
 class ManufacturerAdmin(admin.ModelAdmin):
