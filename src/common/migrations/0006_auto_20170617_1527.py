@@ -17,9 +17,11 @@ def update_events(app, schema_editor):
             if event.aggregate_type == 'DEFECT':
                 event.content_type = ct
             event.save()
-    except:
+    except Exception as e:
         print('Something went wrong in function -> update_events!')
+        print(str(e))
         print('Please ignore if you are running tests!')
+        return
 
 class Migration(migrations.Migration):
 
