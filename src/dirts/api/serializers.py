@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 from common.models import Project
+from common.api.serializers import UserSerializer
 from ..models import Defect, Priority, Status
 
 class PrioritySerializer(serializers.ModelSerializer):
@@ -43,14 +44,6 @@ class DefectSuggestionSerializer(serializers.Serializer):
 
     class Meta:
         model = Defect
-
-class UserSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=100)
-    email = serializers.EmailField()
-    full_name = serializers.SerializerMethodField('get_user_full_name')
-
-    def get_user_full_name(self, obj):
-        return "{0} {1}".format(obj.first_name, obj.last_name)
 
 class CreateDefectSerializer(serializers.ModelSerializer):
     priority = serializers.CharField(max_length=20)

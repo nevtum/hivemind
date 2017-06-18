@@ -7,6 +7,14 @@ from rest_framework import serializers
 from ..models import DomainEvent, Manufacturer, Project
 
 
+class UserSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=100)
+    email = serializers.EmailField()
+    full_name = serializers.SerializerMethodField('get_user_full_name')
+
+    def get_user_full_name(self, obj):
+        return "{0} {1}".format(obj.first_name, obj.last_name)
+
 class ManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manufacturer
@@ -70,7 +78,7 @@ class DomainEventReadSerializer(serializers.ModelSerializer):
     created = serializers.SerializerMethodField()
     aggregate_id = serializers.CharField(source='object_id')
     aggregate_type = serializers.SerializerMethodField()
-    created_by = serializers.CharField(source='owner.username')
+    created_by = UserSerializer(source='owner')
 
     class Meta:
         model = DomainEvent
