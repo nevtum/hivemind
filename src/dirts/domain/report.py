@@ -26,13 +26,12 @@ def _to_dto(index, defect, end_date):
         'status': status
     }
 
-def defect_summary(project_code, end_date, show_active=True):
+def defect_summary_old(project_code, end_date, show_active=True):
     project = get_object_or_404(Project, code=project_code)
     queryset = Defect.objects.filter(
         project_code=project_code,
         date_created__lte=end_date
     ).order_by('date_created')
-    test_method(project_code, end_date, show_active) # for testing and profiling atm
     items = [_to_dto(index, defect, end_date) for index, defect in enumerate(queryset)]
 
     if show_active:
@@ -40,7 +39,31 @@ def defect_summary(project_code, end_date, show_active=True):
     else:
         return project, items
 
-def test_method(project_code, end_date, show_active=True):
+def defect_summary(project_code, end_date, show_active=True):
+    return defect_summary_old(project_code, end_date, show_active=True)
+    # return defect_summary_new(project_code, end_date, show_active=True)
+
+def defect_summary_new(project_code, end_date, show_active=True):
+    events = get_events(project_code, end_date)
+    
+    for event_dtos in grouped_by_object_id(events):
+        import pdb; pdb.set_trace()
+
+    project = get_object_or_404(Project, code=project_code)
+    return project, []
+
+def grouped_by_object_id(events):
+    from itertools import groupby
+    event_groups = groupby(events, lambda e: e.object_id)
+    for object_id, group in event_groups:
+        event_dtos = []
+        for event in group:
+            assert(object_id == event.object_id)
+            event_dto = to_item(event)
+            event_dtos.append(event_dto)
+        yield cleaned
+
+def get_events(project_code, end_date):
     from django.contrib.contenttypes.models import ContentType
     defect_ids = Defect.objects.filter(project_code=project_code).values('id')
     events = DomainEvent.objects.filter(
@@ -48,6 +71,5 @@ def test_method(project_code, end_date, show_active=True):
         object_id__in=defect_ids,
         date_occurred__lte=end_date
     )
-    # events = event.select_related('owner')
-    print(events.query)
-    list(events)
+    events = events.select_related('owner')
+    return events
