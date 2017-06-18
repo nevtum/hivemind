@@ -79,5 +79,21 @@ def get_events(project_code, end_date):
     return events
 
 def to_item(event_dtos):
-    # not yet correct but getting there
-    return DefectViewModel(event_dtos)
+    defect_model = DefectViewModel(event_dtos)
+
+    if defect_model.status == 'Open':
+        status = 'Active'
+    else:
+        status = 'Closed'
+        
+    return {
+        'id': defect_model.id,
+        'version': defect_model.release_id,
+        'reference': defect_model.reference,
+        'date_logged': defect_model.date_created,
+        'level': defect_model.priority,
+        'owner': defect_model.submitter,
+        'description': defect_model.description,
+        'comments': defect_model.comments,
+        'status': status
+    }
