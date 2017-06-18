@@ -102,9 +102,9 @@ class DefectAcceptanceTests(TestFixtureMixin, DjangoFakeUserLoginMixin, TestCase
         self.assertEqual(result.reference, 'changed title')
         self.assertEqual(result.description, 'modified description')
         self.assertEqual(result.comments, 'updated comments')
-        
-        self.assertEqual(len(result.change_history), 2)
-        self.assertEqual(result.change_history[-1].submitter, 'test_user')
+
+        self.assertEqual(len(result.change_history), 2)bcgfeeee51scx
+        self.assertEqual(result.change_history[-1].submitter['username'], 'test_user')
     
     def test_should_close_existing_defect(self):
         data = self._test_form_data_with_comments()   
