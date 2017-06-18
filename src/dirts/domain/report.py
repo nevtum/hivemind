@@ -1,13 +1,13 @@
 
 from django.shortcuts import get_object_or_404
 
-from common.models import Project
+from common.models import Project, DomainEvent
 
 from ..models import Defect
 
 
-def _to_dto(index, defect, freeze_date):
-    defect_model = defect.as_domainmodel(freeze_date)
+def _to_dto(index, defect, end_date):
+    defect_model = defect.as_domainmodel(end_date)
     owner = '{} {}'.format(defect.submitter.first_name, defect.submitter.last_name)
     if defect_model.status == 'Open':
         status = 'Active'
@@ -26,15 +26,28 @@ def _to_dto(index, defect, freeze_date):
         'status': status
     }
 
-def defect_summary(project_code, freeze_date, show_active=True):
+def defect_summary(project_code, end_date, show_active=True):
     project = get_object_or_404(Project, code=project_code)
     queryset = Defect.objects.filter(
         project_code=project_code,
-        date_created__lte=freeze_date
-        ).order_by('date_created')
-    items = [_to_dto(index, defect, freeze_date) for index, defect in enumerate(queryset)]
+        date_created__lte=end_date
+    ).order_by('date_created')
+    test_method(project_code, end_date, show_active) # for testing and profiling atm
+    items = [_to_dto(index, defect, end_date) for index, defect in enumerate(queryset)]
 
     if show_active:
         return project, filter(lambda x: x['status'] == 'Active', items)
     else:
         return project, items
+
+def test_method(project_code, end_date, show_active=True):
+    from django.contrib.contenttypes.models import ContentType
+    defect_ids = Defect.objects.filter(project_code=project_code).values('id')
+    events = DomainEvent.objects.filter(
+        content_type=ContentType.objects.get(model='defect'),
+        object_id__in=defect_ids,
+        date_occurred__lte=end_date
+    )
+    # events = event.select_related('owner')
+    print(events.query)
+    list(events)
