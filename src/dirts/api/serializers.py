@@ -50,7 +50,7 @@ class UserSerializer(serializers.Serializer):
     full_name = serializers.SerializerMethodField('get_user_full_name')
 
     def get_user_full_name(self, obj):
-        request = self.context['request']
+        request = self.context['request'] # this is not correct. should take from object
         user = request.user
         return "{0} {1}".format(user.first_name, user.last_name)
 
