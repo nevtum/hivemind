@@ -22,6 +22,29 @@ input, select {
   border-color: teal;
 }
 
+.panel-heading .title {
+  color: teal;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.panel-heading .status {
+  color: #1888bf;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.panel-body .version, .panel-body .priority {
+  color: #3c4850;
+  font-size: 1.05em;
+  font-weight: bold;
+}
+
+.panel-body .extra, .panel-heading .updated {
+  font-style: italic;
+  font-size: 0.9em;
+}
+
 .jumbotron {
   font-family: monospace;
   color: #ADA5C6;
@@ -102,33 +125,16 @@ input, select {
   margin-bottom: 4;
 }
 
+.paragraph-title {
+  font-weight: bold;
+  text-decoration: underline
+}
+
 #history-list {
-  font-size: 12;
+  font-size: 0.8em;
 }
 
 #defect-comments a {
   color: teal;
   text-decoration: underline;
-}
-
-/* for feeds */
-
-.activity-item {
-  background-color: white;
-  border-radius: 5px;
-  border: 1px dotted dodgerblue;
-  padding: 5px;
-  margin-bottom: 20px;
-}
-
-.activity-item .project {
-  font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-  font-size: 12px;
-  border-bottom: 1px solid crimson;
-}
-
-.activity-item .summary {
-  margin-top: 10px;
-  margin-bottom: 5px;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }

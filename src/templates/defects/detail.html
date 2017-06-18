@@ -59,15 +59,14 @@
         <div class="panel panel-default">
         {% endif %}
           <div class="panel-heading">
-            <h1 class="panel-title">
-                {{ defect.reference }} ({{ defect.status }})
-                [Last updated {{ defect.date_changed | timesince }} ago]
-            </h1>
+            <span class="title">{{ defect.reference }}</span>
+            <span class="status">({{ defect.status }})</span>
+            <span class="updated">- Updated {{ defect.date_changed | timesince }} ago</span>
           </div>
           <div class="panel-body">
-            <h4>Release ID: {{ defect.release_id }}</h4>
-            <h4>Raised by {{ defect.submitter }}, {{ defect.date_created }}</h4>
-            <h4>Priority: {{ defect.priority }}</h4>
+            <p><span class="version">Release ID: {{ defect.release_id }}</span></p>
+            <p><span class="priority">Priority: {{ defect.priority }}</span></p>
+            <p><span class="extra">Created <u>{{ defect.date_created }}</u> ({{ defect.submitter.full_name }})</span></p>
           </div>
         </div>
         <div class="panel panel-default">
@@ -113,7 +112,7 @@
                   ({{ change.date_created | timesince }} ago)
               </td>
               <td class="desc">{{ change.description | linebreaksbr }}</td>
-              <td>{{ change.submitter }}</td>
+              <td><a href="mailto:{{ change.submitter.email }}">{{ change.submitter.username }}</a></td>
             </tr>
             {% endfor %}
           </tbody>

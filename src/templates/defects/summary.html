@@ -63,16 +63,16 @@
           </tr>
           {% for defect in defects %}
           <tr>
-            <td>{{ defect.id }}</td>
-            <td>{{ defect.owner }}</td>
+            <td><a href="{% url 'defects:detail' defect.id %}">{{ defect.id }}</a></td>
+            <td>{{ defect.owner.full_name }}</td>
             <td>
-              <p>Version: {{ defect.version }}</p>
-              <p>Summary: {{ defect.reference }}</p>
-              <p>Description:</p>
+              <p><span class="paragraph-title">Version:</span> {{ defect.version }}</p>
+              <p><span class="paragraph-title">Summary:</span> {{ defect.reference }}</p>
+              <p><span class="paragraph-title">Description:</span></p>
               <p>{{ defect.description | linebreaksbr }}</p>
               {% if defect.comments %}
                 <br>
-                <p>Comments:</p>
+                <p><span class="paragraph-title">Comments:</span></p>
                 <p>{{ defect.comments | linebreaksbr }}</p>
               {% endif %}
               </p>
