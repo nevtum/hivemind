@@ -42,9 +42,12 @@ class GenericRelationModel(models.Model):
 
 class DomainEvent(GenericRelationModel):
     sequence_nr = models.IntegerField()
+    # aggregate_id = models.IntegerField() # deprecated field
+    # aggregate_type = models.CharField(max_length=30) # deprecated field
     event_type = models.CharField(max_length=100)
     blob = models.TextField()
     date_occurred = models.DateTimeField()
+    # username = models.CharField(max_length=50) # deprecated field
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
     objects = DomainEventManager()
     
@@ -63,3 +66,4 @@ class DomainEvent(GenericRelationModel):
     
     class Meta:
         unique_together = (("content_type", "object_id", "sequence_nr"),)
+        # unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),) # deprecated restriction
