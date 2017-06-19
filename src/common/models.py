@@ -42,12 +42,12 @@ class GenericRelationModel(models.Model):
 
 class DomainEvent(GenericRelationModel):
     sequence_nr = models.IntegerField()
-    # aggregate_id = models.IntegerField() # deprecated field
-    # aggregate_type = models.CharField(max_length=30) # deprecated field
+    aggregate_id = models.IntegerField(null=True) # deprecated field
+    aggregate_type = models.CharField(max_length=30, null=True) # deprecated field
     event_type = models.CharField(max_length=100)
     blob = models.TextField()
     date_occurred = models.DateTimeField()
-    # username = models.CharField(max_length=50) # deprecated field
+    username = models.CharField(max_length=50, null=True) # deprecated field
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
     objects = DomainEventManager()
     

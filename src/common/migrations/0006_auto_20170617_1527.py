@@ -21,7 +21,8 @@ def update_events(app, schema_editor):
         print('Something went wrong in function -> update_events!')
         print(str(e))
         print('Please ignore if you are running tests!')
-        return
+        # return # uncomment for testing
+        raise Exception(e) # comment out for testing
 
 class Migration(migrations.Migration):
 
@@ -50,5 +51,24 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL),
             preserve_default=False,
         ),
-        migrations.RunPython(update_events)
+        migrations.RunPython(update_events),
+        migrations.AlterField(
+            model_name='domainevent',
+            name='aggregate_id',
+            field=models.IntegerField(null=True),
+        ),
+        migrations.AlterField(
+            model_name='domainevent',
+            name='aggregate_type',
+            field=models.CharField(max_length=30, null=True),
+        ),
+        migrations.AlterField(
+            model_name='domainevent',
+            name='username',
+            field=models.CharField(max_length=50, null=True),
+        ),
+        migrations.AlterUniqueTogether(
+            name='domainevent',
+            unique_together=set([('content_type', 'object_id', 'sequence_nr')]),
+        ),
     ]
