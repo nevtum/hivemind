@@ -5,6 +5,7 @@ from rest_framework.decorators import (api_view, detail_route,
 from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter
 
 from common import store as EventStore
 from common.api.pagination import CustomLimitOffsetPagination
@@ -148,9 +149,15 @@ class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     """
     Returns a list of defect activities which belongs to a project.
     Matches the [keyword] specified in ?code=[keyword] query string.
+    Ordering can also be specified as ?ordering=[order1,order2,...].
+    The default ordering is by date ascending, then by object_id
+    ascending, then by sequence_nr ascending
     """
     serializer_class = DomainEventReadSerializer
     permission_classes = (AllowAny,)
+    filter_backends = (OrderingFilter,)
+    ordering_fields = ('date_occurred', 'object_id', 'sequence_nr',)
+    ordering = ('date_occurred', 'object_id', 'sequence_nr',)
 
     def get_queryset(self):
         code = self.request.GET.get('code', '')

@@ -9,5 +9,4 @@ def defect_activities(code):
         object_id__in=defect_ids
     )
     events = events.select_related('owner', 'content_type')
-    events = events.order_by('object_id', 'sequence_nr')
     return events
