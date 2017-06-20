@@ -38,6 +38,9 @@ class Defect(SimilarContentAware, EventSourceAware, models.Model):
     objects = DefectsManager()
     tags = TaggableManager()
 
+    class Meta:
+        ordering = ['-date_created']
+
     def next_in_project(self):
         queryset = Defect.objects.filter(project=self.project)
         queryset = queryset.filter(id__gt=self.id)

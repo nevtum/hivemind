@@ -25,5 +25,5 @@ class EditProjectView(UpdateView):
     ]
 
 class ProjectListView(ListView):
-    queryset = Project.objects.all().order_by('-date_created')
+    queryset = Project.objects.all()
     template_name = 'projects/list.html'

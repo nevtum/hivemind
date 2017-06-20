@@ -22,6 +22,9 @@ class Project(models.Model):
     description = models.CharField(max_length=120)
     date_created = models.DateField()
     objects = ProjectsManager()
+
+    class Meta:
+        ordering = ['-date_created']
     
     def save(self, *args, **kwargs):
         self.code = self.code.strip().upper()
@@ -50,6 +53,9 @@ class DomainEvent(GenericRelationModel):
     username = models.CharField(max_length=50, null=True) # deprecated field
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
     objects = DomainEventManager()
+
+    class Meta:
+        ordering = ['date_occurred', 'object_id', 'sequence_nr']
     
     def save(self, *args, **kwargs):
         if not self.id:
