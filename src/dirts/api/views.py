@@ -5,7 +5,7 @@ from rest_framework.decorators import (api_view, detail_route,
 from rest_framework.exceptions import ParseError
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.filters import OrderingFilter
+from rest_framework.filters import OrderingFilter, SearchFilter
 
 from common import store as EventStore
 from common.api.pagination import CustomLimitOffsetPagination
@@ -37,19 +37,25 @@ class CreateDefectView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(submitter=self.request.user)
 
-class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
+class DefectBaseViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Returns a list of all defects.
 
-    For optional search, add ?q=**[keyword]** query string to the url
+    For optional search, add ?search=**[keyword]** query string to the url
     where **[keyword]** is replaced with your search parameter.
     """
-    query_string_key = 'q'
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
     permission_classes = (AllowAny,)
     pagination_class = CustomLimitOffsetPagination
-
+    filter_backends = (SearchFilter,)
+    search_fields = (
+        'project_code',
+        'release_id',
+        'reference',
+        'description',
+        'comments',
+    )
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -61,7 +67,7 @@ class DefectActiveViewSet(DefectBaseViewSet):
     """
     Returns a list of all **opened** defects.
     
-    For optional search, add ?q=**[keyword]** query string to the url
+    For optional search, add ?search=**[keyword]** query string to the url
     where **[keyword]** is replaced with your search parameter.
     """
     queryset = Defect.objects.active()
@@ -70,7 +76,7 @@ class RecentlyChangedDefectViewSet(DefectBaseViewSet):
     """
     Returns a list of all **recently changed** defects.
     
-    For optional search, add ?q=**[keyword]** query string to the url
+    For optional search, add ?search=**[keyword]** query string to the url
     where **[keyword]** is replaced with your search parameter.
     """
     queryset = Defect.objects.recently_changed()
@@ -149,16 +155,23 @@ class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     """
     Returns a list of defect activities which belongs to a project.
     Matches the [keyword] specified in ?code=[keyword] query string.
-    Ordering can also be specified as ?ordering=[order1,order2,...].
+
+    Search can be specified as ?search=[keyword] which finds
+    matching defects by their reference, description or comment and
+    returns all event streams belonging to those defects 
+    
+    Ordering can be specified as ?ordering=[order1,order2,...].
     The default ordering is by date ascending, then by object_id
     ascending, then by sequence_nr ascending
     """
     serializer_class = DomainEventReadSerializer
     permission_classes = (AllowAny,)
-    filter_backends = (OrderingFilter,)
+    filter_backends = (OrderingFilter, SearchFilter)
     ordering_fields = ('date_occurred', 'object_id', 'sequence_nr',)
     ordering = ('date_occurred', 'object_id', 'sequence_nr',)
 
+
     def get_queryset(self):
         code = self.request.GET.get('code', '')
-        return defect_activities(code)
+        search = self.request.GET.get('search', '')
+        return defect_activities(code, search)

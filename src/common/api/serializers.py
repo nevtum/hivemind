@@ -76,7 +76,7 @@ class DomainEventWriteSerializer(serializers.ModelSerializer):
 class DomainEventReadSerializer(serializers.ModelSerializer):
     payload = serializers.SerializerMethodField()
     created = serializers.SerializerMethodField()
-    aggregate_id = serializers.CharField(source='object_id')
+    aggregate_id = serializers.IntegerField(source='object_id')
     aggregate_type = serializers.SerializerMethodField()
     created_by = UserSerializer(source='owner')
 
