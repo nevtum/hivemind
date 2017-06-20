@@ -75,12 +75,13 @@ def _grouped_by_object_id(events):
 
 def _get_events(project_code, end_date):
     defect_ids = Defect.objects.filter(project_code=project_code).values('id')
-    events = DomainEvent.objects.filter(
+    events = DomainEvent.objects.order_by('object_id', 'sequence_nr')
+    events = events.select_related('owner', 'content_type')
+    events = events.filter(
         content_type=ContentType.objects.get(model='defect'),
         object_id__in=defect_ids,
         date_occurred__lte=end_date
     )
-    events = events.select_related('owner', 'content_type')
     return events
 
 def _to_item(event_dtos):
