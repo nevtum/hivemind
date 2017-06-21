@@ -11,7 +11,7 @@ router.register(r'projects', ProjectsViewSet)
 router.register(r'customers', CustomerViewSet)
 
 urlpatterns = [
-    url(r'defects/', include(defect_api_urls, namespace='defects')),
-    url(r'clients/', include(router.urls, namespace='clients')),
-    url(r'process_command/$', accept, name='commands'),
+    url(r'^defects/', include(defect_api_urls, namespace='defects')),
+    url(r'^clients/', include(router.urls, namespace='clients')),
+    url(r'^process_command/$', accept, name='commands'),
 ]
