@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^auth-token/', obtain_jwt_token),
     url(r'^login/', login, {'template_name': 'login.html'}, name='login-url'),
     url(r'^logout/', logout, {'next_page': 'home-url'}, name='logout-url'),
-
+    url(r'^api/', include('api.urls', namespace='api')),
     url(r'^common/', include('common.urls', namespace='common')),
     url(r'^comments/', include('comments.urls', namespace='comments')),
     url(r'^issues/', include('dirts.urls', namespace='defects')),

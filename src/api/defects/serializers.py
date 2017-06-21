@@ -2,8 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 
 from common.models import Project
-from common.api.serializers import UserSerializer
-from ..models import Defect, Priority, Status
+from ..core.serializers import UserSerializer
+from dirts.models import Defect, Priority, Status
 
 class PrioritySerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
@@ -67,7 +67,7 @@ class CreateDefectSerializer(serializers.ModelSerializer):
 class DefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.ReadOnlyField(source='priority.name')
-    detail = serializers.HyperlinkedRelatedField(source='id', view_name='defects:api:all-detail', read_only=True)    
+    detail = serializers.HyperlinkedRelatedField(source='id', view_name='api:defects:all-detail', read_only=True)    
     submitter = UserSerializer()
 
     class Meta:
@@ -87,7 +87,7 @@ class DefectSerializer(serializers.ModelSerializer):
 
 class MoreLikeThisSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
-    link = serializers.HyperlinkedRelatedField(source='id', view_name='defects:api:similar-defects', read_only=True)
+    link = serializers.HyperlinkedRelatedField(source='id', view_name='api:defectssimilar-defects', read_only=True)
     reference = serializers.ReadOnlyField()
     date_created = serializers.ReadOnlyField()
     created_by = serializers.ReadOnlyField(source='submitter.username')

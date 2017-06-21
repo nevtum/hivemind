@@ -2,7 +2,7 @@ import json
 from django.contrib.contenttypes.models import ContentType
 
 from .models import DomainEvent
-from .api.serializers import DomainEventReadSerializer, DomainEventWriteSerializer
+from api.core.serializers import DomainEventReadSerializer, DomainEventWriteSerializer
 
 def get_event_count(content_type, object_id):
 	queryset = DomainEvent.objects.belong_to(content_type, object_id)

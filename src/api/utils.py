@@ -1,4 +1,4 @@
-from .models import Defect
+from dirts.models import Defect
 from common.models import Project, DomainEvent
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q

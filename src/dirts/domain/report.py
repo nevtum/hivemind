@@ -5,6 +5,10 @@ from common.models import Project, DomainEvent
 
 from ..models import Defect
 
+from api.core.serializers import DomainEventReadSerializer
+from itertools import groupby
+from django.contrib.contenttypes.models import ContentType
+from ..domain.models import DefectViewModel
 
 # def _to_dto(index, defect, end_date):
 #     defect_model = defect.as_domainmodel(end_date)
@@ -42,11 +46,6 @@ from ..models import Defect
 def defect_summary(project_code, end_date, show_active=True):
     # return defect_summary_old(project_code, end_date, show_active)
     return _defect_summary_new(project_code, end_date, show_active)
-
-from common.api.serializers import DomainEventReadSerializer
-from itertools import groupby
-from django.contrib.contenttypes.models import ContentType
-from ..domain.models import DefectViewModel
 
 def _defect_summary_new(project_code, end_date, show_active=True):
     events = _get_events(project_code, end_date)

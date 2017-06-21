@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import serializers
 
-from ..models import DomainEvent, Manufacturer, Project
+from common.models import DomainEvent
 
 
 class UserSerializer(serializers.Serializer):
@@ -14,26 +14,6 @@ class UserSerializer(serializers.Serializer):
 
     def get_user_full_name(self, obj):
         return "{0} {1}".format(obj.first_name, obj.last_name)
-
-class ManufacturerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Manufacturer
-
-class ProjectSerializer(serializers.ModelSerializer):
-    customer = serializers.SerializerMethodField()
-
-    def get_customer(self, obj):
-        return obj.manufacturer.name
-
-    class Meta:
-        model = Project
-        fields = (
-            'id',
-            'code',
-            'description',
-            'date_created',
-            'customer',
-        )
 
 class DomainEventWriteSerializer(serializers.ModelSerializer):
     payload = serializers.JSONField(source='blob')

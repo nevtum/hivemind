@@ -3,20 +3,22 @@ from rest_framework import generics, viewsets
 from rest_framework.decorators import (api_view, detail_route,
                                        permission_classes)
 from rest_framework.exceptions import ParseError
+from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.filters import OrderingFilter, SearchFilter
 
 from common import store as EventStore
-from common.api.pagination import CustomLimitOffsetPagination
 from common.models import Project
+from dirts.models import Defect, Priority, Status
 
-from ..mixins import DefectSearchMixin
-from ..models import Defect, Priority, Status
-from .serializers import (CreateDefectSerializer, DefectSerializer,
-                          DefectSuggestionSerializer, MoreLikeThisSerializer,
-                          PrioritySerializer, ProjectSuggestionSerializer,
-                          StatusSerializer)
+from ..core.pagination import CustomLimitOffsetPagination
+from ..core.serializers import DomainEventReadSerializer
+from ..defects.serializers import (CreateDefectSerializer, DefectSerializer,
+                                   DefectSuggestionSerializer,
+                                   MoreLikeThisSerializer, PrioritySerializer,
+                                   ProjectSuggestionSerializer,
+                                   StatusSerializer)
+from ..utils import defect_activities
 
 
 class PriorityViewSet(viewsets.ReadOnlyModelViewSet):
@@ -148,9 +150,6 @@ class AutoCompleteDefectTitles(viewsets.ReadOnlyModelViewSet):
             qs = Defect.objects.filter(reference__icontains=keyword)
             return qs[:10]
 
-
-from ..utils import defect_activities
-from common.api.serializers import DomainEventReadSerializer
 class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     """
     Returns a list of defect activities which belongs to a project.

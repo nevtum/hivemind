@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from ..models import Manufacturer, Project
-from .pagination import CustomLimitOffsetPagination
+from common.models import Manufacturer, Project
+from ..core.pagination import CustomLimitOffsetPagination
 from .serializers import ManufacturerSerializer, ProjectSerializer
 
 
