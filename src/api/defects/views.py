@@ -11,7 +11,8 @@ from common import store as EventStore
 from common.models import Project
 from dirts.models import Defect, Priority, Status
 
-from ..core.pagination import CustomLimitOffsetPagination
+from ..core.pagination import (CustomLimitOffsetPagination,
+                               HighLimitOffsetPagination)
 from ..core.serializers import DomainEventReadSerializer
 from ..defects.serializers import (CreateDefectSerializer, DefectSerializer,
                                    DefectSuggestionSerializer,
@@ -165,10 +166,10 @@ class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     """
     serializer_class = DomainEventReadSerializer
     permission_classes = (AllowAny,)
+    pagination_class = HighLimitOffsetPagination
     filter_backends = (OrderingFilter, SearchFilter)
     ordering_fields = ('date_occurred', 'object_id', 'sequence_nr',)
     ordering = ('date_occurred', 'object_id', 'sequence_nr',)
-
 
     def get_queryset(self):
         code = self.request.GET.get('code', '')
