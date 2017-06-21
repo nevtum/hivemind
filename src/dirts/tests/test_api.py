@@ -17,6 +17,13 @@ class DefectAPITests(TestFixtureMixin, RestFrameworkFakeUserLoginMixin, APITestC
             'description': 'A description.',
             'comments': 'A few comments.',
         }
-        response = self.client.post(reverse('defects:api:create'), data, format='json')
+        response = self.client.post(reverse('api:defects:create'), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(**response.data, **data)
+        kwargs = response.data
+        self.assertEqual(kwargs['status'], 'Open')
+        self.assertEqual(kwargs['project_code'], data['project_code'])
+        self.assertEqual(kwargs['release_id'], data['release_id'])
+        self.assertEqual(kwargs['priority'], data['priority'])
+        self.assertEqual(kwargs['reference'], data['reference'])
+        self.assertEqual(kwargs['description'], data['description'])
+        self.assertEqual(kwargs['comments'], data['comments'])

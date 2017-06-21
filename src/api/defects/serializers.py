@@ -46,6 +46,7 @@ class DefectSuggestionSerializer(serializers.Serializer):
         model = Defect
 
 class CreateDefectSerializer(serializers.ModelSerializer):
+    status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.CharField(max_length=20)
 
     def create(self, validated_data):

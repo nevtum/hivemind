@@ -1,6 +1,6 @@
 from django.test import SimpleTestCase
 
-from ..api.serializers import CreateDefectSerializer
+from api.defects.serializers import CreateDefectSerializer
 
 
 class SerializerTests(SimpleTestCase):
