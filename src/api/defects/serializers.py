@@ -51,11 +51,12 @@ class CreateDefectSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         priority = Priority.objects.get(name=validated_data.pop('priority'))
-        return Defect(priority=priority, **validated_data)
+        return Defect.objects.create(priority=priority, **validated_data)
 
     class Meta:
         model = Defect
         fields = (
+            'id',
             'project_code',
             'release_id',
             'status',
