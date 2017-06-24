@@ -12,4 +12,12 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
+# HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+#         'URL': 'http://elastic:9200/',
+#         'INDEX_NAME': 'haystack',
+#     },
+# }
+
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
