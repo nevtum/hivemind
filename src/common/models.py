@@ -58,9 +58,10 @@ class DomainEvent(GenericRelationModel):
         return super(DomainEvent, self).save(*args, **kwargs)
     
     def __str__(self):
-        return "{} {} {}".format(
+        return "id: {}\ncontent_type: {} ({})\n{}".format(
             self.id,
-            self.content_object,
+            self.content_type,
+            self.content_type.id,
             self.blob
         )
     

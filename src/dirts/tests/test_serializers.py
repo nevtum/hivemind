@@ -1,9 +1,9 @@
-from django.test import SimpleTestCase
+from django.test import TransactionTestCase
 
 from ..api.serializers import CreateDefectSerializer
 
 
-class SerializerTests(SimpleTestCase):
+class SerializerTests(TransactionTestCase):
     def test_create_new_defect(self):
         data = { 
             'project_code': 'ABC.321',

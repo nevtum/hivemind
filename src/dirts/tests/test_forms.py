@@ -1,11 +1,11 @@
 
-from django.test import SimpleTestCase
+from django.test import TestCase
 
 from ..forms import CreateDefectForm
 from ..models import Defect, Priority, Status
 
 
-class DefectFormTests(SimpleTestCase):
+class DefectFormTests(TestCase):
     @staticmethod
     def _test_form_data_with_comments():
         return {

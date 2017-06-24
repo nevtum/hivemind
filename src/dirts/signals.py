@@ -16,7 +16,7 @@ def on_defect_created(sender, instance, **kwargs):
         'aggregate_type': 'defect',
         'event_type': DEFECT_OPENED,
         'created': instance.date_created,
-        'created_by': instance.submitter,
+        'created_by': instance.submitter.username,
         'payload': {
             'project_code': instance.project_code,
             'release_id': instance.release_id,
