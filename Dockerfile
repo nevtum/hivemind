@@ -1,4 +1,4 @@
-FROM django:1.8.7
+FROM python:3.6.1
 
 MAINTAINER Neville Tummon
 
