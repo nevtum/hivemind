@@ -3,6 +3,15 @@ data:
   volumes:
     - /web_app/volume/
     - /web_app/static/
+elasticsearch:
+  image: docker.elastic.co/elasticsearch/elasticsearch:5.4.2
+  volumes:
+    - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+  ports:
+    - "9200:9200"
+    - "9300:9300"
+  environment:
+    ES_JAVA_OPTS: "-Xmx256m -Xms256m"
 postgresdb:
   image: postgres:9.4.5
   environment:
@@ -17,6 +26,7 @@ web:
     - "8001"
   links:
     - postgresdb:pgdb
+    - elasticsearch:elastic
   environment:
     DJANGO_SETTINGS_MODULE: config.settings.prod
     PASSWORD: mypassword
