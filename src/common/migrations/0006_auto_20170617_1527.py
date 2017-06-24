@@ -9,20 +9,21 @@ from common.models import DomainEvent
 from django.contrib.contenttypes.models import ContentType
 
 def update_events(app, schema_editor):
-    try:
-        ct = ContentType.objects.get(model='defect')
-        for event in DomainEvent.objects.all():
-            event.owner = User.objects.get(username=event.username)
-            event.object_id = event.aggregate_id
-            if event.aggregate_type == 'DEFECT':
-                event.content_type = ct
-            event.save()
-    except Exception as e:
-        print('Something went wrong in function -> update_events!')
-        print(str(e))
-        print('Please ignore if you are running tests!')
-        # return # uncomment for testing
-        raise Exception(e) # comment out for testing
+    pass
+    # try:
+    #     ct = ContentType.objects.get(model='defect')
+    #     for event in DomainEvent.objects.all():
+    #         event.owner = User.objects.get(username=event.username)
+    #         event.object_id = event.aggregate_id
+    #         if event.aggregate_type == 'DEFECT':
+    #             event.content_type = ct
+    #         event.save()
+    # except Exception as e:
+    #     print('Something went wrong in function -> update_events!')
+    #     print(str(e))
+    #     print('Please ignore if you are running tests!')
+    #     # return # uncomment for testing
+    #     raise Exception(e) # comment out for testing
 
 class Migration(migrations.Migration):
 
