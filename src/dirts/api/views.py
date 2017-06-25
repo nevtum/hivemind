@@ -52,7 +52,7 @@ class DefectBaseViewSet(DefectSearchMixin, viewsets.ReadOnlyModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        events = EventStore.get_events_for(instance)
+        events = EventStore.get_events_for('DEFECT', instance.id)
         return Response(events)
 
 

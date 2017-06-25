@@ -9,8 +9,8 @@ def create_new_defect():
         'aggregate_id': 1,
         'aggregate_type': 'DEFECT',
         'event_type': DEFECT_OPENED,
-        'created': datetime(2014, 3, 10),
-        'created_by': 'test_user',
+        'timestamp': datetime(2014, 3, 10),
+        'owner': 'test_user', # must be a user instance
         'payload': {
             'project_code': 'TEST.123',
             'release_id': 'v1.23.45',
@@ -88,7 +88,7 @@ class DefectAggregateTests(SimpleTestCase):
     
     def test_open_invalid_input_event_datetime_format(self):
         data = create_new_defect()
-        data['created'] = '10/03/2017'
+        data['timestamp'] = '10/03/2017'
         self.assertRaises(AssertionError, DefectModel, [data])
     
     def test_import(self):
@@ -107,8 +107,8 @@ class DefectAggregateTests(SimpleTestCase):
         model = DefectModel([import_new_defect()])
         amendment_kwargs = create_example_amendment()
         event = model.amend('user2', datetime(2017, 5, 11), **amendment_kwargs)
-        self.assertEqual(event['created'], datetime(2017, 5, 11))
-        self.assertEqual(event['created_by'], 'user2')
+        self.assertEqual(event['timestamp'], datetime(2017, 5, 11))
+        self.assertEqual(event['owner'], 'user2')
         self.assertEqual(event['event_type'], DEFECT_AMENDED)
         model.apply(event)
         self.assertEqual(model.id, 1)
@@ -122,13 +122,13 @@ class DefectAggregateTests(SimpleTestCase):
 
     def test_amend_incorrect_chronological_order(self):
         kwargs = create_new_defect();
-        kwargs['created'] = datetime(2017, 5, 22)
+        kwargs['timestamp'] = datetime(2017, 5, 22)
         model = DefectModel([kwargs])
         self.assertRaises(Exception, model.amend, 'user2', datetime(2017, 5, 21), **create_example_amendment())
 
     def test_close_incorrect_chronological_order(self):
         kwargs = create_new_defect();
-        kwargs['created'] = datetime(2017, 5, 22, 8, 30)
+        kwargs['timestamp'] = datetime(2017, 5, 22, 8, 30)
         model = DefectModel([kwargs])
         self.assertRaises(Exception, model.close, 'user2', 'v2.1.22', '', datetime(2017, 5, 22, 8, 29))
 
@@ -145,8 +145,8 @@ class DefectAggregateTests(SimpleTestCase):
     def test_close(self):
         model = DefectModel([create_new_defect()])
         event = model.close('user2', 'v2.1.22', 'With comment', datetime(2017, 3, 11))
-        self.assertEqual(event['created'], datetime(2017, 3, 11))
-        self.assertEqual(event['created_by'], 'user2')
+        self.assertEqual(event['timestamp'], datetime(2017, 3, 11))
+        self.assertEqual(event['owner'], 'user2')
         self.assertEqual(event['event_type'], DEFECT_CLOSED)
     
     def test_reopen_fail_not_yet_closed(self):
@@ -168,9 +168,9 @@ class DefectAggregateTests(SimpleTestCase):
     def test_model_updated_when_new_event_applied(self):
         model = DefectModel([create_new_defect()])
         event = model.close('user2', 'v7.3.2.1', '', datetime(2015, 4, 11))
-        self.assertNotEqual(event['created'], model.date_created)
-        self.assertNotEqual(event['created'], model.date_changed)
-        self.assertNotEqual(event['created_by'], model.submitter)
+        self.assertNotEqual(event['timestamp'], model.date_created)
+        self.assertNotEqual(event['timestamp'], model.date_changed)
+        self.assertNotEqual(event['owner'], model.submitter)
         model.apply(event)
         self.assertEqual(model.status, 'Closed')
         self.assertEqual(model.date_changed, datetime(2015, 4, 11))

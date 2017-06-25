@@ -26,8 +26,8 @@ class DefectViewModel(object):
         self._replay_from(defect_events)
     
     def apply(self, event):
-        assert_datetime(event['created'])
-        self.date_changed = event['created']
+        assert_datetime(event['timestamp'])
+        self.date_changed = event['timestamp']
         if event['event_type'] == DEFECT_IMPORTED:
             return self._on_imported(event)
         if event['event_type'] == DEFECT_OPENED:
@@ -91,13 +91,13 @@ class DefectViewModel(object):
             raise Exception("DIRT must first be closed to make obsolete.")
         return self._create_event(DEFECT_LOCKED, { 'reason': reason }, user, timestamp)
     
-    def _create_event(self, event_type, dictionary, username, created):
+    def _create_event(self, event_type, dictionary, user, created):
         return {
             'sequence_nr': self.last_sequence_nr + 1,
             'aggregate_id': self.id,
-            'aggregate_type': 'defect',
-            'created': created,
-            'created_by': username,
+            'aggregate_type': 'DEFECT',
+            'timestamp': created,
+            'username': user.username,
             'event_type': event_type,
             'payload': dictionary,
         }
@@ -153,8 +153,8 @@ class DefectViewModel(object):
     
     def _add_changeset(self, event, description):
         ch = ChangeHistory()
-        ch.date_created = event['created']
-        ch.submitter = event['created_by']
+        ch.date_created = event['timestamp']
+        ch.submitter = event['owner']
         ch.description = description
         self.change_history.insert(0, ch)
     
@@ -167,16 +167,16 @@ class DefectViewModel(object):
     def _on_imported(self, event):
         self._create_changeset_dirt_imported(event)
         self.id = event['aggregate_id']
-        self.submitter = event['created_by']
-        self.date_created = event['created']
+        self.submitter = event['owner']
+        self.date_created = event['timestamp']
         self.status = event['payload']['status']
         self._set_properties(event)
 
     def _on_opened(self, event):
         self._create_changeset_dirt_opened(event)
         self.id = event['aggregate_id']
-        self.submitter = event['created_by']
-        self.date_created = event['created']
+        self.submitter = event['owner']
+        self.date_created = event['timestamp']
         self.status = 'Open'
         self._set_properties(event)
         

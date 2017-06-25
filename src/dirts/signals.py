@@ -13,10 +13,10 @@ def on_defect_created(sender, instance, **kwargs):
     event = {
         'sequence_nr': 0,
         'aggregate_id': instance.id,
-        'aggregate_type': 'defect',
+        'aggregate_type': 'DEFECT',
         'event_type': DEFECT_OPENED,
-        'created': instance.date_created,
-        'created_by': instance.submitter.username,
+        'timestamp': instance.date_created,
+        'username': instance.submitter.username,
         'payload': {
             'project_code': instance.project_code,
             'release_id': instance.release_id,
