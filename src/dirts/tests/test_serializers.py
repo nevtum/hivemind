@@ -1,9 +1,12 @@
 from django.test import TransactionTestCase
 
 from ..api.serializers import CreateDefectSerializer
-
+from dirts.models import Priority
 
 class SerializerTests(TransactionTestCase):
+    def setUp(self):
+        Priority.objects.create(name='Low')
+        
     def test_create_new_defect(self):
         data = { 
             'project_code': 'ABC.321',

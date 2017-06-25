@@ -43,12 +43,12 @@ class DomainEventWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = DomainEvent
         fields = (
+            'timestamp',
             'sequence_nr',
             'aggregate_id',
             'aggregate_type',
             'event_type',
             'payload',
-            'timestamp',
             'username',
         )
     
@@ -74,15 +74,15 @@ class DomainEventReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = DomainEvent
         fields = (
+            'timestamp',
             'sequence_nr',
             'aggregate_id',
             'aggregate_type',
             'event_type',
-            'owner',
-            'timestamp',
             'payload',
+            'owner',
         )
-    
+
     def get_timestamp(self, obj):
         return obj.date_occurred
 
