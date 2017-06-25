@@ -93,13 +93,16 @@ class DefectViewModel(object):
     
     def _create_event(self, event_type, dictionary, user, created):
         return {
+            'timestamp': created,
             'sequence_nr': self.last_sequence_nr + 1,
             'aggregate_id': self.id,
             'aggregate_type': 'DEFECT',
-            'timestamp': created,
-            'username': user.username,
             'event_type': event_type,
             'payload': dictionary,
+            'owner': {
+                'username': user.username,
+                'email': user.email
+            }
         }
     
     @property

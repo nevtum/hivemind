@@ -11,12 +11,11 @@ def on_defect_created(sender, instance, **kwargs):
         return
     
     event = {
+        'timestamp': instance.date_created,
         'sequence_nr': 0,
         'aggregate_id': instance.id,
         'aggregate_type': 'DEFECT',
         'event_type': DEFECT_OPENED,
-        'timestamp': instance.date_created,
-        'username': instance.submitter.username,
         'payload': {
             'project_code': instance.project_code,
             'release_id': instance.release_id,
@@ -24,6 +23,10 @@ def on_defect_created(sender, instance, **kwargs):
             'reference': instance.reference,
             'description': instance.description,
             'comments': instance.comments
+        },
+        'owner': {
+            'username': instance.submitter.username,
+            'email': instance.submitter.email
         }
     }
     EventStore.append_next(event)

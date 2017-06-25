@@ -120,7 +120,7 @@ class DefectAggregateTests(TransactionTestCase):
         amendment_kwargs = create_example_amendment()
         event = model.amend(get_user('user2'), datetime(2017, 5, 11), **amendment_kwargs)
         self.assertEqual(event['timestamp'], datetime(2017, 5, 11))
-        self.assertEqual(event['owner'], get_user('user2'))
+        self.assertEqual(event['owner']['username'], 'user2')
         self.assertEqual(event['event_type'], DEFECT_AMENDED)
         model.apply(event)
         self.assertEqual(model.id, 1)
@@ -158,7 +158,7 @@ class DefectAggregateTests(TransactionTestCase):
         model = DefectModel([create_new_defect()])
         event = model.close(get_user('user2'), 'v2.1.22', 'With comment', datetime(2017, 3, 11))
         self.assertEqual(event['timestamp'], datetime(2017, 3, 11))
-        self.assertEqual(event['owner'], get_user('user2'))
+        self.assertEqual(event['owner']['username'], 'user2')
         self.assertEqual(event['event_type'], DEFECT_CLOSED)
     
     def test_reopen_fail_not_yet_closed(self):

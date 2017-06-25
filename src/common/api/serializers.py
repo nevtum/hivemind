@@ -38,7 +38,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class DomainEventWriteSerializer(serializers.ModelSerializer):
     payload = serializers.JSONField(source='blob')
     timestamp = serializers.DateTimeField(source='date_occurred')
-    username = serializers.CharField()
+    owner = UserSerializer()
 
     class Meta:
         model = DomainEvent
@@ -49,12 +49,12 @@ class DomainEventWriteSerializer(serializers.ModelSerializer):
             'aggregate_type',
             'event_type',
             'payload',
-            'username',
+            'owner',
         )
     
     def create(self, validated_data):
         blob = json.dumps(validated_data.pop('blob'), indent=2)
-        owner = User.objects.get(username=validated_data.pop('username'))
+        owner = User.objects.get(username=validated_data.pop('owner')['username'])
         return DomainEvent.objects.create(
             owner=owner,
             blob=blob,
