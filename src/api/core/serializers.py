@@ -17,65 +17,53 @@ class UserSerializer(serializers.Serializer):
 
 class DomainEventWriteSerializer(serializers.ModelSerializer):
     payload = serializers.JSONField(source='blob')
-    created = serializers.DateTimeField(source='date_occurred')
-    created_by = serializers.CharField()
-    aggregate_type = serializers.CharField()
-    aggregate_id = serializers.CharField()
+    timestamp = serializers.DateTimeField(source='date_occurred')
+    owner = UserSerializer()
 
     class Meta:
         model = DomainEvent
         fields = (
+            'timestamp',
             'sequence_nr',
             'aggregate_id',
             'aggregate_type',
             'event_type',
             'payload',
-            'created',
-            'created_by',
+            'owner',
         )
     
     def create(self, validated_data):
-        ct_name = validated_data.pop('aggregate_type')
-        content_type = ContentType.objects.get(model=ct_name)
-        object_id = validated_data.pop('aggregate_id')
         blob = json.dumps(validated_data.pop('blob'), indent=2)
-        owner = User.objects.get(username=validated_data.pop('created_by'))
+        owner = User.objects.get(username=validated_data.pop('owner')['username'])
         return DomainEvent.objects.create(
             owner=owner,
-            content_type=content_type,
-            object_id=object_id,
             blob=blob,
             **validated_data
         )
     
-    def validate_created_by(self, value):
+    def validate_username(self, value):
         if not User.objects.filter(username=value).exists():
             raise User.DoesNotExist("Cannot find username matching '{}'".format(value))
         return value
 
 class DomainEventReadSerializer(serializers.ModelSerializer):
     payload = serializers.SerializerMethodField()
-    created = serializers.SerializerMethodField()
-    aggregate_id = serializers.IntegerField(source='object_id')
-    aggregate_type = serializers.SerializerMethodField()
-    created_by = UserSerializer(source='owner')
+    timestamp = serializers.SerializerMethodField()
+    owner = UserSerializer()
 
     class Meta:
         model = DomainEvent
         fields = (
+            'timestamp',
             'sequence_nr',
             'aggregate_id',
             'aggregate_type',
             'event_type',
-            'created_by',
-            'created',
             'payload',
+            'owner',
         )
-    
-    def get_aggregate_type(self, obj):
-        return obj.content_type.name
-    
-    def get_created(self, obj):
+
+    def get_timestamp(self, obj):
         return obj.date_occurred
 
     def get_payload(self, obj):

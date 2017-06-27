@@ -34,23 +34,14 @@ class Project(models.Model):
     def __str__(self):
         return self.code
 
-class GenericRelationModel(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
-    class Meta:
-        abstract = True
-
-
-class DomainEvent(GenericRelationModel):
+class DomainEvent(models.Model):
     sequence_nr = models.IntegerField()
-    aggregate_id = models.IntegerField(null=True) # deprecated field
-    aggregate_type = models.CharField(max_length=30, null=True) # deprecated field
+    aggregate_id = models.IntegerField()
+    aggregate_type = models.CharField(max_length=30)
     event_type = models.CharField(max_length=100)
     blob = models.TextField()
     date_occurred = models.DateTimeField()
-    username = models.CharField(max_length=50, null=True) # deprecated field
+    username = models.CharField(max_length=50) # deprecated field
     owner = models.ForeignKey(User, on_delete=models.PROTECT)
     objects = DomainEventManager()
 
@@ -64,12 +55,12 @@ class DomainEvent(GenericRelationModel):
         return super(DomainEvent, self).save(*args, **kwargs)
     
     def __str__(self):
-        return "{} {} {}".format(
+        return "id: {}\naggregate_type: {} ({})\n{}".format(
             self.id,
-            self.content_object,
+            self.aggregate_type,
+            self.aggregate_id,
             self.blob
         )
     
     class Meta:
-        unique_together = (("content_type", "object_id", "sequence_nr"),)
-        # unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),) # deprecated restriction
+        unique_together = (("aggregate_type", "aggregate_id", "sequence_nr"),) # deprecated restriction

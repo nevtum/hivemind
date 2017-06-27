@@ -10,5 +10,6 @@ class ProjectsManager(models.Manager):
         return result_set.distinct()
 
 class DomainEventManager(models.Manager):
-    def belong_to(self, content_type, object_id):
-        return self.filter(content_type=content_type, object_id=object_id)
+    def belong_to(self, aggregate_type, aggregate_id):
+        queryset = self.filter(aggregate_type=aggregate_type, aggregate_id=aggregate_id)
+        return queryset.order_by('sequence_nr')

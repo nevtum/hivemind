@@ -1,10 +1,9 @@
-FROM django:1.8.7
+FROM python:3.6.1
 
 MAINTAINER Neville Tummon
 
 RUN apt-get update && apt-get install -y \
-    wget \
-    curl
+    wget curl nano postgresql-client
 
 ADD requirements/ .
 RUN pip install -r prod.txt

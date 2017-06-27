@@ -51,7 +51,7 @@ def _defect_summary_new(project_code, end_date, show_active=True):
     events = _get_events(project_code, end_date)
 
     items = []    
-    for event_dtos in _grouped_by_object_id(events):
+    for event_dtos in _grouped_by_aggregate_id(events):
         items.append(_to_item(event_dtos))
 
     project = get_object_or_404(Project, code=project_code)
@@ -62,23 +62,23 @@ def _defect_summary_new(project_code, end_date, show_active=True):
     else:
         return project, items
 
-def _grouped_by_object_id(events):
-    event_groups = groupby(events, lambda e: e.object_id)
-    for object_id, group in event_groups:
+def _grouped_by_aggregate_id(events):
+    event_groups = groupby(events, lambda e: e.aggregate_id)
+    for aggregate_id, group in event_groups:
         event_dtos = []
         for event in group:
-            assert(object_id == event.object_id)
+            assert(aggregate_id == event.aggregate_id)
             event_dto = DomainEventReadSerializer(event).data
             event_dtos.append(event_dto)
         yield event_dtos
 
 def _get_events(project_code, end_date):
     defect_ids = Defect.objects.filter(project_code=project_code).values('id')
-    events = DomainEvent.objects.order_by('object_id', 'sequence_nr')
-    events = events.select_related('owner', 'content_type')
+    events = DomainEvent.objects.order_by('aggregate_id', 'sequence_nr')
+    events = events.select_related('owner')
     events = events.filter(
-        content_type=ContentType.objects.get(model='defect'),
-        object_id__in=defect_ids,
+        aggregate_type='DEFECT',
+        aggregate_id__in=defect_ids,
         date_occurred__lte=end_date
     )
     return events

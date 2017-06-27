@@ -1,9 +1,26 @@
-from django.test import SimpleTestCase
-
 from api.defects.serializers import CreateDefectSerializer
+from common.models import Manufacturer, Project
+from dirts.models import Priority
+from django.contrib.auth.models import User
+from django.test import TransactionTestCase
+from django.utils import timezone
 
 
-class SerializerTests(SimpleTestCase):
+class SerializerTests(TransactionTestCase):
+    def setUp(self):
+        User.objects.create_user('test_user', 'test@email.com')
+        manufacturer = Manufacturer.objects.create(
+            name='Example Manufacturer',
+            is_operational=True
+        )
+        Project.objects.create(
+            code='ABC.321',
+            manufacturer=manufacturer,
+            description='Project 1',
+            date_created=timezone.now()
+        )
+        Priority.objects.create(name='Low')
+        
     def test_create_new_defect(self):
         data = { 
             'project_code': 'ABC.321',
@@ -15,5 +32,5 @@ class SerializerTests(SimpleTestCase):
         }
         serializer = CreateDefectSerializer(data=data)
         self.assertEquals(serializer.is_valid(), True, "{}".format(serializer.errors))
-        defect = serializer.save()
+        defect = serializer.save(submitter=User.objects.get(username='test_user'))
         self.assertEqual(defect.project_code, data['project_code'])
