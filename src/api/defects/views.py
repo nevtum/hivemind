@@ -4,7 +4,6 @@ from rest_framework.decorators import (api_view, detail_route,
                                        permission_classes)
 from rest_framework.exceptions import ParseError
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from common import store as EventStore
@@ -25,13 +24,11 @@ from ..utils import defect_activities
 class PriorityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Priority.objects.all()
     paginator = None
-    permission_classes = (AllowAny,)
     serializer_class = PrioritySerializer
 
 class StatusViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Status.objects.all()
     paginator = None
-    permission_classes = (AllowAny,)
     serializer_class = StatusSerializer
 
 class CreateDefectView(generics.CreateAPIView):
@@ -49,7 +46,6 @@ class DefectBaseViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Defect.objects.all()
     serializer_class = DefectSerializer
-    permission_classes = (AllowAny,)
     pagination_class = CustomLimitOffsetPagination
     filter_backends = (SearchFilter,)
     search_fields = (
@@ -85,7 +81,6 @@ class RecentlyChangedDefectViewSet(DefectBaseViewSet):
     queryset = Defect.objects.recently_changed()
 
 @api_view(['GET'])
-@permission_classes((AllowAny, ))
 def more_like_this_defect(request, pk):
     """
     Returns a list of 5 to a maximum of 20 defects that are similar
@@ -125,7 +120,6 @@ class AutoCompleteProjects(viewsets.ReadOnlyModelViewSet):
     specified in ?q=[keyword] query string.
     """
     serializer_class = ProjectSuggestionSerializer
-    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         keyword = self.request.GET.get('q', '')
@@ -141,7 +135,6 @@ class AutoCompleteDefectTitles(viewsets.ReadOnlyModelViewSet):
     matches the [keyword] specified in ?q=[keyword] query string.
     """
     serializer_class = DefectSuggestionSerializer
-    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         keyword = self.request.GET.get('q', '')
@@ -165,7 +158,6 @@ class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     ascending, then by sequence_nr ascending
     """
     serializer_class = DomainEventReadSerializer
-    permission_classes = (AllowAny,)
     pagination_class = HighLimitOffsetPagination
     filter_backends = (OrderingFilter, SearchFilter)
     ordering_fields = ('date_occurred', 'aggregate_id', 'sequence_nr',)

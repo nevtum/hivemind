@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from common import store as EventStore
@@ -10,7 +9,6 @@ from .serializers import ImportDefectSerializer
 from .utils import import_data
 
 
-@login_required(login_url='/login/')
 def begin_import(request):
     if request.method == 'POST':
         form = ImportDefectsForm(request.POST, request.FILES)
@@ -75,7 +73,6 @@ def persist_to_database(json_data):
     else:
         persist_open_defect(json_data)
 
-@login_required(login_url='/login/')
 def complete_import(request):
     defects = request.session.get('defects', None)
     code = request.session.get('project', None)
