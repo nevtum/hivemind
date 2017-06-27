@@ -1,8 +1,8 @@
 from .models import DomainEvent
 from api.core.serializers import DomainEventReadSerializer, DomainEventWriteSerializer
 
-def get_event_count(content_type, object_id):
-	queryset = DomainEvent.objects.belong_to(content_type, object_id)
+def get_event_count(aggregate_type, aggregate_id):
+	queryset = DomainEvent.objects.belong_to(aggregate_type, aggregate_id)
 	return queryset.count()
 
 def get_events_for(aggregate_type, aggregate_id, end_date = None):

@@ -1,6 +1,5 @@
 from dirts.models import Defect
 from common.models import Project, DomainEvent
-from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
 def defect_activities(code, search_param):
@@ -16,8 +15,8 @@ def defect_activities(code, search_param):
     defect_ids = defects.only('id').all()
 
     events = DomainEvent.objects.filter(
-        content_type=ContentType.objects.get_for_model(Defect),
-        object_id__in=defect_ids
+        aggregate_type='DEFECT',
+        aggregate_id__in=defect_ids
     )
-    events = events.select_related('owner', 'content_type')
+    events = events.select_related('owner')
     return events

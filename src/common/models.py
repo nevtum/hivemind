@@ -1,6 +1,4 @@
 from django.contrib.auth.models import User
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils import timezone
@@ -46,7 +44,7 @@ class DomainEvent(models.Model):
     objects = DomainEventManager()
 
     class Meta:
-        ordering = ['date_occurred', 'object_id', 'sequence_nr']
+        ordering = ['date_occurred', 'aggregate_id', 'sequence_nr']
     
     def save(self, *args, **kwargs):
         if not self.id:

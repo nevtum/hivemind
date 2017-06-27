@@ -7,7 +7,6 @@ from ..models import Defect
 
 from api.core.serializers import DomainEventReadSerializer
 from itertools import groupby
-from django.contrib.contenttypes.models import ContentType
 from ..domain.models import DefectViewModel
 
 # def _to_dto(index, defect, end_date):

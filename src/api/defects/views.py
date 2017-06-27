@@ -161,15 +161,15 @@ class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     returns all event streams belonging to those defects 
     
     Ordering can be specified as ?ordering=[order1,order2,...].
-    The default ordering is by date ascending, then by object_id
+    The default ordering is by date ascending, then by aggregate_id
     ascending, then by sequence_nr ascending
     """
     serializer_class = DomainEventReadSerializer
     permission_classes = (AllowAny,)
     pagination_class = HighLimitOffsetPagination
     filter_backends = (OrderingFilter, SearchFilter)
-    ordering_fields = ('date_occurred', 'object_id', 'sequence_nr',)
-    ordering = ('date_occurred', 'object_id', 'sequence_nr',)
+    ordering_fields = ('date_occurred', 'aggregate_id', 'sequence_nr',)
+    ordering = ('date_occurred', 'aggregate_id', 'sequence_nr',)
 
     def get_queryset(self):
         code = self.request.GET.get('code', '')
