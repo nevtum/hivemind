@@ -3,7 +3,7 @@
 {% block content %}
 {% if registrations %}
 <table class="table table-condensed">
-    <tbody>
+    <thead>
         <tr>
             <th>Submitted Date</th>
             <th>First name</th>
@@ -13,6 +13,8 @@
             <th></th>
             <th></th>
         </tr>
+    </thead>
+    <tbody>
         {% for registration in registrations %}
         <tr>
             <td>{{registration.date_submitted}}</td>

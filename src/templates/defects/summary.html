@@ -49,10 +49,10 @@
         <input type="submit" value="View Report" />
     </form>
     {% if defects %}
-    <div>
+    <div class="table-responsive">
       <p><b>Defect summary for: <i>{{ project.code }} - {{ project.description }}</i></b></p>
       <table class="table table-striped">
-        <tbody>
+        <thead>
           <tr>
             <th>ID</th>
             <th>Owner</th>
@@ -61,6 +61,8 @@
             <th>Level</th>
             <th>Date Logged</th>
           </tr>
+        </thead>
+        <tbody>
           {% for defect in defects %}
           <tr>
             <td><a href="{% url 'defects:detail' defect.id %}">{{ defect.id }}</a></td>

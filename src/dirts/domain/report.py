@@ -56,7 +56,6 @@ def _defect_summary_new(project_code, end_date, show_active=True):
     project = get_object_or_404(Project, code=project_code)
 
     if show_active:
-        print('here')
         return project, filter(lambda x: x['status'] == 'Active', items)
     else:
         return project, items

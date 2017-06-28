@@ -7,15 +7,17 @@
           <a href="{% url 'common:create-project' %}" class="list-group-item">Add a project</a>
         </div>
       </div>
-      <div class="col-lg-9 col-lg-pull-3">
+      <div class="col-lg-9 col-lg-pull-3 table-responsive">
         <table id="project-results" class="table table-striped table-condensed">
-          <tbody>
+          <thead>
             <tr>
               <th>Project code</th>
               <th>Date created</th>
               <th>Description</th>
               <th></th>
             </tr>
+          </thead>
+          <tbody>
             {% for project in object_list %}
             <tr>
               <td>{{ project.code }}</td>
