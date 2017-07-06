@@ -18,5 +18,6 @@ router.register(r'defect_activities', views.DefectActivitiesForProject, 'activit
 urlpatterns = [
     url(r'', include(router.urls)),
     url(r'^new/$',auth(views.CreateDefectView.as_view()), name='create'),
+    url(r'^detail/(?P<pk>\d+?)/$', views.DefectDetailView.as_view(), name='detail'),
     url(r'^more_like_this/(?P<pk>\d+?)/$', views.more_like_this_defect, name='similar-defects'),
 ]

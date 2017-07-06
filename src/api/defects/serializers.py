@@ -45,6 +45,30 @@ class DefectSuggestionSerializer(serializers.Serializer):
     class Meta:
         model = Defect
 
+class DefectDetailSerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        repr = super(DefectDetailSerializer, self).to_representation(obj)
+        repr['history'] = []
+        repr['more_like_this'] = []
+        return repr
+
+
+    status = serializers.ReadOnlyField(source='status.name')
+    priority = serializers.ReadOnlyField(source='priority.name')
+    submitter = UserSerializer()
+    class Meta:
+        model = Defect
+        fields = (
+            'project_code',
+            'release_id',
+            'status',
+            'priority',
+            'reference',
+            'description',
+            'submitter',
+            'comments',
+        )
+
 class CreateDefectSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.CharField(max_length=20)

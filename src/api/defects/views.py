@@ -1,3 +1,6 @@
+from common import store as EventStore
+from common.models import Project
+from dirts.models import Defect, Priority, Status
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
 from rest_framework.decorators import (api_view, detail_route,
@@ -6,10 +9,6 @@ from rest_framework.exceptions import ParseError
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
 
-from common import store as EventStore
-from common.models import Project
-from dirts.models import Defect, Priority, Status
-
 from ..core.pagination import (CustomLimitOffsetPagination,
                                HighLimitOffsetPagination)
 from ..core.serializers import DomainEventReadSerializer
@@ -17,7 +16,7 @@ from ..defects.serializers import (CreateDefectSerializer, DefectSerializer,
                                    DefectSuggestionSerializer,
                                    MoreLikeThisSerializer, PrioritySerializer,
                                    ProjectSuggestionSerializer,
-                                   StatusSerializer)
+                                   StatusSerializer, DefectDetailSerializer)
 from ..utils import defect_activities
 
 
@@ -143,6 +142,11 @@ class AutoCompleteDefectTitles(viewsets.ReadOnlyModelViewSet):
         else:
             qs = Defect.objects.filter(reference__icontains=keyword)
             return qs[:10]
+
+class DefectDetailView(generics.RetrieveAPIView):
+    serializer_class = DefectDetailSerializer
+    queryset = Defect.objects.all()
+
 
 class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     """
