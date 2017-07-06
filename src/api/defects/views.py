@@ -1,4 +1,3 @@
-from common import store as EventStore
 from common.models import Project
 from dirts.models import Defect, Priority, Status
 from django.shortcuts import get_object_or_404
@@ -13,7 +12,7 @@ from ..core.pagination import (CustomLimitOffsetPagination,
                                HighLimitOffsetPagination)
 from ..core.serializers import DomainEventReadSerializer
 from ..defects.serializers import (CreateDefectSerializer,
-                                   DefectDetailSerializer, DefectSerializer,
+                                   DefectDetailSerializer, DefectListSerializer,
                                    DefectSuggestionSerializer,
                                    MoreLikeThisSerializer, PrioritySerializer,
                                    ProjectSuggestionSerializer,
@@ -45,7 +44,7 @@ class DefectBaseViewSet(viewsets.ReadOnlyModelViewSet):
     where **[keyword]** is replaced with your search parameter.
     """
     queryset = Defect.objects.all()
-    serializer_class = DefectSerializer
+    serializer_class = DefectListSerializer
     pagination_class = CustomLimitOffsetPagination
     filter_backends = (SearchFilter,)
     search_fields = (
@@ -55,12 +54,6 @@ class DefectBaseViewSet(viewsets.ReadOnlyModelViewSet):
         'description',
         'comments',
     )
-
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        events = EventStore.get_events_for('DEFECT', instance.id)
-        return Response(events)
-
 
 class DefectActiveViewSet(DefectBaseViewSet):
     """

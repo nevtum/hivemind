@@ -103,10 +103,10 @@ class CreateDefectSerializer(serializers.ModelSerializer):
             'comments',
         )
 
-class DefectSerializer(serializers.ModelSerializer):
+class DefectListSerializer(serializers.ModelSerializer):
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.ReadOnlyField(source='priority.name')
-    detail = serializers.HyperlinkedRelatedField(source='id', view_name='api:defects:all-detail', read_only=True)    
+    detail = serializers.HyperlinkedRelatedField(source='id', view_name='api:defects:detail', read_only=True)    
     submitter = UserSerializer()
 
     class Meta:
