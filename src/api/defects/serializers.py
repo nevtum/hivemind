@@ -1,9 +1,11 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
+from common import store as EventStore
 from common.models import Project
 from ..core.serializers import UserSerializer
 from dirts.models import Defect, Priority, Status
+from taggit.models import Tag
 
 class PrioritySerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
@@ -18,6 +20,13 @@ class StatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Status
+
+class TagsSerializer(serializers.ModelSerializer):
+    def to_representation(self, obj):
+        return obj.name
+
+    class Meta:
+        model = Tag
 
 class ProjectSuggestionSerializer(serializers.Serializer):
     label = serializers.SerializerMethodField()
@@ -46,18 +55,21 @@ class DefectSuggestionSerializer(serializers.Serializer):
         model = Defect
 
 class DefectDetailSerializer(serializers.ModelSerializer):
-    def to_representation(self, obj):
-        repr = super(DefectDetailSerializer, self).to_representation(obj)
-        repr['history'] = []
-        repr['more_like_this'] = []
-        return repr
-
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.ReadOnlyField(source='priority.name')
     submitter = UserSerializer()
+
+    def to_representation(self, obj):
+        repr = super(DefectDetailSerializer, self).to_representation(obj)
+        repr['tags'] = TagsSerializer(obj.tags.all(), many=True).data
+        repr['more_like_this'] = []
+        repr['history'] = EventStore.get_events_for('DEFECT', obj.id)
+        return repr
+
     class Meta:
         model = Defect
         fields = (
+            'id',
             'project_code',
             'date_created',
             'date_changed',
@@ -91,26 +103,26 @@ class CreateDefectSerializer(serializers.ModelSerializer):
             'comments',
         )
 
-class DefectSerializer(serializers.ModelSerializer):
-    status = serializers.ReadOnlyField(source='status.name')
-    priority = serializers.ReadOnlyField(source='priority.name')
-    detail = serializers.HyperlinkedRelatedField(source='id', view_name='api:defects:all-detail', read_only=True)    
-    submitter = UserSerializer()
+# class DefectSerializer(serializers.ModelSerializer):
+#     status = serializers.ReadOnlyField(source='status.name')
+#     priority = serializers.ReadOnlyField(source='priority.name')
+#     detail = serializers.HyperlinkedRelatedField(source='id', view_name='api:defects:all-detail', read_only=True)    
+#     submitter = UserSerializer()
 
-    class Meta:
-        model = Defect
-        fields = (
-            'id',
-            'detail',
-            'date_created',
-            'date_changed',
-            'status',
-            'project_code',
-            'release_id',
-            'priority',
-            'reference',
-            'submitter'
-        )
+#     class Meta:
+#         model = Defect
+#         fields = (
+#             'id',
+#             'detail',
+#             'date_created',
+#             'date_changed',
+#             'status',
+#             'project_code',
+#             'release_id',
+#             'priority',
+#             'reference',
+#             'submitter'
+#         )
 
 class MoreLikeThisSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
