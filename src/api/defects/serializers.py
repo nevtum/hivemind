@@ -52,7 +52,6 @@ class DefectDetailSerializer(serializers.ModelSerializer):
         repr['more_like_this'] = []
         return repr
 
-
     status = serializers.ReadOnlyField(source='status.name')
     priority = serializers.ReadOnlyField(source='priority.name')
     submitter = UserSerializer()
@@ -60,6 +59,8 @@ class DefectDetailSerializer(serializers.ModelSerializer):
         model = Defect
         fields = (
             'project_code',
+            'date_created',
+            'date_changed',
             'release_id',
             'status',
             'priority',
