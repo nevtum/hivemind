@@ -103,26 +103,26 @@ class CreateDefectSerializer(serializers.ModelSerializer):
             'comments',
         )
 
-# class DefectSerializer(serializers.ModelSerializer):
-#     status = serializers.ReadOnlyField(source='status.name')
-#     priority = serializers.ReadOnlyField(source='priority.name')
-#     detail = serializers.HyperlinkedRelatedField(source='id', view_name='api:defects:all-detail', read_only=True)    
-#     submitter = UserSerializer()
+class DefectSerializer(serializers.ModelSerializer):
+    status = serializers.ReadOnlyField(source='status.name')
+    priority = serializers.ReadOnlyField(source='priority.name')
+    detail = serializers.HyperlinkedRelatedField(source='id', view_name='api:defects:all-detail', read_only=True)    
+    submitter = UserSerializer()
 
-#     class Meta:
-#         model = Defect
-#         fields = (
-#             'id',
-#             'detail',
-#             'date_created',
-#             'date_changed',
-#             'status',
-#             'project_code',
-#             'release_id',
-#             'priority',
-#             'reference',
-#             'submitter'
-#         )
+    class Meta:
+        model = Defect
+        fields = (
+            'id',
+            'detail',
+            'date_created',
+            'date_changed',
+            'status',
+            'project_code',
+            'release_id',
+            'priority',
+            'reference',
+            'submitter'
+        )
 
 class MoreLikeThisSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()

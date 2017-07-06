@@ -13,7 +13,7 @@ from ..core.pagination import (CustomLimitOffsetPagination,
                                HighLimitOffsetPagination)
 from ..core.serializers import DomainEventReadSerializer
 from ..defects.serializers import (CreateDefectSerializer,
-                                   DefectDetailSerializer,
+                                   DefectDetailSerializer, DefectSerializer,
                                    DefectSuggestionSerializer,
                                    MoreLikeThisSerializer, PrioritySerializer,
                                    ProjectSuggestionSerializer,
@@ -45,6 +45,7 @@ class DefectBaseViewSet(viewsets.ReadOnlyModelViewSet):
     where **[keyword]** is replaced with your search parameter.
     """
     queryset = Defect.objects.all()
+    serializer_class = DefectSerializer
     pagination_class = CustomLimitOffsetPagination
     filter_backends = (SearchFilter,)
     search_fields = (
