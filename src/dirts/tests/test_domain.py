@@ -55,7 +55,7 @@ class DefectObsoleteTests(TransactionTestCase):
         User.objects.create_user('user2')
         User.objects.create_user('test_user')
 
-    def test_make_obsolete_after_closed(self):
+    def test_make_obsolete_event(self):
         model = DefectModel([import_new_defect()])
         model.close(get_user('user2'), 'v2.1.22', '', datetime(2017, 5, 22, 9, 45))
         event = model.make_obsolete(get_user('user2'), 'No longer applicable', datetime(2017, 5, 22, 9, 45))
