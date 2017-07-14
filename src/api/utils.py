@@ -27,8 +27,16 @@ from .core.domain.request import DomainEventListRequest
 def defect_activities_new(code, search_param):
     story = DomainEventFilterUserStory()
     request_object = DomainEventListRequest.from_dict({
-        'code': code,
-        'search_string': search_param,
-        'search_on': ['reference', 'description', 'comments']
+        'clients': [],
+        'projects': [code],
+        'usernames': [],
+        'tags': {
+            'match_all': [],
+            'match_any': []
+        },
+        'search': {
+            'q': search_param,
+            'search_on': ['reference', 'description', 'comments']
+        }
     })
     return story.execute(request_object)

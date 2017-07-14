@@ -22,15 +22,16 @@ class UserStory(object):
         raise NotImplementedError("process_request() not implemented")
 
 class DomainEventFilterUserStory(UserStory):
-    def process_request(self, filter_request_object):
-        filters = filter_request_object
+    def process_request(self, request_object):
+        req = request_object
         queryset = Defect.objects.all()
-        if filters.code:
-            queryset = queryset.filter(project_code__iexact=filters.code)
+        if req.has_project_codes():
+            code_query = reduce(lambda q, next: q | Q(project_code__iexact=next), req.projects, Q())
+            queryset = queryset.filter(code_query)
         
-        if filters.search_string:
-            to_q = create_map(filters.search_string)
-            query = reduce(lambda q, next: q | to_q(next), filters.search_on, Q())
+        if req.has_search_string():
+            to_q = create_map(req.search['q'])
+            query = reduce(lambda q, next: q | to_q(next), req.search['search_on'], Q())
             queryset = queryset.filter(query)
 
         defect_ids = queryset.only('id').all()
