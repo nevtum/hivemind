@@ -17,7 +17,7 @@ from ..defects.serializers import (CreateDefectSerializer,
                                    MoreLikeThisSerializer, PrioritySerializer,
                                    ProjectSuggestionSerializer,
                                    StatusSerializer)
-from ..utils import defect_activities
+from ..utils import defect_activities_new as defect_activities
 
 
 class PriorityViewSet(viewsets.ReadOnlyModelViewSet):
@@ -164,4 +164,4 @@ class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         code = self.request.GET.get('code', '')
         search = self.request.GET.get('search', '')
-        return defect_activities(code, search)
+        return defect_activities(code, search).value
