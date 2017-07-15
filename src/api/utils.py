@@ -24,7 +24,7 @@
 from .core.domain.user_stories import DomainEventFilterUserStory
 from .core.domain.request import FilterListRequest
 
-def defect_activities_new(code, search_param=''):
+def defect_activities(code, search_param=''):
     story = DomainEventFilterUserStory()
     request_object = FilterListRequest.from_dict({
         'clients': [],

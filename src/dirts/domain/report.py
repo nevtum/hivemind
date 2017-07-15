@@ -38,7 +38,7 @@ def _grouped_by_aggregate_id(events):
 
 def _get_events(project_code, end_date):
     story = DomainEventFilterUserStory()
-    request_object = DomainEventListRequest(projects=[project_code])
+    request_object = FilterListRequest(projects=[project_code])
     response = story.execute(request_object)
     if response.has_errors:
         raise ValueError(response.message)

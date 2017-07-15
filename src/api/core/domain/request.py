@@ -23,7 +23,7 @@ class FilterListRequest(object):
     @classmethod
     def from_dict(cls, adict):
         # rough validation
-        return cls(adict)
+        return cls(**adict)
 
     def has_project_codes(self):
         if self.projects == []:

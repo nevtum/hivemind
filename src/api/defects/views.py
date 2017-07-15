@@ -17,7 +17,7 @@ from ..defects.serializers import (CreateDefectSerializer,
                                    MoreLikeThisSerializer, PrioritySerializer,
                                    ProjectSuggestionSerializer,
                                    StatusSerializer)
-from ..utils import defect_activities_new as defect_activities
+from ..utils import defect_activities
 
 
 class PriorityViewSet(viewsets.ReadOnlyModelViewSet):
