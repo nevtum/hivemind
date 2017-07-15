@@ -1,24 +1,10 @@
 from collections import defaultdict
 
-class DomainEventListRequest(object):
-    def __init__(self, adict):
-        self.error_dict = defaultdict()
+class FilterListRequest(object):
+    def __init__(self, **adict):
         for key, value in adict.items():
             setattr(self, key, value)
-    
-    def has_project_codes(self):
-        if self.projects == []:
-            return False
-        for code in self.projects:
-            if code != '':
-                return True
-        return False
-
-    def has_search_string(self):
-        if self.search['q'] != '':
-            return True
-        else:
-            return False
+        self.error_dict = defaultdict()
 
     def is_valid(self):
         self._validate_search_input()
@@ -28,6 +14,29 @@ class DomainEventListRequest(object):
             return False
         else:
             return True
+
+    @property
+    def errors(self):
+        if self.error_dict:
+            return self.error_dict
+
+    @classmethod
+    def from_dict(cls, adict):
+        # rough validation
+        return cls(adict)
+
+    def has_project_codes(self):
+        if self.projects == []:
+            return False
+        for code in self.projects:
+            if code != '':
+                return True
+        return False
+
+    def has_search_input(self):
+        if  hasattr(self, 'search'):
+            return True
+        return False
     
     def _validate_search_input(self):
         if hasattr(self, 'search'):
@@ -48,13 +57,3 @@ class DomainEventListRequest(object):
                 errors.append("match_any array missing from tags dictionary")
             if len(errors) > 0:
                 self.error_dict['tags'] = errors
-
-    @property
-    def errors(self):
-        if self.error_dict:
-            return self.error_dict
-
-    @classmethod
-    def from_dict(cls, adict):
-        # rough validation
-        return cls(adict)

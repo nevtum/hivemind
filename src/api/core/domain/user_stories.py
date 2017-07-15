@@ -29,7 +29,7 @@ class DomainEventFilterUserStory(UserStory):
             code_query = reduce(lambda q, next: q | Q(project_code__iexact=next), req.projects, Q())
             queryset = queryset.filter(code_query)
         
-        if req.has_search_string():
+        if req.has_search_input():
             to_q = create_map(req.search['q'])
             query = reduce(lambda q, next: q | to_q(next), req.search['search_on'], Q())
             queryset = queryset.filter(query)
