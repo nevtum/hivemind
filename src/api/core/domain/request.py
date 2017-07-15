@@ -8,7 +8,7 @@ class DomainEventListRequest(object):
         if self.projects == []:
             return False
         for code in self.projects:
-            if (code != '') and (code != None):
+            if code != '':
                 return True
         return False
 
