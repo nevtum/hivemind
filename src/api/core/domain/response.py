@@ -1,11 +1,19 @@
 class Success(object):
     def __init__(self, value):
         self.value = value
+    
+    @property
+    def has_errors(self):
+        return False
 
 class Fail(object):
     def __init__(self, message):
-        self.value = message
+        self.message = message
     
+    @property
+    def has_errors(self):
+        return True
+
     @classmethod
     def from_exception(cls, ex):
         errors = "\n".join(ex.args)

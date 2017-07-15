@@ -164,4 +164,4 @@ class DefectActivitiesForProject(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         code = self.request.GET.get('code', '')
         search = self.request.GET.get('search', '')
-        return defect_activities(code, search).value
+        return defect_activities(code, search)
