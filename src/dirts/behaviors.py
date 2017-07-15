@@ -19,6 +19,7 @@ class SimilarContentAware:
         except:
             return []
 
+# eventually replace with user stories
 class EventSourceAware:
     def as_domainmodel(self, before_date = None):
         events = EventStore.get_events_for('DEFECT', self.id, before_date)

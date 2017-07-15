@@ -89,15 +89,25 @@ def debug(request, pk):
     }
     return render(request, 'defects/debug.html', data)
 
+from ..domain.user_stories import CreateDefectUserStory
+from ..domain.requests import CreateDefectRequest
+
 class DefectCreateView(CreateView):
     template_name = 'defects/create.html'
     form_class = CreateDefectForm
 
     def form_valid(self, form):
-        defect = form.save(commit=False)
-        defect.submitter = self.request.user
-        defect.save()
-        return redirect(defect)
+        request_object = CreateDefectRequest(self.request.user, form)
+        response = CreateDefectUserStory().execute(request_object)
+        if response.has_errors:
+            raise ValueError(response.message)
+        return redirect(response.value)
+
+    # def form_valid(self, form):
+    #     defect = form.save(commit=False)
+    #     defect.submitter = self.request.user
+    #     defect.save()
+    #     return redirect(defect)
 
 class DefectCopyView(DefectCreateView, UpdateView):
     model = Defect

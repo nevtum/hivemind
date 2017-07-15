@@ -69,13 +69,13 @@ class Defect(SimilarContentAware, EventSourceAware, models.Model):
         return reverse('defects:detail', kwargs={'pk': self.id})
     
     def reopen(self, user, release_id, reason):
-        super(Defect, self).reopen(user, release_id, reason)
+        # super(Defect, self).reopen(user, release_id, reason)
         self.status = Status.objects.get(name='Open')
         self.release_id = release_id
         self.save()
 
     def close(self, user, release_id, reason, timestamp=None):
-        super(Defect, self).close(user, release_id, reason, timestamp)
+        # super(Defect, self).close(user, release_id, reason, timestamp)
         self.status = Status.objects.get(name='Closed')
         self.release_id = release_id
         self.save()
