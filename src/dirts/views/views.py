@@ -89,15 +89,15 @@ def debug(request, pk):
     }
     return render(request, 'defects/debug.html', data)
 
-from ..domain.user_stories import CreateDefectUserStory
-from ..domain.requests import CreateDefectRequest
+from ..domain.user_stories import CreateDefectUserStory, UpdateDefectUserStory
+from ..domain.requests import CreateUpdateDefectRequest
 
 class DefectCreateView(CreateView):
     template_name = 'defects/create.html'
     form_class = CreateDefectForm
 
     def form_valid(self, form):
-        request_object = CreateDefectRequest(self.request.user, form)
+        request_object = CreateUpdateDefectRequest(self.request.user, form)
         response = CreateDefectUserStory().execute(request_object)
         if response.has_errors:
             raise ValueError(response.message)
@@ -121,9 +121,16 @@ class DefectUpdateView(UpdateView):
     form_class = CreateDefectForm
     
     def form_valid(self, form):
-        defect = form.save(commit=False)
-        defect.amend(self.request.user)
-        return redirect(defect)
+        request_object = CreateUpdateDefectRequest(self.request.user, form)
+        response = UpdateDefectUserStory().execute(request_object)
+        if response.has_errors:
+            raise ValueError(response.message)
+        return redirect(response.value)
+
+    # def form_valid(self, form):
+    #     defect = form.save(commit=False)
+    #     defect.amend(self.request.user)
+    #     return redirect(defect)
 
 class DefectCloseView(UpdateView):
     model = Defect
