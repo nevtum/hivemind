@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
 from common import store as EventStore
@@ -8,18 +9,6 @@ from .forms import ImportDefectsForm
 from .serializers import ImportDefectSerializer
 from .utils import import_data
 
-
-def begin_import(request):
-    if request.method == 'POST':
-        form = ImportDefectsForm(request.POST, request.FILES)
-        if form.is_valid():
-            request.session['project'] = form.cleaned_data['project_code']
-            request.session['defects'] = import_data(request)
-            return redirect('defects:imports:complete-import')
-        else:
-            return render(request, 'defects/begin_import.html', {'form': form})
-    form = ImportDefectsForm()
-    return render(request, 'defects/begin_import.html', {'form': form})
 
 def import_event(defect):
     return {
@@ -73,6 +62,19 @@ def persist_to_database(json_data):
     else:
         persist_open_defect(json_data)
 
+def begin_import(request):
+    if request.method == 'POST':
+        form = ImportDefectsForm(request.POST, request.FILES)
+        if form.is_valid():
+            request.session['project'] = form.cleaned_data['project_code']
+            request.session['defects'] = import_data(request)
+            return redirect('defects:imports:complete-import')
+        else:
+            return render(request, 'defects/begin_import.html', {'form': form})
+    form = ImportDefectsForm()
+    return render(request, 'defects/begin_import.html', {'form': form})
+
+@transaction.atomic
 def complete_import(request):
     defects = request.session.get('defects', None)
     code = request.session.get('project', None)
