@@ -1,13 +1,10 @@
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 
-from common import store as EventStore
 from common.models import Project
 
 from ..domain.requests import SaveImportedDefectListRequest
 from ..domain.user_stories import CommitImportDefectListUserStory
-from ..models import Status
-from ..utils import create_import_event_dto
 from .forms import ImportDefectsForm
 from .utils import import_data
 
@@ -23,7 +20,6 @@ def begin_import(request):
             return render(request, 'defects/begin_import.html', {'form': form})
     form = ImportDefectsForm()
     return render(request, 'defects/begin_import.html', {'form': form})
-
 
 @transaction.atomic
 def complete_import(request):
