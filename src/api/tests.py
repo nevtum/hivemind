@@ -9,7 +9,7 @@ class CommandHandlerTests(APITestCase):
         email = 'test@test.com'
         password = 'test_password'
         user = User.objects.create_user(username, email, password)
-        self.client.force_authenticate(user)
+        self.client.force_login(user)
 
     def test_missing_header(self):
         data = { 'id': 123 }
