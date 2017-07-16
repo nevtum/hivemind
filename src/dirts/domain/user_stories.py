@@ -19,7 +19,7 @@ class CreateDefectUserStory(UserStory):
         EventStore.append_next(event)
         return Success(defect)
 
-class ImportDefectUserStory(UserStory):
+class CommitImportDefectListUserStory(UserStory):
     @transaction.atomic    
     def process_request(self, request_object):
         raise NotImplementedError()

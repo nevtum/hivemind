@@ -177,7 +177,7 @@ class DefectViewModel(object):
         self.id = event['aggregate_id']
         self.submitter = event['owner']
         self.date_created = event['timestamp']
-        self.status = event['payload']['status']
+        self.status = 'Open'
         self._set_properties(event)
 
     def _on_opened(self, event):
