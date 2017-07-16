@@ -68,26 +68,6 @@ class Defect(SimilarContentAware, EventSourceAware, models.Model):
     def get_absolute_url(self):
         return reverse('defects:detail', kwargs={'pk': self.id})
     
-    def reopen(self, user, release_id, reason):
-        # super(Defect, self).reopen(user, release_id, reason)
-        self.status = Status.objects.get(name='Open')
-        self.release_id = release_id
-        self.save()
-
-    def close(self, user, release_id, reason, timestamp=None):
-        # super(Defect, self).close(user, release_id, reason, timestamp)
-        self.status = Status.objects.get(name='Closed')
-        self.release_id = release_id
-        self.save()
-    
-    def import_close(self, timestamp=None):
-        self.close(
-            self.submitter,
-            self.release_id,
-            '',
-            timestamp
-        )
-        
     def save(self, *args, **kwargs):
         if not self.id:
             if not self.date_created:

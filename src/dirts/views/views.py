@@ -105,12 +105,6 @@ class DefectCreateView(CreateView):
             raise ValueError(response.message)
         return redirect(response.value)
 
-    # def form_valid(self, form):
-    #     defect = form.save(commit=False)
-    #     defect.submitter = self.request.user
-    #     defect.save()
-    #     return redirect(defect)
-
 class DefectCopyView(DefectCreateView, UpdateView):
     model = Defect
 
@@ -129,11 +123,6 @@ class DefectUpdateView(UpdateView):
             raise ValueError(response.message)
         return redirect(response.value)
 
-    # def form_valid(self, form):
-    #     defect = form.save(commit=False)
-    #     defect.amend(self.request.user)
-    #     return redirect(defect)
-
 class DefectCloseView(UpdateView):
     model = Defect
     template_name = 'defects/close.html'
@@ -145,13 +134,6 @@ class DefectCloseView(UpdateView):
         if response.has_errors:
             raise ValueError(response.message)
         return redirect(response.value)
-
-    # def form_valid(self, form):
-    #     defect = form.save(commit=False)
-    #     release_id = form.cleaned_data['release_id']
-    #     reason = form.cleaned_data['reason']
-    #     defect.close(self.request.user, release_id, reason)
-    #     return redirect(defect)
 
 class DefectLockView(UpdateView):
     model = Defect
@@ -165,16 +147,6 @@ class DefectLockView(UpdateView):
             raise ValueError(response.message)
         return redirect(response.value)
 
-    # def form_valid(self, form):
-    #     defect = form.instance
-    #     kwargs = form.cleaned_data
-    #     kwargs['user'] = self.request.user
-    #     kwargs['timestamp'] = timezone.now()
-    #     defect_model = defect.as_domainmodel()
-    #     event = defect_model.make_obsolete(**kwargs)
-    #     EventStore.append_next(event)
-    #     return redirect(defect)
-
 class DefectReopenView(UpdateView):
     model = Defect
     template_name = 'defects/reopen.html'
@@ -186,13 +158,6 @@ class DefectReopenView(UpdateView):
         if response.has_errors:
             raise ValueError(response.message)
         return redirect(response.value)
-
-    # def form_valid(self, form):
-    #     defect = form.save(commit=False)
-    #     release_id = form.data['release_id']
-    #     reason = form.data['reason']
-    #     defect.reopen(self.request.user, release_id, reason)
-    #     return redirect(defect)
 
 class EditTagsView(UpdateView):
     model = Defect

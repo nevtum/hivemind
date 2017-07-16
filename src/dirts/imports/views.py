@@ -39,20 +39,3 @@ def complete_import(request):
         'project': project
     }
     return render(request, 'defects/confirm_import.html', res)
-
-# @transaction.atomic
-# def complete_import(request):
-#     defects = request.session.get('defects', None)
-#     code = request.session.get('project', None)
-#     project = get_object_or_404(Project, code=code)
-#     if request.method == 'POST':
-#         for json in defects:
-#             persist_to_database(json)
-#         del request.session['defects']
-#         del request.session['project']
-#         return redirect('defects:list')
-#     res = {
-#         'defects': defects,
-#         'project': project
-#     }
-#     return render(request, 'defects/confirm_import.html', res)
