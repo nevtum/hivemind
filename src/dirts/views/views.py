@@ -9,9 +9,10 @@ from common import store as EventStore
 from common.models import Project
 
 from ..domain.report import defect_summary
-from ..domain.requests import MutateDefectRequest
+from ..domain.requests import MutateDefectRequest, DeleteDefectRequest
 from ..domain.user_stories import (CloseDefectUserStory, CreateDefectUserStory,
-                                   LockDefectUserStory, UpdateDefectUserStory)
+                                   DeleteDefectUserStory, LockDefectUserStory,
+                                   UpdateDefectUserStory)
 from ..forms import (CloseDefectForm, CreateDefectForm, DefectSummaryForm,
                      LockDefectForm, ReopenDefectForm, TagsForm)
 from ..mixins import DefectSearchMixin
@@ -197,9 +198,8 @@ def delete(request, pk):
     if request.method == 'GET':
         return render(request, 'defects/confirm_delete.html', {'id': pk})
 
-    defect = Defect.objects.get(pk=pk)
-    defect_model = defect.as_domainmodel()
-    event = defect_model.soft_delete(request.user, timezone.now())
-    EventStore.append_next(event)
-    defect.delete()
+    request_object = DeleteDefectRequest(user=request.user, id=pk)
+    response = DeleteDefectUserStory().execute(request_object)
+    if response.has_errors:
+        raise ValueError(response.message)
     return redirect('defects:list')

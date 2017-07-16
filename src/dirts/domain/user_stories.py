@@ -5,8 +5,8 @@ from api.core.domain.response import Success
 from api.core.domain.user_stories import UserStory
 from common import store as EventStore
 
-from ..models import Status
 from .. import constants
+from ..models import Defect, Status
 
 
 class CreateDefectUserStory(UserStory):
@@ -42,6 +42,7 @@ class CreateDefectUserStory(UserStory):
 
 
 class ImportDefectUserStory(UserStory):
+    @transaction.atomic    
     def process_request(self, request_object):
         pass
 
@@ -96,7 +97,12 @@ class ReopenDefectUserStory(UserStory):
 class DeleteDefectUserStory(UserStory):
     @transaction.atomic
     def process_request(self, request_object):
-        pass
+        defect = Defect.objects.get(pk=request_object.id)
+        model = defect.as_domainmodel()
+        event = model.soft_delete(request_object.user, timezone.now())
+        EventStore.append_next(event)
+        defect.delete()
+        return Success(None)
 
 class LockDefectUserStory(UserStory):
     @transaction.atomic
