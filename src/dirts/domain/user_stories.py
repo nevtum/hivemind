@@ -92,7 +92,18 @@ class CloseDefectUserStory(UserStory):
 class ReopenDefectUserStory(UserStory):
     @transaction.atomic
     def process_request(self, request_object):
-        pass
+        form = request_object.form
+        release_id = form.cleaned_data['release_id']
+        reason = form.cleaned_data['reason']
+        
+        defect = form.save(commit=False)
+        model = defect.as_domainmodel()
+        event = model.reopen(request_object.user, release_id, reason, timezone.now())
+        EventStore.append_next(event)
+        defect.status = Status.objects.get(name='Open')
+        defect.release_id = release_id
+        defect.save()
+        return Success(defect)
 
 class DeleteDefectUserStory(UserStory):
     @transaction.atomic

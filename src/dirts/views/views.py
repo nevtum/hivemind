@@ -9,9 +9,10 @@ from common import store as EventStore
 from common.models import Project
 
 from ..domain.report import defect_summary
-from ..domain.requests import MutateDefectRequest, DeleteDefectRequest
+from ..domain.requests import DeleteDefectRequest, MutateDefectRequest
 from ..domain.user_stories import (CloseDefectUserStory, CreateDefectUserStory,
                                    DeleteDefectUserStory, LockDefectUserStory,
+                                   ReopenDefectUserStory,
                                    UpdateDefectUserStory)
 from ..forms import (CloseDefectForm, CreateDefectForm, DefectSummaryForm,
                      LockDefectForm, ReopenDefectForm, TagsForm)
@@ -180,11 +181,18 @@ class DefectReopenView(UpdateView):
     form_class = ReopenDefectForm
     
     def form_valid(self, form):
-        defect = form.save(commit=False)
-        release_id = form.data['release_id']
-        reason = form.data['reason']
-        defect.reopen(self.request.user, release_id, reason)
-        return redirect(defect)
+        request_object = MutateDefectRequest(self.request.user, form)
+        response = ReopenDefectUserStory().execute(request_object)
+        if response.has_errors:
+            raise ValueError(response.message)
+        return redirect(response.value)
+
+    # def form_valid(self, form):
+    #     defect = form.save(commit=False)
+    #     release_id = form.data['release_id']
+    #     reason = form.data['reason']
+    #     defect.reopen(self.request.user, release_id, reason)
+    #     return redirect(defect)
 
 class EditTagsView(UpdateView):
     model = Defect
