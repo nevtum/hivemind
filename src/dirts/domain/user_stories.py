@@ -5,6 +5,7 @@ from api.core.domain.response import Success
 from api.core.domain.user_stories import UserStory
 from common import store as EventStore
 
+from ..models import Status
 from .. import constants
 
 
@@ -58,9 +59,9 @@ class UpdateDefectUserStory(UserStory):
     def _to_kwargs(self, instance):
         return dict({
             'project_code': instance.project_code,
-            'submitter': instance.submitter.username,
+            'submitter': instance.submitter.username, # redundant field
             'release_id': instance.release_id,
-            'status': instance.status.name,
+            'status': instance.status.name, # redundant field. status is always open
             'priority': instance.priority.name,
             'reference': instance.reference,
             'description': instance.description,
@@ -68,13 +69,45 @@ class UpdateDefectUserStory(UserStory):
         })
 
 class CloseDefectUserStory(UserStory):
+    @transaction.atomic
     def process_request(self, request_object):
-        pass
+        form = request_object.form
+        
+        user = request_object.user
+        release_id = form.cleaned_data['release_id']
+        reason = form.cleaned_data['reason']
+        date_closed = timezone.now()
+
+        defect = form.save(commit=False)
+        model = defect.as_domainmodel()
+        event = model.close(user, release_id, reason, date_closed)
+        EventStore.append_next(event)
+        
+        defect.status = Status.objects.get(name='Closed')
+        defect.release_id = release_id
+        defect.save()
+        return Success(defect)
 
 class ReopenDefectUserStory(UserStory):
+    @transaction.atomic
     def process_request(self, request_object):
         pass
 
 class DeleteDefectUserStory(UserStory):
+    @transaction.atomic
     def process_request(self, request_object):
         pass
+
+class LockDefectUserStory(UserStory):
+    @transaction.atomic
+    def process_request(self, request_object):
+        form = request_object.form
+        defect = form.instance
+        defect_model = defect.as_domainmodel()
+        event = defect_model.make_obsolete(
+            user=request_object.user,
+            timestamp=timezone.now(),
+            **form.cleaned_data
+        )
+        EventStore.append_next(event)
+        return Success(defect)

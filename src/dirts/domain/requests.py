@@ -1,4 +1,4 @@
-class CreateUpdateDefectRequest(object):
+class MutateDefectRequest(object):
     def __init__(self, user, form):
         self.form = form
         self.user = user

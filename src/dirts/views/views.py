@@ -8,11 +8,14 @@ from comments.models import Comment
 from common import store as EventStore
 from common.models import Project
 
-from ..forms import (CloseDefectForm, CreateDefectForm, ReopenDefectForm, TagsForm,
-                     DefectSummaryForm, LockDefectForm)
-from ..models import Defect
 from ..domain.report import defect_summary
+from ..domain.requests import MutateDefectRequest
+from ..domain.user_stories import (CloseDefectUserStory, CreateDefectUserStory,
+                                   LockDefectUserStory, UpdateDefectUserStory)
+from ..forms import (CloseDefectForm, CreateDefectForm, DefectSummaryForm,
+                     LockDefectForm, ReopenDefectForm, TagsForm)
 from ..mixins import DefectSearchMixin
+from ..models import Defect
 
 
 class TagsListView(ListView):
@@ -89,15 +92,12 @@ def debug(request, pk):
     }
     return render(request, 'defects/debug.html', data)
 
-from ..domain.user_stories import CreateDefectUserStory, UpdateDefectUserStory
-from ..domain.requests import CreateUpdateDefectRequest
-
 class DefectCreateView(CreateView):
     template_name = 'defects/create.html'
     form_class = CreateDefectForm
 
     def form_valid(self, form):
-        request_object = CreateUpdateDefectRequest(self.request.user, form)
+        request_object = MutateDefectRequest(self.request.user, form)
         response = CreateDefectUserStory().execute(request_object)
         if response.has_errors:
             raise ValueError(response.message)
@@ -121,7 +121,7 @@ class DefectUpdateView(UpdateView):
     form_class = CreateDefectForm
     
     def form_valid(self, form):
-        request_object = CreateUpdateDefectRequest(self.request.user, form)
+        request_object = MutateDefectRequest(self.request.user, form)
         response = UpdateDefectUserStory().execute(request_object)
         if response.has_errors:
             raise ValueError(response.message)
@@ -138,11 +138,18 @@ class DefectCloseView(UpdateView):
     form_class = CloseDefectForm
     
     def form_valid(self, form):
-        defect = form.save(commit=False)
-        release_id = form.cleaned_data['release_id']
-        reason = form.cleaned_data['reason']
-        defect.close(self.request.user, release_id, reason)
-        return redirect(defect)
+        request_object = MutateDefectRequest(self.request.user, form)
+        response = CloseDefectUserStory().execute(request_object)
+        if response.has_errors:
+            raise ValueError(response.message)
+        return redirect(response.value)
+
+    # def form_valid(self, form):
+    #     defect = form.save(commit=False)
+    #     release_id = form.cleaned_data['release_id']
+    #     reason = form.cleaned_data['reason']
+    #     defect.close(self.request.user, release_id, reason)
+    #     return redirect(defect)
 
 class DefectLockView(UpdateView):
     model = Defect
@@ -150,14 +157,21 @@ class DefectLockView(UpdateView):
     form_class = LockDefectForm
 
     def form_valid(self, form):
-        defect = form.instance
-        kwargs = form.cleaned_data
-        kwargs['user'] = self.request.user
-        kwargs['timestamp'] = timezone.now()
-        defect_model = defect.as_domainmodel()
-        event = defect_model.make_obsolete(**kwargs)
-        EventStore.append_next(event)
-        return redirect(defect)
+        request_object = MutateDefectRequest(self.request.user, form)
+        response = LockDefectUserStory().execute(request_object)
+        if response.has_errors:
+            raise ValueError(response.message)
+        return redirect(response.value)
+
+    # def form_valid(self, form):
+    #     defect = form.instance
+    #     kwargs = form.cleaned_data
+    #     kwargs['user'] = self.request.user
+    #     kwargs['timestamp'] = timezone.now()
+    #     defect_model = defect.as_domainmodel()
+    #     event = defect_model.make_obsolete(**kwargs)
+    #     EventStore.append_next(event)
+    #     return redirect(defect)
 
 class DefectReopenView(UpdateView):
     model = Defect
