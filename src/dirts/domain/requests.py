@@ -17,3 +17,12 @@ class DeleteDefectRequest(object):
         if not hasattr(self, 'user') or not hasattr(self, 'id'):
             return False
         return True
+
+class SaveImportedDefectListRequest(object):
+    def __init__(self, defects):
+        self.defects = defects
+    
+    def is_valid(self):
+        if not hasattr(self, 'defects'):
+            return False
+        return True

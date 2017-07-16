@@ -5,8 +5,9 @@ from api.core.domain.response import Success
 from api.core.domain.user_stories import UserStory
 from common import store as EventStore
 
+from ..imports.serializers import ImportDefectSerializer
 from ..models import Defect, Status
-from ..utils import create_event_dto, create_payload
+from ..utils import create_event_dto, create_import_event_dto, create_payload
 
 
 class CreateDefectUserStory(UserStory):
@@ -18,11 +19,6 @@ class CreateDefectUserStory(UserStory):
         event = create_event_dto(defect)
         EventStore.append_next(event)
         return Success(defect)
-
-class CommitImportDefectListUserStory(UserStory):
-    @transaction.atomic    
-    def process_request(self, request_object):
-        raise NotImplementedError()
 
 class UpdateDefectUserStory(UserStory):
     @transaction.atomic
@@ -94,3 +90,41 @@ class LockDefectUserStory(UserStory):
         )
         EventStore.append_next(event)
         return Success(defect)
+
+class CommitImportDefectListUserStory(UserStory):
+    @transaction.atomic    
+    def process_request(self, request_object):
+        for json in request_object.defects:
+            if json['status'] == 'Closed':
+                self.persist_closed_defect(json)
+            else:
+                self.persist_open_defect(json)
+        return Success(None)
+    
+    def persist_open_defect(self, json_data):
+        serializer = ImportDefectSerializer(data=json_data)
+        if not serializer.is_valid():
+            raise Exception("Something went wrong with import!")
+        defect = serializer.save()
+        event = create_import_event_dto(defect)
+        EventStore.append_next(event)
+        return defect
+
+    def persist_closed_defect(self, json_data):
+        updated_data = json_data.copy()
+        updated_data['status'] = 'Open'
+        date_closed = self.get_closed_date(updated_data)
+        defect = self.persist_open_defect(updated_data)
+        user = defect.submitter
+        release_id = defect.release_id
+        model = defect.as_domainmodel()
+        event = model.close(user, release_id, '', date_closed)
+        EventStore.append_next(event)
+        defect.status = Status.objects.get(name='Closed')
+        defect.release_id = release_id
+        defect.save()
+
+    def get_closed_date(self, json_data):
+        serializer = ImportDefectSerializer(data=json_data)
+        if serializer.is_valid():
+            return serializer.validated_data['date_changed']
