@@ -5,8 +5,8 @@ from api.core.domain.response import Success
 from api.core.domain.user_stories import UserStory
 from common import store as EventStore
 
-from .. import constants
 from ..models import Defect, Status
+from ..utils import create_event_dto, create_payload
 
 
 class CreateDefectUserStory(UserStory):
@@ -15,59 +15,25 @@ class CreateDefectUserStory(UserStory):
         defect = request_object.form.save(commit=False)
         defect.submitter = request_object.user
         defect.save()
-        event = self._create_event(defect)
+        event = create_event_dto(defect)
         EventStore.append_next(event)
         return Success(defect)
-    
-    def _create_event(self, instance):
-        return {
-            'timestamp': instance.date_created,
-            'sequence_nr': 0,
-            'aggregate_id': instance.id,
-            'aggregate_type': 'DEFECT',
-            'event_type': constants.DEFECT_OPENED,
-            'payload': {
-                'project_code': instance.project_code,
-                'release_id': instance.release_id,
-                'priority': instance.priority.name,
-                'reference': instance.reference,
-                'description': instance.description,
-                'comments': instance.comments
-            },
-            'owner': {
-                'username': instance.submitter.username,
-                'email': instance.submitter.email
-            }
-        }
-
 
 class ImportDefectUserStory(UserStory):
     @transaction.atomic    
     def process_request(self, request_object):
-        pass
+        raise NotImplementedError()
 
 class UpdateDefectUserStory(UserStory):
     @transaction.atomic
     def process_request(self, request_object):
         defect = request_object.form.save(commit=False)
-        kwargs = self._to_kwargs(defect)
+        kwargs = create_payload(defect)
         model = defect.as_domainmodel()
         event = model.amend(request_object.user, timezone.now(), **kwargs)
         EventStore.append_next(event)
         defect.save()
         return Success(defect)
-
-    def _to_kwargs(self, instance):
-        return dict({
-            'project_code': instance.project_code,
-            'submitter': instance.submitter.username, # redundant field
-            'release_id': instance.release_id,
-            'status': instance.status.name, # redundant field. status is always open
-            'priority': instance.priority.name,
-            'reference': instance.reference,
-            'description': instance.description,
-            'comments': instance.comments,
-        })
 
 class CloseDefectUserStory(UserStory):
     @transaction.atomic
@@ -95,7 +61,7 @@ class ReopenDefectUserStory(UserStory):
         form = request_object.form
         release_id = form.cleaned_data['release_id']
         reason = form.cleaned_data['reason']
-        
+
         defect = form.save(commit=False)
         model = defect.as_domainmodel()
         event = model.reopen(request_object.user, release_id, reason, timezone.now())
