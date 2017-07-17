@@ -5,7 +5,7 @@ from django.views.generic import CreateView, ListView, UpdateView
 
 from . import store as EventStore
 from .models import DomainEvent, Project
-from .utils import create_project_modified_dto
+from .utils import create_project_dto, project_modified_dto
 
 
 class CreateProjectView(CreateView):
@@ -18,22 +18,27 @@ class CreateProjectView(CreateView):
         'description',
         'date_created',
     ]
+
+    @transaction.atomic
+    def form_valid(self, form):
+        project = form.save()
+        event = create_project_dto(self.request.user, project)
+        EventStore.append_next(event)
+        return redirect('common:projects')
     
 class EditProjectView(UpdateView):
     model = Project
     template_name = 'projects/edit.html'
     fields = [
-        'manufacturer',
         'code',
         'description',
-        'date_created',
     ]
 
     @transaction.atomic
     def form_valid(self, form):
         project = form.save()
         seq_nr = DomainEvent.objects.belong_to('PROJECT', project.id).count()
-        event = create_project_modified_dto(self.request.user, project, seq_nr)
+        event = project_modified_dto(self.request.user, project, seq_nr)
         EventStore.append_next(event)
         return redirect('common:projects')
 
