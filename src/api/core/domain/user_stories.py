@@ -12,7 +12,10 @@ class UserStory(object):
     def execute(self, request_object):
         if request_object.is_valid():
             try:
-                return self.process_request(request_object)
+                response = self.process_request(request_object)
+                if response == None:
+                    raise Exception("process_request did not return a reponse")
+                return response
             except Exception as exc:
                 return Fail.from_exception(exc)
         else:
