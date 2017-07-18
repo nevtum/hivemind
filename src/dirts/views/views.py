@@ -4,6 +4,7 @@ from django.utils import dateparse, timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from taggit.models import Tag
 
+from api.core.domain.request import FilterListRequest
 from comments.models import Comment
 from common import store as EventStore
 from common.models import Project
@@ -11,8 +12,9 @@ from common.models import Project
 from ..domain.report import defect_summary
 from ..domain.requests import DeleteDefectRequest, MutateDefectRequest
 from ..domain.user_stories import (CloseDefectUserStory, CreateDefectUserStory,
-                                   DeleteDefectUserStory, LockDefectUserStory,
-                                   ReopenDefectUserStory,
+                                   DeleteDefectUserStory,
+                                   FilterDefectListUserStory,
+                                   LockDefectUserStory, ReopenDefectUserStory,
                                    UpdateDefectUserStory)
 from ..forms import (CloseDefectForm, CreateDefectForm, DefectSummaryForm,
                      LockDefectForm, ReopenDefectForm, TagsForm)
@@ -23,6 +25,22 @@ from ..models import Defect
 class TagsListView(ListView):
     template_name = 'defects/tags.html'
     queryset = Defect.objects.top_tags()
+
+class CustomListView(DefectSearchMixin, ListView):
+    template_name = 'defects/list.html'
+    context_object_name = 'defects'
+    paginate_by = 25
+
+    def get_queryset(self):
+        # get a filter model by slug name
+        # take all parameters and populate request_object
+        request_object = FilterListRequest().from_dict({
+            'clients': [2, 3]
+        })
+        response = FilterDefectListUserStory().execute(request_object)
+        if response.has_errors:
+            raise ValueError(response.message)
+        return response.value
 
 class DefectListView(DefectSearchMixin, ListView):
     queryset = Defect.objects.all()

@@ -128,3 +128,22 @@ class CommitImportDefectListUserStory(UserStory):
         serializer = ImportDefectSerializer(data=json_data)
         if serializer.is_valid():
             return serializer.validated_data['date_changed']
+
+class FilterDefectListUserStory(UserStory):
+    def process_request(self, request_object):
+        req = request_object
+        queryset = Defect.objects.all()
+
+        if req.has_clients():
+            queryset = queryset.filter(project__manufacturer__id__in=req.clients)
+
+        if req.has_project_codes():
+            code_query = reduce(lambda q, next: q | Q(project_code__iexact=next), req.projects, Q())
+            queryset = queryset.filter(code_query)
+        
+        if req.has_search_input():
+            to_q = create_map(req.search['q'])
+            query = reduce(lambda q, next: q | to_q(next), req.search['search_on'], Q())
+            queryset = queryset.filter(query)
+        
+        return Success(queryset)

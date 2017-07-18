@@ -28,3 +28,10 @@ urlpatterns = [
     url(r'^(?P<pk>\d+?)/delete/$', auth(views.delete), name='delete'),
     url(r'^(?P<pk>\d+?)/tags/$', auth(views.EditTagsView.as_view()), name='tags'),
 ]
+
+# experimental url
+urlpatterns += url(
+        r'^filter/(?P<slug>[-\w\d]+)/$',
+        auth(views.CustomListView.as_view()),
+        name='custom_list'
+    ),

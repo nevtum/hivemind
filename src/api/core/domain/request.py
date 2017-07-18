@@ -25,7 +25,16 @@ class FilterListRequest(object):
         # rough validation
         return cls(**adict)
 
+    def has_clients(self):
+        if not hasattr(self, 'clients'):
+            return False
+        if self.clients == []:
+            return False
+        return True
+
     def has_project_codes(self):
+        if not hasattr(self, 'projects'):
+            return False
         if self.projects == []:
             return False
         for code in self.projects:
@@ -34,7 +43,7 @@ class FilterListRequest(object):
         return False
 
     def has_search_input(self):
-        if  hasattr(self, 'search'):
+        if hasattr(self, 'search'):
             return True
         return False
     
