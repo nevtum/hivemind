@@ -1,5 +1,7 @@
 from django.contrib import admin
-from common.models import DomainEvent, Manufacturer, Project
+
+from common.models import CustomFilter, DomainEvent, Manufacturer, Project
+
 
 class EventAdmin(admin.ModelAdmin):
 	list_display = (
@@ -23,7 +25,11 @@ class ProjectAdmin(admin.ModelAdmin):
     ordering = ('-date_created',)
     prepopulated_fields = { 'slug': ('code',) }
 
+class CustomFilterAdmin(admin.ModelAdmin):
+    list_display = ('slug', 'date_created', 'date_updated')
+
 # Register your models here.
 admin.site.register(DomainEvent, EventAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(CustomFilter, CustomFilterAdmin)
