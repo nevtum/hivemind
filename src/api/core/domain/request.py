@@ -32,7 +32,7 @@ class FilterListRequest(object):
             return False
         return True
 
-    def has_project_codes(self):
+    def has_projects(self):
         if not hasattr(self, 'projects'):
             return False
         if self.projects == []:

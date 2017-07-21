@@ -43,8 +43,17 @@
     <div class="links col-lg-12">
       <p>
         <a href="{% url 'defects:list' %}">View all</a> | 
+        {% if request.GET.search %}
+        <a href="{% url 'defects:outstanding' %}?search={{request.GET.search}}">
+          View active
+        </a> |
+        <a href="{% url 'defects:recent' %}?search={{request.GET.search}}">
+          View recently changed
+        </a> |
+        {% else %}
         <a href="{% url 'defects:outstanding' %}">View active</a> |
         <a href="{% url 'defects:recent' %}">View recently changed</a> |
+        {% endif %}
         <a href="{% url 'defects:tags-list' %}">Top tags</a>
       </p>
     </div>
@@ -53,7 +62,12 @@
     <div class="col-lg-3 col-lg-push-9">
       <form action="{% url 'defects:list' %}" method="get">
         <div class="input-group">
-          <input id="search-input" type="text" name="search" class="form-control" placeholder="Search issues...">
+          <input id="search-input"
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Search issues..."
+            value={{request.GET.search}}>
           <span class="input-group-btn">
             <button type="submit" class="btn btn-danger">Search</button>
           </span>
@@ -68,7 +82,7 @@
       <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-              <a href="?search={{ request.GET.search}}&page={{ page_obj.previous_page_number }}">
+              <a href="?search={{request.GET.search}}&page={{ page_obj.previous_page_number }}">
                   &laquo;&nbsp;Previous
               </a>
             {% endif %}
@@ -78,7 +92,7 @@
             </span>
     
             {% if page_obj.has_next %}
-              <a href="?search={{ request.GET.search}}&page={{ page_obj.next_page_number }}">
+              <a href="?search={{request.GET.search}}&page={{ page_obj.next_page_number }}">
                   Next&nbsp;&raquo;
               </a>
             {% endif %}
@@ -108,7 +122,9 @@
             <td>{{ defect.release_id }}</td>
             <td>{{ defect.priority.name }}</td>
             <td>
-              <a href="{% url 'defects:detail' defect.id %}">{{ defect.reference | truncatechars:50 }}</a>
+              <a href="{% url 'defects:detail' defect.id %}?search={{request.GET.search}}">
+                {{ defect.reference | truncatechars:50 }}
+              </a>
             </td>
             <td>{{ defect.submitter }}</td>
           </tr>

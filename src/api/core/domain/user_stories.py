@@ -28,9 +28,8 @@ class DomainEventFilterUserStory(UserStory):
     def process_request(self, request_object):
         req = request_object
         queryset = Defect.objects.all()
-        if req.has_project_codes():
-            code_query = reduce(lambda q, next: q | Q(project_code__iexact=next), req.projects, Q())
-            queryset = queryset.filter(code_query)
+        if req.has_projects():
+            queryset = queryset.filter(project__id__in=req.projects)
         
         if req.has_search_input():
             to_q = create_map(req.search['q'])

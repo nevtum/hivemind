@@ -7,7 +7,7 @@ from taggit.models import Tag
 from api.core.domain.request import FilterListRequest
 from comments.models import Comment
 from common import store as EventStore
-from common.models import Project
+from common.models import CustomFilter, Project
 
 from ..domain.report import defect_summary
 from ..domain.requests import DeleteDefectRequest, MutateDefectRequest
@@ -32,10 +32,20 @@ class CustomListView(DefectSearchMixin, ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        # get a filter model by slug name
-        # take all parameters and populate request_object
+        slug_name = self.kwargs.get('slug')
+        custom_filter = get_object_or_404(CustomFilter, slug=slug_name)
+        clients = [cl.id for cl in custom_filter.clients.all()]
+        projects = [pr.id for pr in custom_filter.projects.all()]
+        users = [u.id for u in custom_filter.users.all()]
+        tags = [t.id for t in custom_filter.tags.all()]
         request_object = FilterListRequest().from_dict({
-            'clients': [2, 3]
+            'clients': clients,
+            'projects': projects,
+            'users': users,
+            'tags': {
+                'match_all': tags,
+                'match_any': []
+            }
         })
         response = FilterDefectListUserStory().execute(request_object)
         if response.has_errors:

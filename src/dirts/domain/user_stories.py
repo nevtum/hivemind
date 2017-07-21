@@ -137,9 +137,8 @@ class FilterDefectListUserStory(UserStory):
         if req.has_clients():
             queryset = queryset.filter(project__manufacturer__id__in=req.clients)
 
-        if req.has_project_codes():
-            code_query = reduce(lambda q, next: q | Q(project_code__iexact=next), req.projects, Q())
-            queryset = queryset.filter(code_query)
+        if req.has_projects():
+            queryset = queryset.filter(project__id__in=req.projects)
         
         if req.has_search_input():
             to_q = create_map(req.search['q'])
