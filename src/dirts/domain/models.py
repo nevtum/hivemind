@@ -18,7 +18,7 @@ class ChangeHistory(object):
 class DefectViewModel(object):
     def __init__(self, defect_events):
         if len(defect_events) == 0:
-            raise Exception("No events were found for this DIRT")
+            raise Exception("No events were found for this defect")
         self.last_sequence_nr = -1
         self.change_history = []
         self.locked = False
@@ -46,7 +46,7 @@ class DefectViewModel(object):
         self.assert_not_locked()
         self.assert_valid(timestamp)
         if self.status != "Open":
-            raise Exception("DIRT must be in open state to amend.")
+            raise Exception("Defect must be in open state to amend.")
         event = self._create_event(DEFECT_AMENDED, kwargs, user, timestamp)
         self.apply(event)
         return event
@@ -55,7 +55,7 @@ class DefectViewModel(object):
         self.assert_not_locked()
         self.assert_valid(timestamp)
         if self.status == "Closed":
-            raise Exception("DIRT is already closed.")
+            raise Exception("Defect is already closed.")
         data = {
             'release_id': release_id,
             'reason': reason
@@ -68,7 +68,7 @@ class DefectViewModel(object):
         self.assert_not_locked()
         self.assert_valid(timestamp)
         if self.status != "Closed":
-            raise Exception("DIRT must be in closed state to reopen.")
+            raise Exception("Defect must be in closed state to reopen.")
         data = {
             'release_id': release_id,
             'reason': reason
@@ -81,7 +81,7 @@ class DefectViewModel(object):
         self.assert_not_locked()
         self.assert_valid(timestamp)
         if self.status != "Closed":
-            raise Exception("DIRT must be in closed state to delete.")
+            raise Exception("Defect must be in closed state to delete.")
         event = self._create_event(DEFECT_DELETED, {}, user, timestamp)
         self.apply(event)
         return event
@@ -91,7 +91,7 @@ class DefectViewModel(object):
         assert(reason != '')
         self.assert_valid(timestamp)
         if self.status != "Closed":
-            raise Exception("DIRT must first be closed to make obsolete.")
+            raise Exception("Defect must first be closed to make obsolete.")
         event = self._create_event(DEFECT_LOCKED, { 'reason': reason }, user, timestamp)
         self.apply(event)
         return event
@@ -120,7 +120,7 @@ class DefectViewModel(object):
     
     def assert_not_locked(self):
         if self.locked:
-            raise Exception("DIRT is obsolete and can no longer be modified.")
+            raise Exception("Defect is obsolete and can no longer be modified.")
     
     def assert_valid(self, datetime):
         assert_datetime(datetime)
@@ -130,7 +130,7 @@ class DefectViewModel(object):
     
     def _add_changeset_dirt_closed(self, event):
         payload = event['payload']    
-        description = "DIRT closed."
+        description = "Defect closed."
         description += "\nVersion: %s" % payload['release_id']
         if payload['reason'] != "":
             description += "\nReason: \"%s\"" % payload['reason']
@@ -138,7 +138,7 @@ class DefectViewModel(object):
     
     def _add_changeset_dirt_reopened(self, event):
         payload = event['payload']
-        description = "DIRT has been reopened."
+        description = "Defect has been reopened."
         description += "\nVersion: %s" % payload['release_id']
         if payload['reason'] != "":
             description += "\nReason: \"%s\"" % payload['reason']
@@ -146,18 +146,18 @@ class DefectViewModel(object):
     
     def _add_changeset_dirt_locked(self, event):
         payload = event['payload']
-        description = "DIRT has been made obsolete."
+        description = "Defect has been made obsolete."
         description += "\nReason: \"%s\"" % payload['reason']
         ch = self._add_changeset(event, description)
 
     def _add_changeset_dirt_amended(self, event):
-        ch = self._add_changeset(event, "DIRT has been updated.")
+        ch = self._add_changeset(event, "Defect has been updated.")
     
     def _create_changeset_dirt_opened(self, event):
-        ch = self._add_changeset(event, "New DIRT created.")
+        ch = self._add_changeset(event, "New defect created.")
     
     def _create_changeset_dirt_imported(self, event):
-        ch = self._add_changeset(event, "New DIRT imported.")
+        ch = self._add_changeset(event, "New defect imported.")
     
     def _add_changeset(self, event, description):
         ch = ChangeHistory()
