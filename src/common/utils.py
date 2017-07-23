@@ -1,4 +1,12 @@
+from django.db.models import Q
 from django.utils import timezone
+
+
+def create_map(search_string):
+    def to_q_object(property_name):
+        item = {'{}__icontains'.format(property_name): search_string}
+        return Q(**item)
+    return to_q_object
 
 def create_project_dto(user, project_instance):
     return {

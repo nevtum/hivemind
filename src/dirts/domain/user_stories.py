@@ -1,9 +1,13 @@
+from functools import reduce
+
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 
 from api.core.domain.response import Success
 from api.core.domain.user_stories import UserStory
 from common import store as EventStore
+from common.utils import create_map
 
 from ..imports.serializers import ImportDefectSerializer
 from ..models import Defect, Status

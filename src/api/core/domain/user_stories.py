@@ -1,9 +1,10 @@
-
 from functools import reduce
 
-from common.models import DomainEvent, Project
-from dirts.models import Defect
 from django.db.models import Q
+
+from common.models import DomainEvent, Project
+from common.utils import create_map
+from dirts.models import Defect
 
 from .response import Fail, Success
 
@@ -45,9 +46,3 @@ class DomainEventFilterUserStory(UserStory):
         events = events.select_related('owner')
         
         return Success(events)
-
-def create_map(search_string):
-    def to_q_object(property_name):
-        item = {'{}__icontains'.format(property_name): search_string}
-        return Q(**item)
-    return to_q_object
