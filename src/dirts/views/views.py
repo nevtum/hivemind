@@ -4,70 +4,25 @@ from django.utils import dateparse, timezone
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from taggit.models import Tag
 
-from api.core.domain.request import FilterListRequest
 from comments.models import Comment
 from common import store as EventStore
-from common.models import CustomFilter, Project
+from common.models import Project
 
 from ..domain.report import defect_summary
 from ..domain.requests import DeleteDefectRequest, MutateDefectRequest
 from ..domain.user_stories import (CloseDefectUserStory, CreateDefectUserStory,
                                    DeleteDefectUserStory,
-                                   FilterDefectListUserStory,
                                    LockDefectUserStory, ReopenDefectUserStory,
                                    UpdateDefectUserStory)
 from ..forms import (CloseDefectForm, CreateDefectForm, DefectSummaryForm,
                      LockDefectForm, ReopenDefectForm, TagsForm)
-from ..mixins import DefectSearchMixin
+from ..mixins import FilterListMixin
 from ..models import Defect
 
 
 class TagsListView(ListView):
     template_name = 'defects/tags.html'
     queryset = Defect.objects.top_tags()
-
-class FilterListMixin(object):
-    def get_queryset(self):
-        keyword = self.request.GET.get('search', '')
-        slug_name = self.kwargs.get('slug', '')
-        if keyword or slug_name:
-            adict = {}
-            if keyword:
-                adict['search'] = {
-                    'q': keyword,
-                    'search_on': [
-                        'reference',
-                        'project_code',
-                        'description',
-                        'comments',
-                        'release_id'
-                    ]
-                }
-
-            if slug_name:
-                custom_filter = get_object_or_404(CustomFilter, slug=slug_name)
-                clients = [cl.id for cl in custom_filter.clients.all()]
-                projects = [pr.id for pr in custom_filter.projects.all()]
-                users = [u.id for u in custom_filter.users.all()]
-                tags = [t.id for t in custom_filter.tags.all()]
-                if clients:
-                    adict['clients'] = clients
-                if projects:
-                    adict['projects'] = projects
-                if users:
-                    adict['users'] = users
-                if tags:
-                    adict['tags'] = {
-                        'match_all': tags,
-                        'match_any': []
-                    }
-            request_object = FilterListRequest().from_dict(adict)
-            response = FilterDefectListUserStory().execute(request_object)
-            if response.has_errors:
-                raise ValueError(response.message)
-            return response.value
-        else:
-            return super(FilterListMixin, self).get_queryset()
 
 class CustomListView(FilterListMixin, ListView):
     template_name = 'defects/filtered_list.html'
