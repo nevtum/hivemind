@@ -70,9 +70,15 @@ class FilterListMixin(object):
             return super(FilterListMixin, self).get_queryset()
 
 class CustomListView(FilterListMixin, ListView):
-    template_name = 'defects/list.html'
+    template_name = 'defects/filtered_list.html'
     context_object_name = 'defects'
     paginate_by = 25
+
+class CustomActiveDefectListView(CustomListView):
+    queryset = Defect.objects.active()
+
+class CustomChangedDefectListView(CustomListView):
+    queryset = Defect.objects.recently_changed()
 
 class DefectListView(FilterListMixin, ListView):
     queryset = Defect.objects.all()
