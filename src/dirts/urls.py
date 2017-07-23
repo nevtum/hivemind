@@ -31,7 +31,7 @@ urlpatterns = [
 
 # experimental url
 urlpatterns += url(
-        r'^filter/(?P<slug>[-\w\d]+)/$',
+        r'^(?P<slug>[-\w\d]+)/$',
         auth(views.CustomListView.as_view()),
         name='custom_list'
     ),
