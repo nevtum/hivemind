@@ -33,20 +33,27 @@ class CustomListView(DefectSearchMixin, ListView):
 
     def get_queryset(self):
         slug_name = self.kwargs.get('slug')
-        custom_filter = get_object_or_404(CustomFilter, slug=slug_name)
-        clients = [cl.id for cl in custom_filter.clients.all()]
-        projects = [pr.id for pr in custom_filter.projects.all()]
-        users = [u.id for u in custom_filter.users.all()]
-        tags = [t.id for t in custom_filter.tags.all()]
-        request_object = FilterListRequest().from_dict({
-            'clients': clients,
-            'projects': projects,
-            'users': users,
-            'tags': {
-                'match_all': tags,
-                'match_any': []
-            }
-        })
+        # search = self.GET.get('search')
+        adict = {}
+
+        if slug_name:
+            custom_filter = get_object_or_404(CustomFilter, slug=slug_name)
+            clients = [cl.id for cl in custom_filter.clients.all()]
+            projects = [pr.id for pr in custom_filter.projects.all()]
+            users = [u.id for u in custom_filter.users.all()]
+            tags = [t.id for t in custom_filter.tags.all()]
+            if clients:
+                adict['clients'] = clients
+            if projects:
+                adict['projects'] = projects
+            if users:
+                adict['users'] = users
+            if tags:
+                adict['tags'] = {
+                    'match_all': tags,
+                    'match_any': []
+                }
+        request_object = FilterListRequest().from_dict(adict)
         response = FilterDefectListUserStory().execute(request_object)
         if response.has_errors:
             raise ValueError(response.message)
