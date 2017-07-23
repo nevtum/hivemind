@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div>
+    <ul>
+        <li><a href="{% url 'defects:list' %}">Show all defects (No filters applied)</a></li>
+        {% for filter in filters %}
+        <li><a href="{% url 'defects:list' filter.slug %}">{{filter.slug}}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

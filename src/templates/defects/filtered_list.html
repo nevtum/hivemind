@@ -53,7 +53,8 @@
       <a href="{% url 'defects:outstanding' view.kwargs.slug %}">View active</a> |
       <a href="{% url 'defects:recent' view.kwargs.slug %}">View recently changed</a> |
       {% endif %}
-      <a href="{% url 'defects:tags-list' %}">Top tags</a>
+      <a href="{% url 'defects:tags-list' %}">Top tags</a> |
+      <a href="{% url 'defects:filters' %}">Change list filter</a>
     </p>
   </div>
 </div>

@@ -25,10 +25,11 @@ urlpatterns = [
     url(r'^(?P<pk>\d+?)/(?P<day>\d{1,2})-(?P<month>\d{1,2})-(?P<year>\d{4})/$', auth(views.time_travel), name='dirt-time-travel'),
 ]
 
-# tags urls
+# tags/filters urls
 urlpatterns += [
     url(r'^tags/$', auth(views.TagsListView.as_view()), name='tags-list'),
     url(r'^tags/(?P<slug>[-\w\d]+)/$', auth(views.defects_by_tag), name='filter-by-tag'),
+    url(r'^filters/$', auth(views.CustomFiltersViews.as_view()), name='filters'),
 ]
 
 # defect list urls

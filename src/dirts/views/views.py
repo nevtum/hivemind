@@ -6,7 +6,7 @@ from taggit.models import Tag
 
 from comments.models import Comment
 from common import store as EventStore
-from common.models import Project
+from common.models import Project, CustomFilter
 
 from ..domain.report import defect_summary
 from ..domain.requests import DeleteDefectRequest, MutateDefectRequest
@@ -19,6 +19,10 @@ from ..forms import (CloseDefectForm, CreateDefectForm, DefectSummaryForm,
 from ..mixins import FilterListMixin
 from ..models import Defect
 
+class CustomFiltersViews(ListView):
+    template_name = 'filters/list.html'
+    context_object_name = 'filters'
+    queryset = CustomFilter.objects.all()
 
 class TagsListView(ListView):
     template_name = 'defects/tags.html'
