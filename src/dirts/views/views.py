@@ -34,10 +34,14 @@ class CustomListView(FilterListMixin, ListView):
     paginate_by = 25
 
 class CustomActiveDefectListView(CustomListView):
-    queryset = Defect.objects.active()
+    def get_queryset(self):
+        queryset = super(CustomActiveDefectListView, self).get_queryset()
+        return queryset.filter(status__name='Open')
 
 class CustomChangedDefectListView(CustomListView):
-    queryset = Defect.objects.recently_changed()
+    def get_queryset(self):
+        queryset = super(CustomChangedDefectListView, self).get_queryset()
+        return queryset.order_by('-date_changed')
 
 class DefectListView(FilterListMixin, ListView):
     queryset = Defect.objects.all()
