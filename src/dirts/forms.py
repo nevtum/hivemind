@@ -75,6 +75,7 @@ class CloseDefectForm(ModelForm, forms.Form):
 LOCK_REASONS = (
     ('', '<select reason>'),
     ('Invalid issue raised.', 'Invalid issue raised'),
+    ('Not applicable to this submission.', 'Not applicable to this submission'),
     ('Backlogged for future releases.', 'Backlogged for future releases'),
     ('No longer valid: Requirements changed.', 'No longer valid: Requirements changed'),
     ('No longer valid: Functionality removed.', 'No longer valid: Functionality removed'),
