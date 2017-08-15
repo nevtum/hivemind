@@ -172,7 +172,7 @@ class DefectViewModel(object):
             sequence_nr = event['sequence_nr']
             if (sequence_nr != self.last_sequence_nr):
                 error = "id {}: sequence_nr {}, expected {}".format(
-                    self.id,
+                    event['aggregate_id'],
                     sequence_nr,
                     self.last_sequence_nr
                 )

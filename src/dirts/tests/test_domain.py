@@ -191,3 +191,4 @@ class DefectAggregateTests(TransactionTestCase):
         event1 = create_new_defect()
         event2 = create_example_close_event(3)
         self.assertRaises(AssertionError, DefectModel, [event1, event2])
+        # DefectModel([event1, event2])
