@@ -25,6 +25,20 @@ def create_new_defect():
         }
     }
 
+def create_example_close_event(sequence_nr):
+    return {
+        'sequence_nr': sequence_nr,
+        'aggregate_id': 1,
+        'aggregate_type': 'DEFECT',
+        'event_type': DEFECT_CLOSED,
+        'timestamp': datetime(2014, 3, 12),
+        'owner': 'test_user', # must be a user instance
+        'payload': {
+            "release_id": "v5.13.2.0",
+            "reason": "Resolved."
+        }
+    }
+
 def create_example_amendment():
     return {
         'project_code': 'TEST.7436',
@@ -172,3 +186,8 @@ class DefectAggregateTests(TransactionTestCase):
         self.assertEqual(model.status, 'Open')
         self.assertEqual(model.date_created, datetime(2014, 3, 10))
         self.assertEqual(model.date_changed, datetime(2016, 8, 22))
+    
+    def test_throws_unexpected_sequence_nr_on_read(self):
+        event1 = create_new_defect()
+        event2 = create_example_close_event(3)
+        self.assertRaises(AssertionError, DefectModel, [event1, event2])

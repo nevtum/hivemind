@@ -169,7 +169,14 @@ class DefectViewModel(object):
     def _replay_from(self, defect_events):
         for event in defect_events:
             self.last_sequence_nr += 1
-            assert(event['sequence_nr'] == self.last_sequence_nr)
+            sequence_nr = event['sequence_nr']
+            if (sequence_nr != self.last_sequence_nr):
+                error = "id {}: sequence_nr {}, expected {}".format(
+                    self.id,
+                    sequence_nr,
+                    self.last_sequence_nr
+                )
+                raise AssertionError(error)
             self.apply(event)
     
     def _on_imported(self, event):
