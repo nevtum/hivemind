@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 from django.utils import timezone
 from common.models import Project, Manufacturer
-from dirts.models import Defect
+from defects.models import Defect
 
 def load_fixtures(apps, schema_editor):
     for defect in Defect.objects.all():
@@ -43,7 +43,7 @@ def create_manufacturer_from(code):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dirts', '0003_defect_project'),
+        ('defects', '0003_defect_project'),
     ]
 
     operations = [

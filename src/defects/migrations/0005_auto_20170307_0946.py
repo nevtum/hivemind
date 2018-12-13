@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dirts', '0004_fixtures'),
+        ('defects', '0004_fixtures'),
     ]
 
     operations = [

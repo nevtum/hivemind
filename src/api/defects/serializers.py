@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from common import store as EventStore
 from common.models import Project
 from ..core.serializers import UserSerializer
-from dirts.models import Defect, Priority, Status
+from defects.models import Defect, Priority, Status
 from taggit.models import Tag
 
 class PrioritySerializer(serializers.ModelSerializer):

@@ -1,5 +1,5 @@
 from common.models import Project
-from dirts.models import Defect, Priority, Status
+from defects.models import Defect, Priority, Status
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
 from rest_framework.decorators import (api_view, detail_route,

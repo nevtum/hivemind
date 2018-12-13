@@ -47,12 +47,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='defect',
             name='priority',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='dirts.Priority'),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='defects.Priority'),
         ),
         migrations.AddField(
             model_name='defect',
             name='status',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='dirts.Status'),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='defects.Status'),
         ),
         migrations.AddField(
             model_name='defect',

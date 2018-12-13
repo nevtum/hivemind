@@ -1,6 +1,6 @@
 from api.defects.serializers import CreateDefectSerializer
 from common.models import Manufacturer, Project
-from dirts.models import Priority
+from defects.models import Priority
 from django.contrib.auth.models import User
 from django.test import TransactionTestCase
 from django.utils import timezone

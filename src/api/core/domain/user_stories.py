@@ -4,7 +4,7 @@ from django.db.models import Q
 
 from common.models import DomainEvent, Project
 from common.utils import create_map
-from dirts.models import Defect
+from defects.models import Defect
 
 from .response import Fail, Success
 

@@ -7,7 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('common', '0004_manufacturer_project'),
-        ('dirts', '0002_fixtures'),
+        ('defects', '0002_fixtures'),
     ]
 
     operations = [

@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('dirts', '0005_auto_20170307_0946'),
+        ('defects', '0005_auto_20170307_0946'),
     ]
 
     operations = [
@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('timestamp', models.DateTimeField()),
                 ('content', models.TextField()),
                 ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
-                ('defect', models.ForeignKey(to='dirts.Defect')),
+                ('defect', models.ForeignKey(to='defects.Defect')),
             ],
         ),
     ]
