@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Attention!!
-# Update this settings variable when releasing a new version of Echelon
+# Update this settings variable when releasing a new version of Hivemind
 # such as when there are changes to db models
 RELEASE_VERSION = 'v0.6.4'
 
