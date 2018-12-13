@@ -11,7 +11,7 @@ from .domain.models import DefectViewModel
 
 class SimilarContentAware:
     def more_like_this(self, count = 5):
-        if os.environ.get("DJANGO_SETTINGS_MODULE") != "config.settings.prod":
+        if os.environ.get("DJANGO_SETTINGS_MODULE") != "config.prod":
             return []
         try:
             sqs = SearchQuerySet().more_like_this(self)[:count]

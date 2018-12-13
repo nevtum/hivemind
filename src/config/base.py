@@ -21,7 +21,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from .drf import REST_FRAMEWORK
 
-SRC_DIR = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+SRC_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 BASE_DIR = path.dirname(SRC_DIR)
 
 from .haystack import HAYSTACK_CONNECTIONS, HAYSTACK_SIGNAL_PROCESSOR
