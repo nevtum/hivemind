@@ -1,5 +1,6 @@
-import os
-from .base import INSTALLED_APPS
+from os import path
+
+from .base import BASE_DIR, INSTALLED_APPS
 
 INSTALLED_APPS += [
     'haystack'
@@ -8,7 +9,7 @@ INSTALLED_APPS += [
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        'PATH': path.join(BASE_DIR, 'volume', 'whoosh_index'),
     },
 }
 
