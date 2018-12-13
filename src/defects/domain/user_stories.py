@@ -4,7 +4,6 @@ from django.db import transaction
 from django.db.models import Q
 from django.utils import timezone
 
-from api.core.domain.response import Success
 from api.core.domain.user_stories import UserStory
 from common import store as EventStore
 from common.utils import create_map
@@ -22,7 +21,7 @@ class CreateDefectUserStory(UserStory):
         defect.save()
         event = create_event_dto(defect)
         EventStore.append_next(event)
-        return Success(defect)
+        return defect
 
 class UpdateDefectUserStory(UserStory):
     @transaction.atomic
@@ -33,7 +32,7 @@ class UpdateDefectUserStory(UserStory):
         event = model.amend(request_object.user, timezone.now(), **kwargs)
         EventStore.append_next(event)
         defect.save()
-        return Success(defect)
+        return defect
 
 class CloseDefectUserStory(UserStory):
     @transaction.atomic
@@ -53,7 +52,7 @@ class CloseDefectUserStory(UserStory):
         defect.status = Status.objects.get(name='Closed')
         defect.release_id = release_id
         defect.save()
-        return Success(defect)
+        return defect
 
 class ReopenDefectUserStory(UserStory):
     @transaction.atomic
@@ -69,7 +68,7 @@ class ReopenDefectUserStory(UserStory):
         defect.status = Status.objects.get(name='Open')
         defect.release_id = release_id
         defect.save()
-        return Success(defect)
+        return defect
 
 class DeleteDefectUserStory(UserStory):
     @transaction.atomic
@@ -79,7 +78,7 @@ class DeleteDefectUserStory(UserStory):
         event = model.soft_delete(request_object.user, timezone.now())
         EventStore.append_next(event)
         defect.delete()
-        return Success(None)
+        return None
 
 class LockDefectUserStory(UserStory):
     @transaction.atomic
@@ -93,7 +92,7 @@ class LockDefectUserStory(UserStory):
             **form.cleaned_data
         )
         EventStore.append_next(event)
-        return Success(defect)
+        return defect
 
 class CommitImportDefectListUserStory(UserStory):
     @transaction.atomic    
@@ -103,7 +102,7 @@ class CommitImportDefectListUserStory(UserStory):
                 self.persist_closed_defect(json)
             else:
                 self.persist_open_defect(json)
-        return Success(None)
+        return None
     
     def persist_open_defect(self, json_data):
         serializer = ImportDefectSerializer(data=json_data)
@@ -149,4 +148,4 @@ class FilterDefectListUserStory(UserStory):
             query = reduce(lambda q, next: q | to_q(next), req.search['search_on'], Q())
             queryset = queryset.filter(query)
         
-        return Success(queryset)
+        return queryset

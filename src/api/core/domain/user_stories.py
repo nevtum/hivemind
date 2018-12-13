@@ -16,14 +16,11 @@ class UserStory(object):
                 response = self.process_request(request_object)
                 if response == None:
                     raise Exception("process_request did not return a reponse")
-                return response
+                return Success(response)
             except Exception as exc:
                 return Fail.from_exception(exc)
         else:
             return Fail.from_invalid_request_object(request_object)
-    
-    def process_request(self, request_object):
-        raise NotImplementedError("process_request() not implemented")
 
 class DomainEventFilterUserStory(UserStory):
     def process_request(self, request_object):
