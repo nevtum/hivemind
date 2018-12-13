@@ -128,7 +128,7 @@ class DefectViewModel(object):
         if last_date > datetime:
             raise Exception("datetime specified is earlier than latest change")
     
-    def _add_changeset_dirt_closed(self, event):
+    def _add_changeset_defect_closed(self, event):
         payload = event['payload']    
         description = "Defect closed."
         description += "\nVersion: %s" % payload['release_id']
@@ -136,7 +136,7 @@ class DefectViewModel(object):
             description += "\nReason: \"%s\"" % payload['reason']
         ch = self._add_changeset(event, description)
     
-    def _add_changeset_dirt_reopened(self, event):
+    def _add_changeset_defect_reopened(self, event):
         payload = event['payload']
         description = "Defect has been reopened."
         description += "\nVersion: %s" % payload['release_id']
@@ -144,19 +144,19 @@ class DefectViewModel(object):
             description += "\nReason: \"%s\"" % payload['reason']
         ch = self._add_changeset(event, description)
     
-    def _add_changeset_dirt_locked(self, event):
+    def _add_changeset_defect_locked(self, event):
         payload = event['payload']
         description = "Defect has been made obsolete."
         description += "\nReason: \"%s\"" % payload['reason']
         ch = self._add_changeset(event, description)
 
-    def _add_changeset_dirt_amended(self, event):
+    def _add_changeset_defect_amended(self, event):
         ch = self._add_changeset(event, "Defect has been updated.")
     
-    def _create_changeset_dirt_opened(self, event):
+    def _create_changeset_defect_opened(self, event):
         ch = self._add_changeset(event, "New defect created.")
     
-    def _create_changeset_dirt_imported(self, event):
+    def _create_changeset_defect_imported(self, event):
         ch = self._add_changeset(event, "New defect imported.")
     
     def _add_changeset(self, event, description):
@@ -180,7 +180,7 @@ class DefectViewModel(object):
             self.apply(event)
     
     def _on_imported(self, event):
-        self._create_changeset_dirt_imported(event)
+        self._create_changeset_defect_imported(event)
         self.id = event['aggregate_id']
         self.submitter = event['owner']
         self.date_created = event['timestamp']
@@ -188,7 +188,7 @@ class DefectViewModel(object):
         self._set_properties(event)
 
     def _on_opened(self, event):
-        self._create_changeset_dirt_opened(event)
+        self._create_changeset_defect_opened(event)
         self.id = event['aggregate_id']
         self.submitter = event['owner']
         self.date_created = event['timestamp']
@@ -196,24 +196,24 @@ class DefectViewModel(object):
         self._set_properties(event)
         
     def _on_closed(self, event):
-        self._add_changeset_dirt_closed(event)
+        self._add_changeset_defect_closed(event)
         self.status = 'Closed'
         self.release_id = event['payload']['release_id']
     
     def _on_reopened(self, event):
-        self._add_changeset_dirt_reopened(event)    
+        self._add_changeset_defect_reopened(event)    
         self.status = 'Open'
         self.release_id = event['payload']['release_id']
     
     def _on_amended(self, event):
-        self._add_changeset_dirt_amended(event)    
+        self._add_changeset_defect_amended(event)    
         self._set_properties(event)
     
     def _on_deleted(self, event):
         self.status = 'Deleted'
     
     def _on_locked(self, event):
-        self._add_changeset_dirt_locked(event)
+        self._add_changeset_defect_locked(event)
         self.locked = True
         self.status = 'Obsolete'
     

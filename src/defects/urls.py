@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^(?P<pk>\d+?)/lock/$', auth(views.DefectLockView.as_view()), name='lock'),
     url(r'^(?P<pk>\d+?)/delete/$', auth(views.delete), name='delete'),
     url(r'^(?P<pk>\d+?)/debug/$', auth(views.debug)),
-    url(r'^(?P<pk>\d+?)/(?P<day>\d{1,2})-(?P<month>\d{1,2})-(?P<year>\d{4})/$', auth(views.time_travel), name='dirt-time-travel'),
+    url(r'^(?P<pk>\d+?)/(?P<day>\d{1,2})-(?P<month>\d{1,2})-(?P<year>\d{4})/$', auth(views.time_travel), name='defect-time-travel'),
 ]
 
 # tags/filters urls

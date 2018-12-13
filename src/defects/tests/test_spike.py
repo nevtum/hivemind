@@ -132,14 +132,14 @@ class DefectAcceptanceTests(TestFixtureMixin, DjangoFakeUserLoginMixin, TestCase
         self.assertEqual(result.priority, expected_priority)
 
     # # obsolete test     
-    # def test_should_create_dirt_opened_event(self):
+    # def test_should_create_defect_opened_event(self):
     #     form = CreateDefectForm(data=self._test_form_data_with_comments())
     #     defect = form.save(commit=False)
     #     defect.submitter = self.test_user
     #     event = defect.raise_new()
         
     #     self.assertEqual(event['sequence_nr'], 0)
-    #     self.assertEqual(event['event_type'], 'DIRT.OPENED')
+    #     self.assertEqual(event['event_type'], 'DEFECT.OPENED')
     #     self.assertIsNotNone(event['payload'])
 
 class CreateDefectPage:
