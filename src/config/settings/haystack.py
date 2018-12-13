@@ -1,10 +1,6 @@
 from os import path
 
-from .base import BASE_DIR, INSTALLED_APPS
-
-INSTALLED_APPS += [
-    'haystack'
-]
+from .base import BASE_DIR
 
 HAYSTACK_CONNECTIONS = {
     'default': {

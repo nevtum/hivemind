@@ -15,12 +15,16 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # such as when there are changes to db models
 RELEASE_VERSION = 'v0.6.4'
 
-# Build paths inside the project like this: os.path.join(SRC_DIR, ...)
-import os
+from os import environ, path
 
-SRC_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-BASE_DIR = os.path.dirname(SRC_DIR)
+from django.core.urlresolvers import reverse_lazy
 
+from .drf import REST_FRAMEWORK
+
+SRC_DIR = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
+BASE_DIR = path.dirname(SRC_DIR)
+
+from .haystack import HAYSTACK_CONNECTIONS, HAYSTACK_SIGNAL_PROCESSOR
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -32,6 +36,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'crispy_forms',
     'taggit',
+    'rest_framework',
+    'haystack',
 ]
 
 HIVEMIND_APPS = [
@@ -43,26 +49,21 @@ HIVEMIND_APPS = [
 
 INSTALLED_APPS.extend(HIVEMIND_APPS)
 
-from django.core.urlresolvers import reverse_lazy
-
 APP_LINKS = [
     { 'title': 'Projects', 'url': reverse_lazy('common:projects') },
     { 'title': 'Issues', 'url': reverse_lazy('defects:list') },
 ]
 
-# Import third party libraries
-from .drf import *
-from .haystack import *
-
 CORS_ORIGIN_ALLOW_ALL = True
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'app.urls'
+WSGI_APPLICATION = 'app.wsgi.application'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(SRC_DIR, 'templates'),
+            path.join(SRC_DIR, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -71,17 +72,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'config.context_processors.app_version',
-                'config.context_processors.app_links',
-                'config.context_processors.pending_registrations',                
+                'app.context_processors.app_version',
+                'app.context_processors.app_links',
+                'app.context_processors.pending_registrations',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
-
-SECRET_KEY = open(os.path.join(BASE_DIR, 'volume', 'secret_key.txt')).read()
+SECRET_KEY = environ.get('SECRET_KEY', 'default-key')
 
 ALLOWED_HOSTS = ['*']
 
@@ -105,12 +104,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = path.join(BASE_DIR, "static")
 
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(SRC_DIR, "static"),
+    path.join(SRC_DIR, "static"),
 )
 
 LOGGING = {
@@ -130,7 +129,7 @@ LOGGING = {
         'file': {
             'level': 'WARNING',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'volume', 'debug.log'),
+            'filename': path.join(BASE_DIR, 'volume', 'debug.log'),
             'formatter': 'verbose',
         },
         'console':{

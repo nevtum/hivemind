@@ -42,4 +42,4 @@ class DomainEventFilterUserStory(UserStory):
         )
         events = events.select_related('owner')
         
-        return Success(events)
+        return events

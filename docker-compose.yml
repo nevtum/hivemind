@@ -19,6 +19,7 @@ web:
     - postgresdb:pgdb
   environment:
     DJANGO_SETTINGS_MODULE: config.settings.prod
+    SECRET_KEY: h5q-*ck_23etyu)pmd7n#p#7i)ci8p@&s!hw8#(0)4ieno9+%7
     PASSWORD: mypassword
     USER: hivemind_user
 reverse_proxy:
