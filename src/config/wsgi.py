@@ -1,5 +1,5 @@
 """
-WSGI config for echelon project.
+WSGI config for Hivemind project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

@@ -7,7 +7,7 @@ postgresdb:
   image: postgres:9.4.5
   environment:
     POSTGRES_PASSWORD: mypassword
-    POSTGRES_USER: echelon_user
+    POSTGRES_USER: hivemind_user
 web:
   build: .
   command: sh entry-point.sh
@@ -20,7 +20,7 @@ web:
   environment:
     DJANGO_SETTINGS_MODULE: config.settings.prod
     PASSWORD: mypassword
-    USER: echelon_user
+    USER: hivemind_user
 reverse_proxy:
   build: ./nginx
   volumes_from:

@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y \
 ADD requirements/ .
 RUN pip install -r prod.txt
 
-RUN mkdir -p web_app/echelon
-ADD src/ entry-point.sh /web_app/echelon/
+RUN mkdir -p web_app/hivemind
+ADD src/ entry-point.sh /web_app/hivemind/
 
-WORKDIR /web_app/echelon
+WORKDIR /web_app/hivemind
 
 CMD ["sh", "entry-point.sh"]
