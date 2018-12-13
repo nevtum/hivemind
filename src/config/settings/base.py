@@ -116,20 +116,32 @@ STATICFILES_DIRS = (
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} - {asctime} - {name} - {process:d} - {thread:d} - {message}',
+            'style': '{',
+        },
+        'default': {
+            'format': '{levelname} - {asctime} - {name} - {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'file': {
             'level': 'WARNING',
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'volume', 'debug.log'),
+            'formatter': 'verbose',
         },
         'console':{
             'level': 'INFO',
             'class': 'logging.StreamHandler',
+            'formatter': 'default',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
         },
