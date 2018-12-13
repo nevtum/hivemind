@@ -59,3 +59,4 @@ Inside the container, run these commands, then exit out of the container:
 
     $ python manage.py migrate
     $ python manage.py createsuperuser
+    $ python manage.py rebuild_index --noinput
